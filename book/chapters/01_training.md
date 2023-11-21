@@ -33,7 +33,7 @@ This system evolved into {term}`MIDI` after some time.
 
 ## Agency of the player piano
 
-A piano automata has often 
+A piano automata has often
 
 There are some really interesting pieces for player piano, which should only give an introduction.
 
@@ -41,7 +41,7 @@ There are some really interesting pieces for player piano, which should only giv
 
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/LFz2lCEkjFk?si=ZE6HPthjfvwIy-pb" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
-The works of Nancarrow influenced 
+The works of Nancarrow influenced
 
 ### Peter Ablinger & Winfried Ritsch - Speaking piano
 
@@ -50,13 +50,13 @@ Austrian composers Peter Ablinger created a famous piece entitled [*Deus Cantand
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/muCPjK4nGY4?si=PKeOnLtp85CR9KtY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 
 Ablinger [writes](https://ablinger.mur.at/speaking_piano.html) about the speaking piano
- 
+
 > Talking machines have been in conversation since 1748. Leonhard Euler, for example, had the idea of constructing a piano who's individual keys would produce each a speech sound (cf. Mladen Dolar, The Voice of His Master, p. 13ff). In 1780 the Imperial Academy of Sciences in Saint Petersburg announced an award to build a talking machine. Christian Gottlieb Kratzenstein wins the award.
-> 
+>
 > 1748-1780: This is the heyday of the development and emancipation of sonata and instrumental music. And of course, instrumental music is itself a speaking machine. After all, it had to speak to us. It had to tell us something! Only on this condition could the newly emerging instrumental music finally be accepted. And the sonata is nothing more than a speech that tries to convince us, and which we judge according to how convincing we find it.
-> 
+>
 > But the history of instrumental music and speaking machines is also the history of information technology. Because when Graham Bell saw the speaking machine, he wanted to recreate something similar but in the process inadvertently invented the telephone; at the same time Charles Babbage invented the first calculating machine in 1819, also in response to a speaking automaton.
-> 
+>
 > Talking machines, sonatas and computers - or smartphones - are on the same line.
 
 ### George Lewis - Voyager

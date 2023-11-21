@@ -7,4 +7,3 @@
 ### Control a VST via MIDI
 
 ## Python
-

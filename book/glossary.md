@@ -11,7 +11,15 @@ MIDI
 sclang
     The programming language of {term}`SuperCollider` with a focus on conciseness for audio environments.
 
+social score
+
+    Something with social score here
+
 SuperCollider
     A framework for audio synthesis and algorithmic composition, see [supercollider.online](https://supercollider.online)
+
+token
+
+    A token represents either a word, or a sign, and is used to represent
 
 :::

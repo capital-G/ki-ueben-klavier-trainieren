@@ -13,6 +13,12 @@ parts:
     maxdepth: 2
     chapters:
       - file: chapters/01_training
+      - file: chapters/artificial
+      - file: chapters/what-to-learn
+      - file: chapters/measuring
+      - file: chapters/player_limitations
+      - file: chapters/02_representation
+      - file: chapters/realtime_ml
   - caption: Appendices
     chapters:
       - file: bibliography.md

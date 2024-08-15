@@ -2,6 +2,7 @@ book/_build
 resources/
 book/chapters/data
 book/data
+book/chapters/logs
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

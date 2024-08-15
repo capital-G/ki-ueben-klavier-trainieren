@@ -71,8 +71,6 @@ There is a theory that a reflection is necessary in order to obtain knowledge - 
 Without this second order action of observing it would be impossible for us to adapt the situation, but we trade this in for staying in this second order perspective forever - we even tend to separate from our experience before this situation, which is the reason why we can not remember anything from post-natality.
 It needs lots of practice to realize that oneself is in this situation.
 
-
-
 ## The audience vs. the performer
 
 The question of the relating to the action through observation enables a way of *Entfremdung* with ourselves.

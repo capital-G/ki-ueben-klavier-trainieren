@@ -13,3 +13,8 @@ But in order for this we would either need to reconstruct the synthesis methods 
 
 With the help of the realtime environment of FluCoMa it is possible to compare a source signal and a generated signal in realtime, while also adjusting the parameters of the neural network in realtime.
 This limits the complexity of the neural network, but the goal for this project is not to have the best performing neural network but instead having a neural network with which we can interact in a real time manner.
+
+## Another idea
+
+Autoencoders allow to omit certain areas of a possibility room.
+A piano has 88 possible keys, but what if we want to reduce it to two keys (a single key would be simply skipping through the output of the model which would also be possible in a rather deterministic manner, but a focus should be laid upon the interaction and the actual playing of 88 keys through 2 keys as an instrument).

@@ -16,8 +16,12 @@ parts:
       - file: chapters/artificial
       - file: chapters/what-to-learn
       - file: chapters/measuring
+      - file: chapters/markov
       - file: chapters/player_limitations
       - file: chapters/02_representation
+      - file: chapters/ann
+      - file: chapters/rnn
+      - file: chapters/transformer
       - file: chapters/realtime_ml
   - caption: Appendices
     chapters:

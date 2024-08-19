@@ -1,0 +1,627 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>2. The artificial &#8212; KI üben, Klavier trainieren</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/style.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/artificial';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="3. What can be learned?" href="what-to-learn.html" />
+    <link rel="prev" title="1. Training vs. Learning" href="01_training.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">KI üben, Klavier trainieren</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    KI üben, Klavier trainieren
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction &amp; Overview</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../setup.html">Setup</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Chapters</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_training.html">1. Training vs. Learning</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">2. The artificial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="what-to-learn.html">3. What can be learned?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="measuring.html">4. Measuring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="markov.html">5. The likelihood of the successive note</a></li>
+<li class="toctree-l1"><a class="reference internal" href="player_limitations.html">6. Player limitations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_representation.html">7. Representation of sonic data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ann.html">8. Artificial Neural networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rnn.html">9. Recursive learning of patterns via RNN</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendices</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/chapters/artificial.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>The artificial</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-reflection-of-ourselves">2.1. The reflection of ourselves</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#enjoyment-of-the-2nd-order">2.2. Enjoyment of the 2nd order</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#face-swapping">2.3. Face swapping</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#live-of-an-npc">2.4. Live of an NPC</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reversing-an-npc">2.4.1. Reversing an NPC</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-audience-vs-the-performer">2.4.2. The audience vs. the performer</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-does-this-belong-together">2.5. How does this belong together</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#entfremdung">2.6. Entfremdung</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-player-piano-as-a-performer">2.6.1. The player piano as a performer</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="the-artificial">
+<h1><span class="section-number">2. </span>The artificial<a class="headerlink" href="#the-artificial" title="Permalink to this heading">#</a></h1>
+<p>We reflect on the artificial, which is itself a reflection, as we will see.</p>
+<p>The mélange of our own perception and something <em>artificial</em>, seemingly outside of ourselves, becomes more and more intertwined and offers the opportunity to learn something new about ourselves by reflecting on these situations.</p>
+<section id="the-reflection-of-ourselves">
+<h2><span class="section-number">2.1. </span>The reflection of ourselves<a class="headerlink" href="#the-reflection-of-ourselves" title="Permalink to this heading">#</a></h2>
+<p>When thinking about our<em>selves</em>, it is important to reflect on what we actually perceive as ourselves.
+Perceiving oneself is a second-order action, such as <em>recognizing</em> oneself can only be achieved by observing being oneself, so we have an encapsulation of ourselves when observing ourselves.
+And while we have a physical attachment to <em>ourself</em> through our body, we don’t have a physical attachment to the action of observation.</p>
+<p>So we are looking at something artificial, based on a physical structure, but acting on itself through the physical structure.</p>
+</section>
+<section id="enjoyment-of-the-2nd-order">
+<h2><span class="section-number">2.2. </span>Enjoyment of the 2nd order<a class="headerlink" href="#enjoyment-of-the-2nd-order" title="Permalink to this heading">#</a></h2>
+<blockquote class="epigraph">
+<div><p>How are we to cope with this brave new world which undermines the basic premises of our intimate life? The ultimate solution would be, of course, to push a vibrator into the Stamina Training Unit, turn them both on and leave all the fun to this ideal couple, with us, the two real human partners, sitting at a nearby table, drinking tea and calmly enjoying the fact that, without great effort, we have fulfilled our duty to enjoy.</p>
+<p class="attribution">—Slavoj Žižek: In the future we’ll outsource sex <span id="id1">[<a class="reference internal" href="../bibliography.html#id6" title="Slavoj Žižek. Is romance dead? The Guardian, 2013. URL: https://www.theguardian.com/commentisfree/2013/feb/14/valentines-day-is-romance-dead (visited on 2024-01-10).">Ziz13</a>]</span></p>
+</div></blockquote>
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/7xYO-VMZUGo?si=4k1OgPsDGPEGxDTl&amp;start=366" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<p>Second-order enjoyment involves not just observing, but reflecting on the act of observing itself.
+Connecting from Heinz von Foerster’s ideas of second-order cybernetics, this meta-experience transforms the observer into an active participant who shapes reality through his or her perception.
+The pleasure here is not merely in the content, but in the awareness that by observing we are contributing to the experience.</p>
+<p>Žižek’s notion of outsourced pleasure is in tune with this: technology mediates our experiences, allowing us to enjoy them from a distance.
+But in second-order pleasure, the act of watching becomes the real source of fulfillment, as we engage in a self-conscious loop of observation and meaning making.
+This recursive process makes the experience richer and more complex, emphasizing our role in creating the reality we observe.</p>
+</section>
+<section id="face-swapping">
+<h2><span class="section-number">2.3. </span>Face swapping<a class="headerlink" href="#face-swapping" title="Permalink to this heading">#</a></h2>
+<p>We often use artificial intelligence to also create an artificial version of ourselves - face-swapping technology is an example of this.
+By digitally replacing one person’s face with another’s, we blur the lines between identity and appearance, challenging our perception of what is real of our identity and what is just artificial, or if there is even still a distinction here.</p>
+<p>Face-swapping isn’t just a playful tool as it raises deeper questions about authenticity and representation of ourselves.
+When our appearance can be effortlessly altered or replicated, our sense of self becomes more fluid.
+This goes in hand with the concept of second-order observation - where we not only see ourselves through the eyes of others, but can now literally be seen as someone else.</p>
+<p>Heinz von Foerster’s notion of self-referential systems seem to be matching here as well.
+Just as observation influences reality, face-swapping technologies allow us to manipulate and reconstruct our identities in real time.
+The result is a new form of self-reflection in which our identity is no longer fixed, but can be endlessly modified and reinterpreted.</p>
+<p>This technology also disrupts our relationship to authenticity.
+When our faces can be swapped, morphed, or manipulated, the line between real and artificial is blurred.
+This creates a new kind of self-awareness-one in which identity becomes a flexible construct rather than a fixed attribute.
+Face-swapping goes beyond - it is a reflection of our evolving understanding of identity in the digital age.</p>
+<p>Face-swapping also creates a reality which gets constructed by the observer: our perceptions of identity and authenticity become more and more subjective.</p>
+</section>
+<section id="live-of-an-npc">
+<h2><span class="section-number">2.4. </span>Live of an NPC<a class="headerlink" href="#live-of-an-npc" title="Permalink to this heading">#</a></h2>
+<p>Recently there has been has been an <a class="reference external" href="https://knowyourmeme.com/memes/npc-non-playable-character">advent of the concept <em>NPC</em></a>, which stands for Non-Playable-Character.</p>
+<p>It rose popularity through memes and became more and more mainstream in such a way, that it was even picked up as <a class="reference external" href="https://www.langenscheidt.com/presse/jugendwort-2023-das-sind-die-top-10">candidate for the 2023 edition of the <em>Jugendwort des Jahres</em></a> by Langenscheidt Verlag.</p>
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/nn_R2uqMVDM?si=H4wOXRZgBzDQw7gf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<section id="reversing-an-npc">
+<h3><span class="section-number">2.4.1. </span>Reversing an NPC<a class="headerlink" href="#reversing-an-npc" title="Permalink to this heading">#</a></h3>
+<p>The NPC is an embodiment of predetermined scripts that lack autonomy.
+By reversing this concept we can try tobreak out of these predetermined roles and reclaiming our own agency again.</p>
+<p>Žižek is known for his critique on how ideology shapes our behavior, by making us conform to societal norms without questioning them.
+Therefore, the NPC becomes a metaphor for how we unconsciously follow these scripts, behaving as if we are programmed.
+Reversing the NPC becomes an act of ideological resistance - it is about becoming aware of our own hidden structures that dictate our actions and choosing to act differently.</p>
+<p>This reversal is not just about defying the norms, but we would also need to expose these mechanisms of control.
+Žižek argues that true freedom comes not from simply doing what we want, but from recognizing and challenging the forces that shape our desires.
+By reversing the NPC, we move from passive subjects to active agents, refusing to be defined by external norms or frids.
+We wake up from the ideological dream, seeing through the facade, and reclaiming the ability to shape our own narrative.</p>
+</section>
+<section id="the-audience-vs-the-performer">
+<h3><span class="section-number">2.4.2. </span>The audience vs. the performer<a class="headerlink" href="#the-audience-vs-the-performer" title="Permalink to this heading">#</a></h3>
+<p>In this dynamic between audience and performer, the lines between observation and participation often blur.
+Traditionally, the performer engages in a display of skill, while the audience is there to witness, admire, and perhaps judge.
+However, this relationship is more complex than it seems.</p>
+<p>We could argue that in our current cultural landscape, the role of the audience has shifted from passive consumption to active participation.
+This is evident in the rise of reaction videos, live streaming, and interactive performances, where the audience’s response becomes part of the performance itself.
+The audience is no longer just watching — they are influencing the event, becoming co-creators of the experience by actually shaping the event through their observation.</p>
+<p>This shift reflects a broader change in how we engage with media and entertainment.
+In the digital age, the audience’s role becomes intertwined with that of the performer through comments, reactions, likes and following.</p>
+<p>Through the actions of a player piano, the player can also become the audience of their own playing.
+It is not the same as a sonic recoding of a performance as the reconstruction of the player piano allows to synchronize it to the same acoustics and physical movement applied upon the piano - it is also a simulation of perceiving, it is in the same state that we are in during all times, the second order observation.</p>
+<p>In the context of a player piano, the <em>performer’s</em> skill becomes encoded into the machine, and the audience might be left to focus purely on the music.
+But here, the audience seeks a connection to a human element to which it can relate to.
+Without visible human effort, the experience creates an feeling of emptiness, creating a desire for authenticity in an superficial world.</p>
+<p>But aren’t our private actions also often mediated by public perception?
+The act of observing becomes a performance in itself, blurring the lines between who is the observer and who is being observed.</p>
+<p>So what else is there to do? Is there something we need to do? Is there something we should do?</p>
+</section>
+</section>
+<section id="how-does-this-belong-together">
+<h2><span class="section-number">2.5. </span>How does this belong together<a class="headerlink" href="#how-does-this-belong-together" title="Permalink to this heading">#</a></h2>
+<p>The similarities of training an AI and training on a piano - both try to follow an ideal target which does not exist in reality and try to approximate it through repetition, evaluation and adaptation - in an endless cycle.</p>
+<p>There is also a perspective of mirroring something - normally this is done through a record, but on a player piano it is possible to.</p>
+<p>At the same time, having the connection to <em>something a human could do</em> gives the very reason to perform something on it, which a human could not do - most likely by doing something faster or <em>more of it</em> at the same time.</p>
+<p>So what is the reason to not have this anymore?</p>
+<p>There is a theory that a reflection is necessary in order to obtain knowledge - sentience creates the ability to reflect upon oneself, stepping outside of oneself and reflect.
+Without this second order action of observing it would be impossible for us to adapt the situation, but we trade this in for staying in this second order perspective forever - we even tend to separate from our experience before this situation, which is the reason why we can not remember anything from post-natality.
+It needs lots of practice to realize that oneself is in this situation.</p>
+</section>
+<section id="entfremdung">
+<h2><span class="section-number">2.6. </span>Entfremdung<a class="headerlink" href="#entfremdung" title="Permalink to this heading">#</a></h2>
+<p>The question of the relating to the action through observation enables a way of <em>Entfremdung</em> with ourselves.</p>
+<p>The media landscape of today has become a vast array of commentary and content that often contradicts itself which creates a cacophony of voices, where the sheer volume and diversity of opinions amplify a sense of disconnection from our own experiences.
+We become observers not only of the world but of ourselves, increasingly alienated from direct engagement.</p>
+<p>This phenomenon is in contrast to more traditional, unified approaches, such as those found in academia, where debate and contradiction are structured and aimed at specific ideas rather than individuals. In academia, the claimed goal is to seek some kind of truth through reasoned argument, while in the digital sphere, the goal can sometimes be to generate noise and attention, creating alienation with everyone.</p>
+<p>To cope with this overwhelming plurality, the role of curators—like reaction video creators or streamers—has become crucial.
+Just as a DJ curates a dancefloor experience, these curators help to navigate the flood of content by selecting and presenting it in a way that seems to makes sense to us.
+However, this too can broaden our alienation, as we increasingly rely on others to shape our experiences for us, further distancing ourselves from active engagement.</p>
+<p>In this mediated environment, we are constantly observing the act of observing, leading to a recursive loop of alienation.
+We watch others curate our reality, becoming passive consumers rather than active participants in our own lives.
+This <em>Entfremdung</em> reflects complexities of living in a world where direct experience becomes overshadowed by layers of commentary, likes and votes.</p>
+<section id="the-player-piano-as-a-performer">
+<h3><span class="section-number">2.6.1. </span>The player piano as a performer<a class="headerlink" href="#the-player-piano-as-a-performer" title="Permalink to this heading">#</a></h3>
+<p>When shifting into a setup where the show of skill is not directly visible anymore, the audience can solely focus on the music.
+But is this what the audience desires?
+Does the audience wants something to relate to?
+For example, Electronic sounds are not embodied through the human body, and can therefore be considered something, outside, strange, alienating and unknown, combined with the experience of someone interacting with an abstract instrument<a class="footnote-reference brackets" href="#abstract-instrument" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p>
+<p>How does this relate to AI?
+The comparison lies in the abstraction and the complexity of interaction.</p>
+<hr class="footnotes docutils" />
+<aside class="footnote brackets" id="abstract-instrument" role="note">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">1</a><span class="fn-bracket">]</span></span>
+<p>An abstract instrument is defined as an object, through which interaction can generate sound. But opposing to classical instruments, the physical interaction will not be directly translated into sound (the press of a piano key correlates with the sound of the piano string), but instead allows to construct, delay or combine multiple (musical and non-musical) events via physical interaction (the press of a key on a computer keyboard to type in a statement such as <code class="docutils literal notranslate"><span class="pre">STOP</span> <span class="pre">ALL</span> <span class="pre">SOUNDS</span></code>).</p>
+</aside>
+</section>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="01_training.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title"><span class="section-number">1. </span>Training vs. Learning</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="what-to-learn.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title"><span class="section-number">3. </span>What can be learned?</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-reflection-of-ourselves">2.1. The reflection of ourselves</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#enjoyment-of-the-2nd-order">2.2. Enjoyment of the 2nd order</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#face-swapping">2.3. Face swapping</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#live-of-an-npc">2.4. Live of an NPC</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#reversing-an-npc">2.4.1. Reversing an NPC</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-audience-vs-the-performer">2.4.2. The audience vs. the performer</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-does-this-belong-together">2.5. How does this belong together</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#entfremdung">2.6. Entfremdung</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-player-piano-as-a-performer">2.6.1. The player piano as a performer</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Dennis Scheiba
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

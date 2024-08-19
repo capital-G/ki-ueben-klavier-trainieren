@@ -1,0 +1,729 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>More context for FCNN &#8212; KI üben, Klavier trainieren</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/style.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/ann-context';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">KI üben, Klavier trainieren</p>
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    KI üben, Klavier trainieren
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction &amp; Overview</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../preface.html">Preface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../setup.html">Setup</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Chapters</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_training.html">1. Training vs. Learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="artificial.html">2. The artificial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="what-to-learn.html">3. What can be learned?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="measuring.html">4. Measuring</a></li>
+<li class="toctree-l1"><a class="reference internal" href="markov.html">5. The likelihood of the successive note</a></li>
+<li class="toctree-l1"><a class="reference internal" href="player_limitations.html">6. Player limitations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_representation.html">7. Representation of sonic data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ann.html">8. Artificial Neural networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rnn.html">9. Recursive learning of patterns via RNN</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendices</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/chapters/ann-context.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>More context for FCNN</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="more-context-for-fcnn">
+<h1>More context for FCNN<a class="headerlink" href="#more-context-for-fcnn" title="Permalink to this heading">#</a></h1>
+<p>MoreStuff!!</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ki_ueben.datasets</span> <span class="kn">import</span> <span class="n">Maestro3Dataset</span><span class="p">,</span> <span class="n">PianoRollDataset</span>
+<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span>
+
+<span class="n">WINDOW_SIZE</span> <span class="o">=</span> <span class="mi">20</span>
+
+<span class="n">piano_roll_dataset</span> <span class="o">=</span> <span class="n">PianoRollDataset</span><span class="p">(</span>
+    <span class="n">midi_files</span><span class="o">=</span><span class="n">Maestro3Dataset</span><span class="p">()</span><span class="o">.</span><span class="n">midi_file_paths</span><span class="p">,</span>
+    <span class="n">window_size</span><span class="o">=</span><span class="n">WINDOW_SIZE</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">context_data_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">piano_roll_dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">lightning</span> <span class="k">as</span> <span class="nn">L</span>
+<span class="kn">from</span> <span class="nn">pytorch_lightning.utilities.model_summary</span> <span class="kn">import</span> <span class="n">summarize</span>
+<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span><span class="p">,</span> <span class="n">optim</span>
+
+
+<span class="k">class</span> <span class="nc">ContextNet</span><span class="p">(</span><span class="n">L</span><span class="o">.</span><span class="n">LightningModule</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">input_window_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+        <span class="n">num_input_dim</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">88</span><span class="p">,</span>
+        <span class="n">num_output_dm</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">88</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_window_size</span> <span class="o">=</span> <span class="n">input_window_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_input_dim</span> <span class="o">=</span> <span class="n">num_input_dim</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_output_dim</span> <span class="o">=</span> <span class="n">num_output_dm</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Flatten</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_window_size</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_input_dim</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">88</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">training_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">batch</span>
+        <span class="c1"># scalar value needs to be put into a vector</span>
+        <span class="c1"># x = x.unsqueeze(1)</span>
+        <span class="c1"># y = y.unsqueeze(1)</span>
+        <span class="c1"># z is the predicted note</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="c1"># print(&quot;x&quot;, x.shape, &quot;y&quot;, y.shape, &quot;z&quot;, z.shape)</span>
+        <span class="c1"># we calculate the loss here</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;train_loss&quot;</span><span class="p">,</span> <span class="n">loss</span><span class="p">,</span> <span class="n">prog_bar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">loss</span>
+
+    <span class="k">def</span> <span class="nf">test_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">batch</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">test_loss</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;test_loss&quot;</span><span class="p">,</span> <span class="n">test_loss</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">configure_optimizers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
+
+
+<span class="n">context_net</span> <span class="o">=</span> <span class="n">ContextNet</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">context_net</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Summary:&quot;</span><span class="p">)</span>
+<span class="n">summarize</span><span class="p">(</span><span class="n">context_net</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ContextNet(
+  (net): Sequential(
+    (0): Flatten(start_dim=1, end_dim=-1)
+    (1): Linear(in_features=1760, out_features=64, bias=True)
+    (2): ReLU()
+    (3): Linear(in_features=64, out_features=64, bias=True)
+    (4): ReLU()
+    (5): Linear(in_features=64, out_features=64, bias=True)
+    (6): Linear(in_features=64, out_features=88, bias=True)
+  )
+)
+Summary:
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  | Name | Type       | Params | Mode 
+--------------------------------------------
+0 | net  | Sequential | 126 K  | train
+--------------------------------------------
+126 K     Trainable params
+0         Non-trainable params
+126 K     Total params
+0.507     Total estimated model params size (MB)
+8         Modules in train mode
+0         Modules in eval mode
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pytorch_lightning.loggers</span> <span class="kn">import</span> <span class="n">CSVLogger</span>
+
+<span class="n">simple_trainer</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">Trainer</span><span class="p">(</span>
+    <span class="n">max_epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="p">[</span><span class="n">CSVLogger</span><span class="p">(</span><span class="n">save_dir</span><span class="o">=</span><span class="s2">&quot;logs&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;context_net&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="mi">0</span><span class="p">)]</span>
+<span class="p">)</span>
+<span class="n">simple_trainer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">context_net</span><span class="p">,</span> <span class="n">train_dataloaders</span><span class="o">=</span><span class="n">context_data_loader</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>GPU available: False, used: False
+TPU available: False, using: 0 TPU cores
+HPU available: False, using: 0 HPUs
+/Users/scheiba/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/lightning_fabric/loggers/csv_logs.py:268: Experiment logs directory logs/context_net/version_0 exists and is not empty. Previous log files in this directory will be deleted when the new ones are saved!
+
+  | Name | Type       | Params | Mode 
+--------------------------------------------
+0 | net  | Sequential | 126 K  | train
+--------------------------------------------
+126 K     Trainable params
+0         Non-trainable params
+126 K     Total params
+0.507     Total estimated model params size (MB)
+8         Modules in train mode
+0         Modules in eval mode
+/Users/scheiba/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:419: Consider setting `persistent_workers=True` in &#39;train_dataloader&#39; to speed up the dataloader worker initialization.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 0: |          | 3/? [00:00&lt;00:00,  6.02it/s, v_num=0, train_loss=168.0]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/v0/7q67mljd4v9_frk_1p_mr2ph0000gn/T/ipykernel_20717/3724257029.py:31: UserWarning: Using a target size (torch.Size([32, 1, 88])) that is different to the input size (torch.Size([32, 88])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  loss = nn.functional.mse_loss(z, y)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 0: |          | 14629/? [02:54&lt;00:00, 83.95it/s, v_num=0, train_loss=122.0]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Detected KeyboardInterrupt, attempting graceful shutdown ...
+</pre></div>
+</div>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
+<span class="nn">File ~/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/lightning/pytorch/trainer/call.py:47,</span> in <span class="ni">_call_and_handle_interrupt</span><span class="nt">(trainer, trainer_fn, *args, **kwargs)</span>
+<span class="g g-Whitespace">     </span><span class="mi">46</span>         <span class="k">return</span> <span class="n">trainer</span><span class="o">.</span><span class="n">strategy</span><span class="o">.</span><span class="n">launcher</span><span class="o">.</span><span class="n">launch</span><span class="p">(</span><span class="n">trainer_fn</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">trainer</span><span class="o">=</span><span class="n">trainer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="ne">---&gt; </span><span class="mi">47</span>     <span class="k">return</span> <span class="n">trainer_fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">49</span> <span class="k">except</span> <span class="n">_TunerExitException</span><span class="p">:</span>
+
+<span class="nn">File ~/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/lightning/pytorch/trainer/trainer.py:574,</span> in <span class="ni">Trainer._fit_impl</span><span class="nt">(self, model, train_dataloaders, val_dataloaders, datamodule, ckpt_path)</span>
+<span class="g g-Whitespace">    </span><span class="mi">568</span> <span class="n">ckpt_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_checkpoint_connector</span><span class="o">.</span><span class="n">_select_ckpt_path</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">569</span>     <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">fn</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">570</span>     <span class="n">ckpt_path</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">571</span>     <span class="n">model_provided</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">572</span>     <span class="n">model_connected</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">lightning_module</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">573</span> <span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">574</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">ckpt_path</span><span class="o">=</span><span class="n">ckpt_path</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">576</span> <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">stopped</span>
+
+<span class="nn">File ~/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/lightning/pytorch/trainer/trainer.py:981,</span> in <span class="ni">Trainer._run</span><span class="nt">(self, model, ckpt_path)</span>
+<span class="g g-Whitespace">    </span><span class="mi">978</span> <span class="c1"># ----------------------------</span>
+<span class="g g-Whitespace">    </span><span class="mi">979</span> <span class="c1"># RUN THE TRAINER</span>
+<span class="g g-Whitespace">    </span><span class="mi">980</span> <span class="c1"># ----------------------------</span>
+<span class="ne">--&gt; </span><span class="mi">981</span> <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_run_stage</span><span class="p">()</span>
+<span class="g g-Whitespace">    </span><span class="mi">983</span> <span class="c1"># ----------------------------</span>
+<span class="g g-Whitespace">    </span><span class="mi">984</span> <span class="c1"># POST-Training CLEAN UP</span>
+<span class="g g-Whitespace">    </span><span class="mi">985</span> <span class="c1"># ----------------------------</span>
+
+<span class="nn">File ~/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/lightning/pytorch/trainer/trainer.py:1025,</span> in <span class="ni">Trainer._run_stage</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1024</span> <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">set_detect_anomaly</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_detect_anomaly</span><span class="p">):</span>
+<span class="ne">-&gt; </span><span class="mi">1025</span>     <span class="bp">self</span><span class="o">.</span><span class="n">fit_loop</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+<span class="g g-Whitespace">   </span><span class="mi">1026</span> <span class="k">return</span> <span class="kc">None</span>
+
+<span class="nn">File ~/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/lightning/pytorch/loops/fit_loop.py:205,</span> in <span class="ni">_FitLoop.run</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">    </span><span class="mi">204</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_advance_start</span><span class="p">()</span>
+<span class="ne">--&gt; </span><span class="mi">205</span> <span class="bp">self</span><span class="o">.</span><span class="n">advance</span><span class="p">()</span>
+<span class="g g-Whitespace">    </span><span class="mi">206</span> <span class="bp">self</span><span class="o">.</span><span class="n">on_advance_end</span><span class="p">()</span>
+
+<span class="nn">File ~/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/lightning/pytorch/loops/fit_loop.py:363,</span> in <span class="ni">_FitLoop.advance</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">    </span><span class="mi">362</span> <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_fetcher</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+<span class="ne">--&gt; </span><span class="mi">363</span> <span class="bp">self</span><span class="o">.</span><span class="n">epoch_loop</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_fetcher</span><span class="p">)</span>
+
+<span class="nn">File ~/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/lightning/pytorch/loops/training_epoch_loop.py:140,</span> in <span class="ni">_TrainingEpochLoop.run</span><span class="nt">(self, data_fetcher)</span>
+<span class="g g-Whitespace">    </span><span class="mi">139</span> <span class="k">try</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">140</span>     <span class="bp">self</span><span class="o">.</span><span class="n">advance</span><span class="p">(</span><span class="n">data_fetcher</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">141</span>     <span class="bp">self</span><span class="o">.</span><span class="n">on_advance_end</span><span class="p">(</span><span class="n">data_fetcher</span><span class="p">)</span>
+
+<span class="nn">File ~/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/lightning/pytorch/loops/training_epoch_loop.py:269,</span> in <span class="ni">_TrainingEpochLoop.advance</span><span class="nt">(self, data_fetcher)</span>
+<span class="g g-Whitespace">    </span><span class="mi">267</span>     <span class="bp">self</span><span class="o">.</span><span class="n">batch_progress</span><span class="o">.</span><span class="n">is_last_batch</span> <span class="o">=</span> <span class="n">data_fetcher</span><span class="o">.</span><span class="n">done</span>
+<span class="ne">--&gt; </span><span class="mi">269</span> <span class="n">call</span><span class="o">.</span><span class="n">_call_callback_hooks</span><span class="p">(</span><span class="n">trainer</span><span class="p">,</span> <span class="s2">&quot;on_train_batch_end&quot;</span><span class="p">,</span> <span class="n">batch_output</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">270</span> <span class="n">call</span><span class="o">.</span><span class="n">_call_lightning_module_hook</span><span class="p">(</span><span class="n">trainer</span><span class="p">,</span> <span class="s2">&quot;on_train_batch_end&quot;</span><span class="p">,</span> <span class="n">batch_output</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">)</span>
+
+<span class="nn">File ~/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/lightning/pytorch/trainer/call.py:218,</span> in <span class="ni">_call_callback_hooks</span><span class="nt">(trainer, hook_name, monitoring_callbacks, *args, **kwargs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">217</span>         <span class="k">with</span> <span class="n">trainer</span><span class="o">.</span><span class="n">profiler</span><span class="o">.</span><span class="n">profile</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[Callback]</span><span class="si">{</span><span class="n">callback</span><span class="o">.</span><span class="n">state_key</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">hook_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">):</span>
+<span class="ne">--&gt; </span><span class="mi">218</span>             <span class="n">fn</span><span class="p">(</span><span class="n">trainer</span><span class="p">,</span> <span class="n">trainer</span><span class="o">.</span><span class="n">lightning_module</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">220</span> <span class="k">if</span> <span class="n">pl_module</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">221</span>     <span class="c1"># restore current_fx when nested context</span>
+
+<span class="nn">File ~/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/lightning/pytorch/callbacks/progress/tqdm_progress.py:279,</span> in <span class="ni">TQDMProgressBar.on_train_batch_end</span><span class="nt">(self, trainer, pl_module, outputs, batch, batch_idx)</span>
+<span class="g g-Whitespace">    </span><span class="mi">278</span> <span class="n">_update_n</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">train_progress_bar</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">279</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_progress_bar</span><span class="o">.</span><span class="n">set_postfix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_metrics</span><span class="p">(</span><span class="n">trainer</span><span class="p">,</span> <span class="n">pl_module</span><span class="p">))</span>
+
+<span class="nn">File ~/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/lightning/pytorch/callbacks/progress/progress_bar.py:198,</span> in <span class="ni">ProgressBar.get_metrics</span><span class="nt">(self, trainer, pl_module)</span>
+<span class="g g-Whitespace">    </span><span class="mi">197</span> <span class="n">standard_metrics</span> <span class="o">=</span> <span class="n">get_standard_metrics</span><span class="p">(</span><span class="n">trainer</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">198</span> <span class="n">pbar_metrics</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">progress_bar_metrics</span>
+<span class="g g-Whitespace">    </span><span class="mi">199</span> <span class="n">duplicates</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">standard_metrics</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">pbar_metrics</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+<span class="nn">File ~/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/lightning/pytorch/trainer/trainer.py:1635,</span> in <span class="ni">Trainer.progress_bar_metrics</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1629</span><span class="w"> </span><span class="sd">&quot;&quot;&quot;The metrics sent to the progress bar.</span>
+<span class="g g-Whitespace">   </span><span class="mi">1630</span><span class="sd"> </span>
+<span class="g g-Whitespace">   </span><span class="mi">1631</span><span class="sd"> This includes metrics logged via :meth:`~lightning.pytorch.core.LightningModule.log` with the</span>
+<span class="g g-Whitespace">   </span><span class="mi">1632</span><span class="sd"> :paramref:`~lightning.pytorch.core.LightningModule.log.prog_bar` argument set.</span>
+<span class="g g-Whitespace">   </span><span class="mi">1633</span><span class="sd"> </span>
+<span class="g g-Whitespace">   </span><span class="mi">1634</span><span class="sd"> &quot;&quot;&quot;</span>
+<span class="ne">-&gt; </span><span class="mi">1635</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_logger_connector</span><span class="o">.</span><span class="n">progress_bar_metrics</span>
+
+<span class="nn">File ~/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/lightning/pytorch/trainer/connectors/logger_connector/logger_connector.py:254,</span> in <span class="ni">_LoggerConnector.progress_bar_metrics</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">    </span><span class="mi">253</span>     <span class="n">metrics</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="p">[</span><span class="s2">&quot;pbar&quot;</span><span class="p">]</span>
+<span class="ne">--&gt; </span><span class="mi">254</span>     <span class="bp">self</span><span class="o">.</span><span class="n">_progress_bar_metrics</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">metrics</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">255</span> <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_progress_bar_metrics</span>
+
+<span class="ne">KeyboardInterrupt</span>: 
+
+<span class="n">During</span> <span class="n">handling</span> <span class="n">of</span> <span class="n">the</span> <span class="n">above</span> <span class="n">exception</span><span class="p">,</span> <span class="n">another</span> <span class="n">exception</span> <span class="n">occurred</span><span class="p">:</span>
+
+<span class="ne">NameError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">line</span> <span class="mi">7</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="kn">from</span> <span class="nn">pytorch_lightning.loggers</span> <span class="kn">import</span> <span class="n">CSVLogger</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="n">simple_trainer</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">Trainer</span><span class="p">(</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span>     <span class="n">max_epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span>     <span class="n">logger</span><span class="o">=</span><span class="p">[</span><span class="n">CSVLogger</span><span class="p">(</span><span class="n">save_dir</span><span class="o">=</span><span class="s2">&quot;logs&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;context_net&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="mi">0</span><span class="p">)]</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="p">)</span>
+<span class="ne">----&gt; </span><span class="mi">7</span> <span class="n">simple_trainer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">context_net</span><span class="p">,</span> <span class="n">train_dataloaders</span><span class="o">=</span><span class="n">context_data_loader</span><span class="p">)</span>
+
+<span class="nn">File ~/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/lightning/pytorch/trainer/trainer.py:538,</span> in <span class="ni">Trainer.fit</span><span class="nt">(self, model, train_dataloaders, val_dataloaders, datamodule, ckpt_path)</span>
+<span class="g g-Whitespace">    </span><span class="mi">536</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">TrainerStatus</span><span class="o">.</span><span class="n">RUNNING</span>
+<span class="g g-Whitespace">    </span><span class="mi">537</span> <span class="bp">self</span><span class="o">.</span><span class="n">training</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="ne">--&gt; </span><span class="mi">538</span> <span class="n">call</span><span class="o">.</span><span class="n">_call_and_handle_interrupt</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">539</span>     <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fit_impl</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">train_dataloaders</span><span class="p">,</span> <span class="n">val_dataloaders</span><span class="p">,</span> <span class="n">datamodule</span><span class="p">,</span> <span class="n">ckpt_path</span>
+<span class="g g-Whitespace">    </span><span class="mi">540</span> <span class="p">)</span>
+
+<span class="nn">File ~/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/lightning/pytorch/trainer/call.py:64,</span> in <span class="ni">_call_and_handle_interrupt</span><span class="nt">(trainer, trainer_fn, *args, **kwargs)</span>
+<span class="g g-Whitespace">     </span><span class="mi">62</span>     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">launcher</span><span class="p">,</span> <span class="n">_SubprocessScriptLauncher</span><span class="p">):</span>
+<span class="g g-Whitespace">     </span><span class="mi">63</span>         <span class="n">launcher</span><span class="o">.</span><span class="n">kill</span><span class="p">(</span><span class="n">_get_sigkill_signal</span><span class="p">())</span>
+<span class="ne">---&gt; </span><span class="mi">64</span>     <span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">66</span> <span class="k">except</span> <span class="ne">BaseException</span> <span class="k">as</span> <span class="n">exception</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">67</span>     <span class="n">_interrupt</span><span class="p">(</span><span class="n">trainer</span><span class="p">,</span> <span class="n">exception</span><span class="p">)</span>
+
+<span class="ne">NameError</span>: name &#39;exit&#39; is not defined
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">df_simple_metrics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;logs/context_net/version_0/metrics.csv&quot;</span><span class="p">)</span>
+<span class="n">df_simple_metrics</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span>
+    <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Context FCNN loss&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;step&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;train_loss&quot;</span><span class="p">,</span> <span class="n">logy</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/13b03704cc23fd0c7a11f26e3d69552134bace86145c32f9d5d9cf363aa8b142.png" src="../_images/13b03704cc23fd0c7a11f26e3d69552134bace86145c32f9d5d9cf363aa8b142.png" />
+</div>
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./chapters"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Dennis Scheiba
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

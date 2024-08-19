@@ -1,6 +1,7 @@
 stages:
   - pre-commit
   - build
+  - deploy
 
 pre-commit:
   stage: pre-commit

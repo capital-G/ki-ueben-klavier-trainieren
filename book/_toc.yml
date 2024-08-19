@@ -13,16 +13,14 @@ parts:
     maxdepth: 2
     chapters:
       - file: chapters/01_training
-      - file: chapters/artificial
-      - file: chapters/what-to-learn
-      - file: chapters/measuring
-      - file: chapters/markov
-      - file: chapters/player_limitations
-      - file: chapters/02_representation
-      - file: chapters/ann
-      - file: chapters/rnn
-      - file: chapters/transformer
-      - file: chapters/realtime_ml
+      - file: chapters/02_artificial
+      - file: chapters/03_what-to-learn
+      - file: chapters/04_measuring
+      - file: chapters/05_markov
+      - file: chapters/06_player_limitations
+      - file: chapters/07_representation
+      - file: chapters/08_ann
+      - file: chapters/09_rnn
   - caption: Appendices
     chapters:
       - file: bibliography.md

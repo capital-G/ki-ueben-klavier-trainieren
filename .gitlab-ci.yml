@@ -1,0 +1,36 @@
+stages:
+  - pre-commit
+  - build
+
+pre-commit:
+  stage: pre-commit
+  image: python:3.10
+  script:
+    - pip install pre-commit
+    - pre-commit run --all-files
+  only:
+    - merge_requests
+    - main
+
+build-book:
+  stage: build
+  image: python:3.10
+  script:
+    - pip install -r requirements-dev.txt
+    - make book
+  artifacts:
+    paths:
+      - book/_build/html
+  only:
+    - merge_requests
+    - main
+
+pages:
+  stage: deploy
+  script:
+    - mv book/_build/html public
+  artifacts:
+    paths:
+      - public
+  only:
+    - main

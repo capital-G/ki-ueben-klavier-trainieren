@@ -5,3 +5,7 @@ body {
 p, h1, h2, h3 {
     font-family: monospace !important;
 }
+
+article.bd-article {
+    text-align: justify;
+}

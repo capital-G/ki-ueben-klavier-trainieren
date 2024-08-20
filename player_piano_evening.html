@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="./" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>Player Piano Evening &#8212; KI üben, Klavier trainieren</title>
   
@@ -29,44 +28,40 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/style.css" />
-    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="_static/style.css?v=4c607a41" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/clipboard.min.js"></script>
-    <script src="_static/copybutton.js"></script>
-    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="_static/togglebutton.js"></script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'player_piano_evening';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Bibliography" href="bibliography.html" />
+    <link rel="next" title="ki_ueben API" href="ki_ueben_api.html" />
     <link rel="prev" title="9. Recursive learning of patterns via RNN" href="chapters/09_rnn.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -158,7 +153,18 @@ const thebe_selector_output = ".output, .cell_output"
     <p class="title logo__title">KI üben, Klavier trainieren</p>
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -188,6 +194,7 @@ const thebe_selector_output = ".output, .cell_output"
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendices</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Player Piano Evening</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ki_ueben_api.html">ki_ueben API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
 <li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
 </ul>
@@ -219,9 +226,9 @@ const thebe_selector_output = ".output, .cell_output"
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -330,9 +337,9 @@ document.write(`
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -377,11 +384,11 @@ document.write(`
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="player-piano-evening">
-<h1>Player Piano Evening<a class="headerlink" href="#player-piano-evening" title="Permalink to this heading">#</a></h1>
+<h1>Player Piano Evening<a class="headerlink" href="#player-piano-evening" title="Link to this heading">#</a></h1>
 <figure class="align-default" id="id1">
 <img alt="_images/event_poster.png" src="_images/event_poster.png" />
 <figcaption>
-<p><span class="caption-number">Fig. 1 </span><span class="caption-text">Poster for the <em>Player Piano Evening</em> event.</span><a class="headerlink" href="#id1" title="Permalink to this image">#</a></p>
+<p><span class="caption-number">Fig. 1 </span><span class="caption-text">Poster for the <em>Player Piano Evening</em> event.</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p><strong>Place:</strong> e_0.29a (E-Gebäude)
@@ -391,16 +398,16 @@ People from RSH Düsseldorf, UdK Berlin and ZKM Karlsruhe have created new piece
 <p>The pieces will be performed on the prestigious <em>Steinway Model d sprio r</em> of the RSH, one of the best grand pianos owned by the RSH, which allows not only automated playback, but also recording of its keyboard input in high resolution.</p>
 <p>In order to allow free movement of the audience and to increase the capacity, no seating will be provided.</p>
 <section id="program">
-<h2>Program<a class="headerlink" href="#program" title="Permalink to this heading">#</a></h2>
+<h2>Program<a class="headerlink" href="#program" title="Link to this heading">#</a></h2>
 <section id="shuoxin-tan-voice-and-piano">
-<h3>Shuoxin Tan: Voice$ and Piano<a class="headerlink" href="#shuoxin-tan-voice-and-piano" title="Permalink to this heading">#</a></h3>
+<h3>Shuoxin Tan: Voice$ and Piano<a class="headerlink" href="#shuoxin-tan-voice-and-piano" title="Link to this heading">#</a></h3>
 <blockquote>
 <div><p>4 miniature compositions</p>
 </div></blockquote>
 <p>Melodic transcription for player piano of 4 quotations from speeches by Felix Ensslin, Clarence Barlow, John Cage, and Fjodor Gladilin.</p>
 </section>
 <section id="pamela-soria-sanchez-mittel-und-zweck">
-<h3>Pamela Soria Sanchez: Mittel und Zweck<a class="headerlink" href="#pamela-soria-sanchez-mittel-und-zweck" title="Permalink to this heading">#</a></h3>
+<h3>Pamela Soria Sanchez: Mittel und Zweck<a class="headerlink" href="#pamela-soria-sanchez-mittel-und-zweck" title="Link to this heading">#</a></h3>
 <blockquote>
 <div><p>Three short pieces that explore different approaches to use a musical instrument.</p>
 </div></blockquote>
@@ -408,18 +415,18 @@ People from RSH Düsseldorf, UdK Berlin and ZKM Karlsruhe have created new piece
 Is this instrument a means to an end? Or is it both? Let the audience decide.</p>
 </section>
 <section id="luis-kuffner-imperfections">
-<h3>Luis Küffner: Imperfections<a class="headerlink" href="#luis-kuffner-imperfections" title="Permalink to this heading">#</a></h3>
+<h3>Luis Küffner: Imperfections<a class="headerlink" href="#luis-kuffner-imperfections" title="Link to this heading">#</a></h3>
 <p>A player piano embodies values such as precession, perfection, and efficiency. Imperfections tries to express the exact opposites of those.</p>
 </section>
 <section id="dietmar-saxler-2-mantras">
-<h3>Dietmar Saxler: 2 Mantras<a class="headerlink" href="#dietmar-saxler-2-mantras" title="Permalink to this heading">#</a></h3>
+<h3>Dietmar Saxler: 2 Mantras<a class="headerlink" href="#dietmar-saxler-2-mantras" title="Link to this heading">#</a></h3>
 <blockquote>
 <div><p>2 mantras for piano, composed by Lubomyr Melnyk.</p>
 </div></blockquote>
 <p>The pianist Lubomyr Melnyk composed several mantras for my master’s thesis “How does God sound?”. Melnyk is considered the inventor of “continuous music”. The two mantras are typical of his style of composition.</p>
 </section>
 <section id="conlon-nancarrow-4-studies-for-player-piano">
-<h3>Conlon Nancarrow: 4 Studies for Player Piano<a class="headerlink" href="#conlon-nancarrow-4-studies-for-player-piano" title="Permalink to this heading">#</a></h3>
+<h3>Conlon Nancarrow: 4 Studies for Player Piano<a class="headerlink" href="#conlon-nancarrow-4-studies-for-player-piano" title="Link to this heading">#</a></h3>
 <p>Studies #6, #7, #19, #21</p>
 <p>Conlon Nancarrow composed primarily for a modified player piano controlled by punched cards. His studies emphasize the juxtaposition of phasing patterns and varying tempos, creating a wild storm of keystrokes that create a new sonic landscape that escapes the traditional sonorities of a piano.
 Although the <em>spirio r</em> is a magnificent piano, it is not up to the demands of Nancarrow’s prepared player piano, so a more tamed version will be performed.</p>
@@ -430,25 +437,25 @@ Although the <em>spirio r</em> is a magnificent piano, it is not up to the deman
 </section>
 <hr class="docutils" />
 <section id="zihern-lee-composition-of-rest-iii">
-<h3>Zihern Lee: 공백空白: Composition of rest III<a class="headerlink" href="#zihern-lee-composition-of-rest-iii" title="Permalink to this heading">#</a></h3>
+<h3>Zihern Lee: 공백空白: Composition of rest III<a class="headerlink" href="#zihern-lee-composition-of-rest-iii" title="Link to this heading">#</a></h3>
 <blockquote>
 <div><p>20 minute performance</p>
 </div></blockquote>
 </section>
 <section id="dennis-scheiba-a-practicing-player-piano">
-<h3>Dennis Scheiba: A practicing player piano<a class="headerlink" href="#dennis-scheiba-a-practicing-player-piano" title="Permalink to this heading">#</a></h3>
+<h3>Dennis Scheiba: A practicing player piano<a class="headerlink" href="#dennis-scheiba-a-practicing-player-piano" title="Link to this heading">#</a></h3>
 <p>Although every player spends a lot of time practicing piano, this is rarely shown in a public performance, as these <em>imperfections</em> are labeled as something un-finsihed of an idealistic set of instructions.
 But instead of hiding this progression, <em>A practicing player piano</em> exposes this never-ending pursuit for something <em>idealistic</em>, something that can also be found in the <em>training</em> process of AI (where a result of an algorithm is compared to an ideal dataset, whose difference is then used to <em>tune</em> the algorithm) and in the tuning of a piano (where a reference tone is tried to be matched and tune its relations accordingly).</p>
 <p>By analyzing datasets of performances and practice sessions on a piano, and combining this with an exploration of the mechanical limits of the player piano, the piece attempts to expose this pursuit, creating its own semantics of perfection and imperfection by sonifying how algorithms and mechanical parts practice.</p>
 </section>
 <section id="jia-liu-unnumbered-modes">
-<h3>Jia Liu: unnumbered modes<a class="headerlink" href="#jia-liu-unnumbered-modes" title="Permalink to this heading">#</a></h3>
+<h3>Jia Liu: unnumbered modes<a class="headerlink" href="#jia-liu-unnumbered-modes" title="Link to this heading">#</a></h3>
 <blockquote>
 <div><p>10 minute performance</p>
 </div></blockquote>
 </section>
 <section id="aphex-twin-aisatsana-102">
-<h3>Aphex Twin: aisatsana [102]<a class="headerlink" href="#aphex-twin-aisatsana-102" title="Permalink to this heading">#</a></h3>
+<h3>Aphex Twin: aisatsana [102]<a class="headerlink" href="#aphex-twin-aisatsana-102" title="Link to this heading">#</a></h3>
 <p>Originally composed for a player piano on a swing, this piece was released as the last song on Aphex Twin’s 2014 release <em>Syro</em>.
 Richard D. James has a long tradition of composing for computer-controlled instruments, such as the often sampled classic <em>Avril 14th</em> or his 2015 album <em>Computer Controlled Acoustic Instruments pt2 EP</em>.</p>
 <p>In the original, the movement of the piano creates a natural phasing effect, but for this evening, the song will be performed without swing.</p>
@@ -496,11 +503,11 @@ Richard D. James has a long tradition of composing for computer-controlled instr
       </div>
     </a>
     <a class="right-next"
-       href="bibliography.html"
+       href="ki_ueben_api.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Bibliography</p>
+        <p class="prev-next-title">ki_ueben API</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -556,7 +563,7 @@ By Dennis Scheiba
 
   <p class="copyright">
     
-      © Copyright 2022.
+      © Copyright 2023.
       <br/>
     
   </p>

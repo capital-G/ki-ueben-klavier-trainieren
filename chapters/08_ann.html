@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>8. Artificial Neural networks &#8212; KI üben, Klavier trainieren</title>
   
@@ -29,40 +28,36 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/style.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/style.css?v=4c607a41" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/08_ann';</script>
@@ -160,7 +155,18 @@ const thebe_selector_output = ".output, .cell_output"
     <p class="title logo__title">KI üben, Klavier trainieren</p>
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -190,6 +196,7 @@ const thebe_selector_output = ".output, .cell_output"
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendices</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../player_piano_evening.html">Player Piano Evening</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ki_ueben_api.html">ki_ueben API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
 </ul>
@@ -221,9 +228,9 @@ const thebe_selector_output = ".output, .cell_output"
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -332,9 +339,9 @@ document.write(`
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -376,9 +383,9 @@ document.write(`
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="artificial-neural-networks">
-<h1><span class="section-number">8. </span>Artificial Neural networks<a class="headerlink" href="#artificial-neural-networks" title="Permalink to this heading">#</a></h1>
+<h1><span class="section-number">8. </span>Artificial Neural networks<a class="headerlink" href="#artificial-neural-networks" title="Link to this heading">#</a></h1>
 <section id="the-seasons-of-ai">
-<h2><span class="section-number">8.1. </span>The seasons of AI<a class="headerlink" href="#the-seasons-of-ai" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">8.1. </span>The seasons of AI<a class="headerlink" href="#the-seasons-of-ai" title="Link to this heading">#</a></h2>
 <p>The development of AI have always been met with hype cycles.
 As seen with the McCulloch Pitts model, many foundations of “<em>AI</em>” have already been laid out in the 1940/1950s, but these constructs failed to meet their high expectations and promises, which finally lead to an abandonment of <em>AI</em> research, a circumstance labeled as an <a class="reference external" href="https://en.wikipedia.org/wiki/AI_winter">AI Winter</a>.</p>
 <p>In the early 1980s, new architectures in neural networks and training methods re-initiated an interest in neural networks, but the the promised advancements were not met and by the 1990s other machine learning methods such as <a class="reference external" href="https://en.wikipedia.org/wiki/Support_vector_machine">Support Vector Machine (SVM)</a> were the focus of attention, which offered more reliable results in a more comprehensive theoretical framework, therefore the AI research went out of focus in the 90s.</p>
@@ -390,7 +397,7 @@ But only due to the wide and cheap availability of GPUs through the gaming indus
 <p><em>AI</em> is therefore not a recent or new field of research, but had a coming and going which has been attached to the availability or lack of breakthroughs.</p>
 </section>
 <section id="how-to-program-a-neural-network">
-<h2><span class="section-number">8.2. </span>How to program a neural network<a class="headerlink" href="#how-to-program-a-neural-network" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">8.2. </span>How to program a neural network<a class="headerlink" href="#how-to-program-a-neural-network" title="Link to this heading">#</a></h2>
 <p>While traditional programming uses algorithms to describe the output for a given input, programming neural networks involves more setting up an environment or topology with many degrees of freedom (<em>“variables”</em>) and a <em>traning</em> process, in which these degrees of freedom are tuned to a set of <em>samples</em> which traditionally contain a <em>sample</em> of the input data and an associated desired output.</p>
 <p>There are lots of variations of how this topology or this training process can be constructed, and new paths in the structuring of these</p>
 <p>This setup still requires the use a combination of different crucial algorithms such as <a class="reference external" href="https://en.wikipedia.org/wiki/Automatic_differentiation">AutoDiff</a> (an algorithm for automatic partial differentiation) or optimizing algorithms such as <a class="reference external" href="https://en.wikipedia.org/wiki/Stochastic_gradient_descent#Adam">Adam</a>.
@@ -398,25 +405,26 @@ Instead of implementing those algorithms oneself, it is possible to use librarie
 <p>This course will use <em>PyTorch</em> which provides a Python interface to all the necessary algorithms with a high level abstraction.</p>
 </section>
 <section id="fully-connected-neural-networks">
-<h2><span class="section-number">8.3. </span>Fully connected neural networks<a class="headerlink" href="#fully-connected-neural-networks" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">8.3. </span>Fully connected neural networks<a class="headerlink" href="#fully-connected-neural-networks" title="Link to this heading">#</a></h2>
 <p>A <em>fully connected neural network</em> is one of the basic architectures of neural networks.
 It works by having multiple <em>layers</em> which each consist of multiple <em>neurons</em>.
 Each neuron of a layer is connected to every neuron of its successive layer, therefore it is called a <em>fully connected</em> layer or neural network.
 Each connection is modeled as a multiplication of the value with a <em>weight</em> of the connection.
 All incoming connections of a neuron are then summed together, resulting in a new value which either acts as the output or act as intermediate value used as input for another layer (in which case the layer is called a hidden layer).</p>
 <figure class="align-center" id="id1">
-<img alt="An artifical neural network with 3 fully connected layers" src="https://upload.wikimedia.org/wikipedia/commons/4/46/Colored_neural_network.svg" /><figcaption>
+<img alt="An artifical neural network with 3 fully connected layers" src="https://upload.wikimedia.org/wikipedia/commons/4/46/Colored_neural_network.svg" />
+<figcaption>
 <p><span class="caption-number">Fig. 8.1 </span><span class="caption-text">An artifical neural network with an input layer which consists of 3 input neurons, a hidden layer consisting of 4 neurons and an output layer with two neurons.
 As all every neuron is <em>connected</em> with every neuron in the subsequent layer, this is called a <em>fully connected</em> network.
 Note that the connections are also directed, so there is no way to introduce feedback loops - something which biological networks tend to form.
-Source: <a class="reference external" href="https://en.wikipedia.org/wiki/File:Colored_neural_network.svg">https://en.wikipedia.org/wiki/File:Colored_neural_network.svg</a></span><a class="headerlink" href="#id1" title="Permalink to this image">#</a></p>
+Source: <a class="reference external" href="https://en.wikipedia.org/wiki/File:Colored_neural_network.svg">https://en.wikipedia.org/wiki/File:Colored_neural_network.svg</a></span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 </section>
 <section id="implementation-and-iteration">
-<h2><span class="section-number">8.4. </span>Implementation and iteration<a class="headerlink" href="#implementation-and-iteration" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">8.4. </span>Implementation and iteration<a class="headerlink" href="#implementation-and-iteration" title="Link to this heading">#</a></h2>
 <section id="simple-fcnn">
-<h3><span class="section-number">8.4.1. </span>Simple FCNN<a class="headerlink" href="#simple-fcnn" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">8.4.1. </span>Simple FCNN<a class="headerlink" href="#simple-fcnn" title="Link to this heading">#</a></h3>
 <p>As a first introduction to neural networks, we will formulate, train, and evaluate a fully connected neural network that simply predicts the next note given the current note.
 This is very similar to the Markov chain discussed earlier.</p>
 <p>To implement such a network, we will use <a class="reference external" href="https://lightning.ai/docs/pytorch/stable/">Lightning</a>, which is build on top of <a class="reference external" href="https://pytorch.org/">PyTorch</a>.</p>
@@ -736,7 +744,7 @@ HPU available: False, using: 0 HPUs
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/2f2b585941769e07731caca4f4977b222b4f344b66f873120090b3ecd29e6ff7.png" src="../_images/2f2b585941769e07731caca4f4977b222b4f344b66f873120090b3ecd29e6ff7.png" />
+<a class="reference internal image-reference" href="../_images/2f2b585941769e07731caca4f4977b222b4f344b66f873120090b3ecd29e6ff7.png"><img alt="../_images/2f2b585941769e07731caca4f4977b222b4f344b66f873120090b3ecd29e6ff7.png" src="../_images/2f2b585941769e07731caca4f4977b222b4f344b66f873120090b3ecd29e6ff7.png" style="width: 549px; height: 454px;" /></a>
 </div>
 </div>
 <div class="cell docutils container">
@@ -781,7 +789,7 @@ HPU available: False, using: 0 HPUs
 </div>
 </section>
 <section id="making-the-model-more-complex">
-<h3><span class="section-number">8.4.2. </span>Making the model more complex<a class="headerlink" href="#making-the-model-more-complex" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">8.4.2. </span>Making the model more complex<a class="headerlink" href="#making-the-model-more-complex" title="Link to this heading">#</a></h3>
 <p>We can also make the model a bit more complex, by adding an additional hidden layer and increase its dimensions.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -907,7 +915,7 @@ HPU available: False, using: 0 HPUs
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/e06f2adce5b3afffc80ab68e46e1dbbb72cfadfb7d411081be4ce6e92ebea711.png" src="../_images/e06f2adce5b3afffc80ab68e46e1dbbb72cfadfb7d411081be4ce6e92ebea711.png" />
+<a class="reference internal image-reference" href="../_images/e06f2adce5b3afffc80ab68e46e1dbbb72cfadfb7d411081be4ce6e92ebea711.png"><img alt="../_images/e06f2adce5b3afffc80ab68e46e1dbbb72cfadfb7d411081be4ce6e92ebea711.png" src="../_images/e06f2adce5b3afffc80ab68e46e1dbbb72cfadfb7d411081be4ce6e92ebea711.png" style="width: 549px; height: 454px;" /></a>
 </div>
 </div>
 <div class="cell docutils container">
@@ -932,7 +940,7 @@ HPU available: False, using: 0 HPUs
 </div>
 </section>
 <section id="adding-context">
-<h3><span class="section-number">8.4.3. </span>Adding context<a class="headerlink" href="#adding-context" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">8.4.3. </span>Adding context<a class="headerlink" href="#adding-context" title="Link to this heading">#</a></h3>
 <p>Although it manages to perform a bit better, its loss is still immense.
 One way to improve could be, instead of making the net bigger and bigger, provide some additional context, e.g. the latest 10 notes.</p>
 <div class="cell docutils container">
@@ -1137,7 +1145,7 @@ HPU available: False, using: 0 HPUs
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/ab06f833472008ea5466f8cb8f93f6997b696dc65c2571adfb21cfc938210f43.png" src="../_images/ab06f833472008ea5466f8cb8f93f6997b696dc65c2571adfb21cfc938210f43.png" />
+<a class="reference internal image-reference" href="../_images/ab06f833472008ea5466f8cb8f93f6997b696dc65c2571adfb21cfc938210f43.png"><img alt="../_images/ab06f833472008ea5466f8cb8f93f6997b696dc65c2571adfb21cfc938210f43.png" src="../_images/ab06f833472008ea5466f8cb8f93f6997b696dc65c2571adfb21cfc938210f43.png" style="width: 573px; height: 454px;" /></a>
 </div>
 </div>
 <div class="cell docutils container">
@@ -1297,7 +1305,7 @@ By Dennis Scheiba
 
   <p class="copyright">
     
-      © Copyright 2022.
+      © Copyright 2023.
       <br/>
     
   </p>

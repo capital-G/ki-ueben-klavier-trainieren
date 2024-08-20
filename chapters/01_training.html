@@ -1,13 +1,12 @@
 
-
 <!DOCTYPE html>
 
 
-<html lang="en" data-content_root="" >
+<html lang="en" data-content_root="../" >
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <title>1. Training and Learning &#8212; KI üben, Klavier trainieren</title>
   
@@ -29,40 +28,36 @@
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/style.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+    <link rel="stylesheet" type="text/css" href="../_static/style.css?v=4c607a41" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
   <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
-    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
-    <script src="../_static/jquery.js"></script>
-    <script src="../_static/underscore.js"></script>
-    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
-    <script src="../_static/doctools.js"></script>
-    <script src="../_static/clipboard.min.js"></script>
-    <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/01_training';</script>
@@ -160,7 +155,18 @@ const thebe_selector_output = ".output, .cell_output"
     <p class="title logo__title">KI üben, Klavier trainieren</p>
   
 </a></div>
-        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
@@ -190,6 +196,7 @@ const thebe_selector_output = ".output, .cell_output"
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendices</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../player_piano_evening.html">Player Piano Evening</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../ki_ueben_api.html">ki_ueben API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../glossary.html">Glossary</a></li>
 </ul>
@@ -221,9 +228,9 @@ const thebe_selector_output = ".output, .cell_output"
   
     <div class="header-article-items__start">
       
-        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
   <span class="fa-solid fa-bars"></span>
-</label></div>
+</button></div>
       
     </div>
   
@@ -332,9 +339,9 @@ document.write(`
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
-</label>
+</button>
 </div></div>
       
     </div>
@@ -378,9 +385,9 @@ document.write(`
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="training-and-learning">
-<h1><span class="section-number">1. </span>Training and Learning<a class="headerlink" href="#training-and-learning" title="Permalink to this heading">#</a></h1>
+<h1><span class="section-number">1. </span>Training and Learning<a class="headerlink" href="#training-and-learning" title="Link to this heading">#</a></h1>
 <section id="adjusting-algorithms">
-<h2><span class="section-number">1.1. </span>Adjusting algorithms<a class="headerlink" href="#adjusting-algorithms" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">1.1. </span>Adjusting algorithms<a class="headerlink" href="#adjusting-algorithms" title="Link to this heading">#</a></h2>
 <p>The terms <em>learning</em> and <em>training</em> are often used interchangeably in the context of machine <em>learning</em>, as many people use the term <em>learning</em> to refer to the process of adjusting the parameters of an algorithm through data.
 This implies a notion of intelligence in a system - is this marketing, or is the term actually justified when we compare this process to how we learn?
 In addition, referring to algorithms as <em>neural</em> networks implies a similarity to nerons found in a human brain, which is also closely associated with <em>intelligence</em>.
@@ -401,14 +408,15 @@ Training emphasizes the external process applied by the engineer, while learning
 While obtaining the best possible solution is sometimes not trivial, it is still feasible without the computational power of a computer, though this adaptation step is rarely referred to as <em>learning</em>.
 Is this because the complexity, in terms of the need for computation, makes this task solvable without a computer, or because there is a definitive answer instead of just an approximation?</p>
 <figure class="align-default" id="id2">
-<img alt="https://upload.wikimedia.org/wikipedia/commons/3/3a/Linear_regression.svg" src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Linear_regression.svg" /><figcaption>
+<img alt="https://upload.wikimedia.org/wikipedia/commons/3/3a/Linear_regression.svg" src="https://upload.wikimedia.org/wikipedia/commons/3/3a/Linear_regression.svg" />
+<figcaption>
 <p><span class="caption-number">Fig. 1.1 </span><span class="caption-text">A linear regression where the impact of a given <span class="math notranslate nohighlight">\(x\)</span> value is measured against its target variable <span class="math notranslate nohighlight">\(y\)</span>.
-Source: <a class="reference external" href="https://commons.wikimedia.org/wiki/File:Linear_regression.svg">https://commons.wikimedia.org/wiki/File:Linear_regression.svg</a></span><a class="headerlink" href="#id2" title="Permalink to this image">#</a></p>
+Source: <a class="reference external" href="https://commons.wikimedia.org/wiki/File:Linear_regression.svg">https://commons.wikimedia.org/wiki/File:Linear_regression.svg</a></span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 </section>
 <section id="training-piano">
-<h2><span class="section-number">1.2. </span>Training piano<a class="headerlink" href="#training-piano" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">1.2. </span>Training piano<a class="headerlink" href="#training-piano" title="Link to this heading">#</a></h2>
 <p>This distinction between training and learning in <em>machine learning</em> could be analogously applied to training on a piano or for a player piano.
 Training a piano could describe the communication between the piano as an object and a person who initiates a communication through an impulse.
 This acts as a two-way communication process where the player attempts to direct the piano to produce specific sounds, while simultaneously adjusting techniques in response to the piano’s feedback.
@@ -420,7 +428,7 @@ The piano acts therefore also as a translator between an input through the keybo
 The pianist’s learning process involves internalizing techniques, developing muscle memory, and understanding musical theory, for which different views and contexts is necessary to develop an understanding.</p>
 </section>
 <section id="the-player-piano">
-<h2><span class="section-number">1.3. </span>The player piano<a class="headerlink" href="#the-player-piano" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">1.3. </span>The player piano<a class="headerlink" href="#the-player-piano" title="Link to this heading">#</a></h2>
 <p>For a player piano, the training process can have a focus in the programming and input of piano rolls or MIDI files, where specific instructions are fed into the mechanism to produce music.
 The learning aspect is reflected in how these instructions are interpreted and executed by the piano, ensuring that the nuances of the music are accurately reproduced.
 It allows to mechanical realize an <em>artifical</em> performance or <em>clone</em> a human performance, which creates in both ways a reflection of how a (player) piano is used.</p>
@@ -428,7 +436,7 @@ It allows to mechanical realize an <em>artifical</em> performance or <em>clone</
 Similarly, programming a player piano involves calibration of its input data to achieve the desired musical expression, creating a link between training and learning in using machine learning, practicing a piano or tweaking the input on a player-piano in order to craft a musical performance.</p>
 </section>
 <section id="player-piano-as-an-abstraction">
-<h2><span class="section-number">1.4. </span>Player Piano as an abstraction<a class="headerlink" href="#player-piano-as-an-abstraction" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">1.4. </span>Player Piano as an abstraction<a class="headerlink" href="#player-piano-as-an-abstraction" title="Link to this heading">#</a></h2>
 <p>Acoustic instruments rely on an immediate impulse as a physical action transformed into sound.
 This impulse can be the plucking of a string, the blowing of a pipe, or the striking of an object.
 Such physical actions produce vibrations that result in an auditory event.</p>
@@ -441,7 +449,7 @@ This innovation creates an early form of abstraction in music creation, where th
 <img alt="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/PlayerPianoRoll.jpg/1280px-PlayerPianoRoll.jpg" src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/PlayerPianoRoll.jpg/1280px-PlayerPianoRoll.jpg" />
 <figcaption>
 <p><span class="caption-number">Fig. 1.2 </span><span class="caption-text">A piano roll on a player piano in which a hole in the roll indicates the pressing of a key.
-Source: <a class="reference external" href="https://commons.wikimedia.org/wiki/File:PlayerPianoRoll.jpg">https://commons.wikimedia.org/wiki/File:PlayerPianoRoll.jpg</a></span><a class="headerlink" href="#id3" title="Permalink to this image">#</a></p>
+Source: <a class="reference external" href="https://commons.wikimedia.org/wiki/File:PlayerPianoRoll.jpg">https://commons.wikimedia.org/wiki/File:PlayerPianoRoll.jpg</a></span><a class="headerlink" href="#id3" title="Link to this image">#</a></p>
 </figcaption>
 </figure>
 <p>A piano roll on a player piano in which a hole in the roll indicates the pressing of a key.</p>
@@ -450,10 +458,10 @@ Over time, this system of communicating keystrokes evolved into <a class="refere
 This transition from physical rolls to digital MIDI represents a further evolution in the abstraction of musical performance, making it increasingly independent of direct human physical interaction in trade for electro-mechanical interactions.</p>
 </section>
 <section id="agency-of-the-player-piano">
-<h2><span class="section-number">1.5. </span>Agency of the player piano<a class="headerlink" href="#agency-of-the-player-piano" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">1.5. </span>Agency of the player piano<a class="headerlink" href="#agency-of-the-player-piano" title="Link to this heading">#</a></h2>
 <p>The <em>piano automata</em> has attracted a multitude of different artists, and this small selection should rather give a small glimpse and taste why it may be interesting to look into player piano as an autonomous instrument.</p>
 <section id="conlon-nancarrow-studies-for-player-piano">
-<h3><span class="section-number">1.5.1. </span>Conlon Nancarrow - Studies for player piano<a class="headerlink" href="#conlon-nancarrow-studies-for-player-piano" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">1.5.1. </span>Conlon Nancarrow - Studies for player piano<a class="headerlink" href="#conlon-nancarrow-studies-for-player-piano" title="Link to this heading">#</a></h3>
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/LFz2lCEkjFk?si=ZE6HPthjfvwIy-pb" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 <p>Nancarrow meticulously programmed his player pianos by punching holes in piano rolls, encoding complex rhythms and intricate musical patterns that would be impossible for a human performer to execute.</p>
 <p>Nancarrow fed precise data into the player piano, akin to providing training examples for a machine learning algorithm.
@@ -464,7 +472,7 @@ By leveraging the mechanical precision of the player piano, he was able to explo
 <p>For further information on Nancarrow’s work, take a look at <span id="id1">[<a class="reference internal" href="../bibliography.html#id7" title="Conlon Nancarrow and Jürgen Hocker. Begegnungen mit Conlon Nancarrow. Neue Zeitschrift für Musik. Schott Music, Mainz, Germany, September 2002.">NH02</a>]</span>.</p>
 </section>
 <section id="peter-ablinger-winfried-ritsch-speaking-piano">
-<h3><span class="section-number">1.5.2. </span>Peter Ablinger &amp; Winfried Ritsch - Speaking piano<a class="headerlink" href="#peter-ablinger-winfried-ritsch-speaking-piano" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">1.5.2. </span>Peter Ablinger &amp; Winfried Ritsch - Speaking piano<a class="headerlink" href="#peter-ablinger-winfried-ritsch-speaking-piano" title="Link to this heading">#</a></h3>
 <p>Austrian composers Peter Ablinger created an infamous piece entitled <a class="reference external" href="https://ablinger.mur.at/txt_qu3god.html"><em>Deus Cantando</em></a> which makes use of the <a class="reference external" href="https://ablinger.mur.at/speaking_piano.html"><em>Speaking Piano</em></a> which was build by Winfried Ritsch.</p>
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/muCPjK4nGY4?si=PKeOnLtp85CR9KtY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 <p>Ablinger <a class="reference external" href="https://ablinger.mur.at/speaking_piano.html">writes</a> about the <em>“speaking piano”</em>:</p>
@@ -476,7 +484,7 @@ By leveraging the mechanical precision of the player piano, he was able to explo
 </div></blockquote>
 </section>
 <section id="george-lewis-voyager">
-<h3><span class="section-number">1.5.3. </span>George Lewis - Voyager<a class="headerlink" href="#george-lewis-voyager" title="Permalink to this heading">#</a></h3>
+<h3><span class="section-number">1.5.3. </span>George Lewis - Voyager<a class="headerlink" href="#george-lewis-voyager" title="Link to this heading">#</a></h3>
 <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/o9UsLbsdA6s?si=2TxktWVa8LzmVP71" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
 <p>Instead of providing a static piece that has a fixed state, George Lewis created a system called <em>Voyager</em> that allows for dynamic interaction with a live performer.
 <em>Voyager</em> is an interactive improvisation system that listens to and analyzes the music played by a human musician in real-time.
@@ -491,7 +499,7 @@ The instrument itself becomes an active collaborator rather than a passive tool.
 </section>
 </section>
 <section id="training-a-piano-to-play">
-<h2><span class="section-number">1.6. </span>Training a piano to play<a class="headerlink" href="#training-a-piano-to-play" title="Permalink to this heading">#</a></h2>
+<h2><span class="section-number">1.6. </span>Training a piano to play<a class="headerlink" href="#training-a-piano-to-play" title="Link to this heading">#</a></h2>
 <p>Practicing an instrument involves not only the physical mastery of the instrument but also the psychological engagement necessary to develop musicality and expression.
 Similarly, having access to a piano means more than just the ability to play notes; it encompasses the intricate interaction between the musician and the instrument.</p>
 <p>In the realm of player pianos, the physical training is embedded in the mechanical capabilities and programming of the piano rolls or digital instructions.
@@ -610,7 +618,7 @@ By Dennis Scheiba
 
   <p class="copyright">
     
-      © Copyright 2022.
+      © Copyright 2023.
       <br/>
     
   </p>

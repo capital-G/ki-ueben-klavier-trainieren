@@ -4,25 +4,26 @@
 
 The terms *learning* and *training* are often used interchangeably in the context of machine *learning*, as many people use the term *learning* to refer to the process of adjusting the parameters of an algorithm through data.
 This implies a notion of intelligence in a system - is this marketing, or is the term actually justified when we compare this process to how we learn?
-In addition, referring to algorithms as *neural* networks implies a similarity to human intelligence.
-Does this association challenge our perception of what constitutes intelligent behavior in machines or humans?
+In addition, referring to algorithms as *neural* networks implies a similarity to nerons found in a human brain, which is also closely associated with *intelligence*.
+Does this association challenge or enhance our perception of what constitutes as intelligent behavior in machines, humans or society?
 
-In machine learning, **training** involves feeding data into a *model* - an algorithm designed to approximate a *probability distribution* by analyzing multiple juxtapositions of variables - which is *evaluated* based on a given *metric*.
+In machine learning, **training** is often referred to as feeding data into a *model* - an algorithm designed to approximate a *probability distribution* by analyzing multiple juxtapositions of variables - which is *evaluated* based on a given *metric*.
 Based on this evaluation, the algorithm can adjust its parameters to improve performance based on the given data.
 This is somewhat similar to teaching a piano student by providing examples and correcting mistakes over time through repetition.
-Training encapsulates the iterative process of optimization where the model *learns* to make predictions or decisions based on input data.
+Training therefore encapsulates an iterative process of *optimization* where a model tries to *learn* to make predictions or decisions based on input data.
 
-**Learning** refers to the model's internal adjustments and how it updates its understanding of the data through algorithms.
+**Learning** is usually referred to the model's internal adjustments and how it updates its understanding of the data through algorithms.
 Learning is affected by a *learning rate*, which determines the speed at which a model updates its parameters.
 A higher learning rate means the model changes more quickly, potentially missing nuances, while a lower rate means slower but more stable learning.
 This distinction is critical because effective training relies on a deep understanding of how the model learns and adapts.
 
-In AI, the nuances of learning can include processes such as gradient descent, backpropagation, and regularization techniques that are used to shape the model as it attempts to translate an input into an output.
+In AI, the means of learning can include processes such as gradient descent, backpropagation, and regularization techniques that are used to shape the model as it attempts to translate an input into an output.
 The general goal of these methods is to ensure that it generalizes well to new data and avoids *overfitting* to a training set.
 
-In addition, the language of *training* versus *learning* highlights different aspects of AI development. Training emphasizes the external process applied by the engineer, while learning focuses on the internal mechanisms of the AI itself. Recognizing this difference helps clarify discussions about AI capabilities and development, and ensures a more accurate understanding of how intelligent systems evolve and improve.
+In addition, the language of *training* versus *learning* highlights different aspects of AI development.
+Training emphasizes the external process applied by the engineer, while learning focuses on the internal mechanisms of the algorithm itself.
 
-At the same time, parameter tuning can also be found in more *basic* algorithms, such as linear regression, which seeks to measure the linear impact of one or more input variables on the output using a scalar.
+At the same time, parameter adjustments and tuning can also be found in more *basic* algorithms, such as linear regression, which seeks to measure the linear impact of one or more input variables on the output using a scalar.
 While obtaining the best possible solution is sometimes not trivial, it is still feasible without the computational power of a computer, though this adaptation step is rarely referred to as *learning*.
 Is this because the complexity, in terms of the need for computation, makes this task solvable without a computer, or because there is a definitive answer instead of just an approximation?
 
@@ -35,7 +36,7 @@ Source: <https://commons.wikimedia.org/wiki/File:Linear_regression.svg>
 
 ## Training piano
 
-This distinction between training and learning in AI can be analogously applied to training on a piano or for a player piano.
+This distinction between training and learning in *machine learning* could be analogously applied to training on a piano or for a player piano.
 Training a piano describes the communication between the piano as an object and a person who initiates a communication through an impulse.
 This is a two-way communication process where the player attempts to direct the piano to produce specific sounds, while simultaneously adjusting their technique in response to the piano's feedback.
 The result is that the piano and the player together can create a unique musical expression.

@@ -1,14 +1,13 @@
 # Setup
 
-Although this course explores the training on a piano, it is not necessary to have one accessible in order to follow along the course, instead there will be also a focus on how, through virtualized environments, the need for a physical thing may be fitted accordingly.
-
 ## Python
 
-Although machine learning is an intense resource exhaustive endeavor and Python is not a very performant language, it's adaptability has become the default to setup and control machine learning algorithms.
-Although machine learning frameworks such as *Tensorflow* by Google or *torch* by Meta are written in the programming language C++, they offer a Python binding which allows to setup the environment in which we want to transform and evaluate our data.
-Once this environment has been setup, Python also takes care of the data- and training-flow and all the calculation, such as on the GPU, happens via the C++ backend.
+In recent years, Python has become widely used in many areas beyond traditional software development, especially in research and analysis.
+It is based on the [*Zen of Python*] (https://peps.python.org/pep-0020/) and will be used throughout this course.
 
-Python has found high adaptation in multiple areas, especially within research, and follows the, so called, [*Zen of Python*](https://peps.python.org/pep-0020/).
+Although machine learning is an intense resource exhaustive endeavor and Python is not a very performant language, Python's adaptability has become a default to setup and control machine learning algorithms.
+Although machine learning frameworks such as *Tensorflow* by Google or *pytorch* by Meta are written in the programming language C++, they offer a Python *binding* which allows to setup the environment in which we want to transform and evaluate our data.
+Once this environment has been setup, Python takes care of the data- and training-flow, and all the extensive calculation that happens on the GPU through the C++ backend.
 
 The advised way of setting up Python can be found at <https://realpython.com/installing-python/> - additionally `git` will be necessary to download the course materials.
 

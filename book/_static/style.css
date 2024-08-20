@@ -9,3 +9,8 @@ p, h1, h2, h3 {
 article.bd-article {
     text-align: justify;
 }
+
+.cell_output img {
+    display: block;
+    margin: auto;
+}

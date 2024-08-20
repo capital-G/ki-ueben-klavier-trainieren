@@ -355,13 +355,10 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#artificial-neural-networks">3.1. Artificial neural networks</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mcculloch-and-pitts-model">3.1.1. McCulloch and Pitts model</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#taylor-and-fourier-series">3.1.2. Taylor and Fourier series</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#perceptron">3.1.3. Perceptron</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-layered-perceptron">3.1.3.1. Multi layered perceptron</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analyzing-data">3.1. Analyzing data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-to-derive-from-data-analysis">3.2. What to derive from data analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mcculloch-and-pitts-model">3.3. McCulloch and Pitts model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#perceptron">3.3.1. Perceptron</a></li>
 </ul>
 </li>
 </ul>
@@ -377,11 +374,17 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="what-can-be-learned">
 <h1><span class="section-number">3. </span>What can be learned?<a class="headerlink" href="#what-can-be-learned" title="Permalink to this heading">#</a></h1>
-<p>The metaphysical question of what can be learned is not typically considered in our daily lives, as we often focus on the more practical question of how something can be learned. However, when transferring human learning achievements, understanding, and comprehension to a machine, we must consider not only how a machine could learn this information but also whether it is possible for the machine to learn it at all.</p>
-<p>As cultural beings, our perception of any circumstance is inevitably influenced by its implicit cultural framework. Frameworks such as critical theory aim to uncover how these implicit structures shape our understanding. For example, when discussing transportation, we already have subjective associations and relations with the topic.</p>
-<p>This concept also applies to music, as illustrated by the differing perceptions of tuning systems across various cultures. To approximate such sensory sensitivity in a machine learning model, we must use mathematical formalism. The fundamental idea of machine learning is that this sensitivity and information are embedded within data, and patterns can be detected and extracted.</p>
-<p>A machine learning algorithm is essentially a mathematical function with numerous variables that maps an input to an output, a result. One might assume that it is always necessary to provide pairs of inputs and outputs to identify a structure. However, it is often sufficient to present enough data for the algorithm to discern patterns.</p>
-<p>This can be demonstrated by comparing images of hand-drawn digits, such as the numbers 3 and 8, from the MNIST dataset.</p>
+<p>The metaphysical question of what can be learned is not typically considered in our daily lives, as we often focus on the more practical question of how something can be learned.
+However, when transferring human learning achievements, understanding, and comprehension to a machine, we must consider not only how a machine could learn this information but also whether it is possible for the machine to learn it at all.</p>
+<p>As cultural beings, our perception of any circumstance is inevitably influenced by its implicit cultural framework.
+Frameworks such as critical theory aim to uncover how these implicit structures shape our understanding. For example, when discussing transportation, we already have subjective associations and relations with the topic.</p>
+<p>This concept also applies to music, as illustrated by the different perceptions of tuning systems in different cultures.
+To approximate such sensory sensitivity in a machine learning model, we need to use mathematical formalism.
+The basic idea of machine learning is that this sensitivity and information is embedded in data, and its underlying and inherent patterns can be detected and extracted.</p>
+<p>A machine learning algorithm is essentially a mathematical function with numerous variables that maps an input to an output, a result.
+One might assume that it is always necessary to provide pairs of inputs and outputs to identify a structure.
+However, it is often sufficient to present enough data for the algorithm to discern patterns.</p>
+<p>This can be demonstrated by comparing images of hand-drawn digits, such as the numbers 3 and 8, from the <a class="reference external" href="https://en.wikipedia.org/wiki/MNIST_database">MNIST dataset</a>.</p>
 <figure class="align-default" id="id2">
 <img alt="../_images/mnist_3.png" src="../_images/mnist_3.png" />
 <figcaption>
@@ -394,29 +397,28 @@ document.write(`
 <p><span class="caption-number">Fig. 3.2 </span><span class="caption-text">Some examples of a handwritten <span class="math notranslate nohighlight">\(8\)</span> of the <a class="reference external" href="https://en.wikipedia.org/wiki/MNIST_database">MNIST dataset</a>.</span><a class="headerlink" href="#id3" title="Permalink to this image">#</a></p>
 </figcaption>
 </figure>
-<p>One interesting way to create <code class="docutils literal notranslate"><span class="pre">term</span></code>{embeddings} is <a class="reference external" href="https://www.tensorflow.org/text/tutorials/word2vec">word2vec</a>, which has a</p>
-<p>Within this document, the question is how the relation of neural network topology implies also its capabilities to <em>learn</em> tasks of different <em>complexity</em>.</p>
-<p>Models such as the formalization of randomness through probability theory and … have not just provided new paths within their respective field, but also.</p>
-<p>At the same time, although everything has been shaped and conceived through mental processes, these processes have not seen a full comprehension yet, but their powerful model has been applied to domains of computation as well.</p>
-<p>In this document we want to inspect some basic capabilities of <em>artificial</em> neural networks.</p>
-<p>Most likely this is also closely attached to the question, what can be computed?</p>
-<p>Interestingly enough, the ideas of how a brain can be represented is always strongly dependent upon the history.
-In history, there have been models of the brain which work around the concept of a pneumatic model.</p>
-<p>Starting with the rise of computers, they have been used to model the functions of a brain.</p>
+<p>Within this document, we want to take a look how to analyze data and question how different mathematical functions implement capabilities to <em>learn</em> tasks of different <em>complexity</em>.</p>
+<section id="analyzing-data">
+<h2><span class="section-number">3.1. </span>Analyzing data<a class="headerlink" href="#analyzing-data" title="Permalink to this heading">#</a></h2>
+<p>We want to take a first look on how to analyze data from within Python by making use of tools such as <em>numpy</em> (for mathematical operations), <em>pandas</em> (for data aggregation and managing) and <em>matplotlib</em> (for plotting data).
+The dataset we will take a small look at will be the already mentioned MNIST dataset.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">torchvision.datasets</span> <span class="kn">import</span> <span class="n">MNIST</span>
 
 <span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;svg&#39;
 
+<span class="c1"># load the MNIST dataset</span>
 <span class="n">mnist</span> <span class="o">=</span> <span class="n">MNIST</span><span class="p">(</span><span class="n">root</span><span class="o">=</span><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="s2">&quot;data&quot;</span><span class="p">,</span> <span class="s2">&quot;mnist&quot;</span><span class="p">),</span> <span class="n">download</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
+<span class="c1"># convert data to a numpy array</span>
+<span class="n">mnist_data</span> <span class="o">=</span> <span class="n">mnist</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+
+<span class="c1"># get the indices of the dataset series which are showing 3 / 8</span>
 <span class="n">idx_3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mnist</span><span class="o">.</span><span class="n">targets</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span>
 <span class="n">idx_8</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mnist</span><span class="o">.</span><span class="n">targets</span> <span class="o">==</span> <span class="mi">8</span><span class="p">)</span>
 </pre></div>
@@ -425,187 +427,376 @@ In history, there have been models of the brain which work around the concept of
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Number of samples for each class&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">([</span><span class="s2">&quot;3&quot;</span><span class="p">,</span> <span class="s2">&quot;8&quot;</span><span class="p">],</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">idx_3</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">len</span><span class="p">(</span><span class="n">idx_8</span><span class="p">[</span><span class="mi">0</span><span class="p">])]);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/6438f1a5dd771a012b9ddb3b76adc4047ee6e661413865ab51042da504ac43e8.svg" src="../_images/6438f1a5dd771a012b9ddb3b76adc4047ee6e661413865ab51042da504ac43e8.svg" /></div>
+</div>
+<p>Already with this, we can take a look the different kind of variety these two numbers have.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax_1</span><span class="p">,</span> <span class="n">ax_2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Meaned 3 and 8&quot;</span><span class="p">)</span>
 
-<span class="n">ax_1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">mnist</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">idx_3</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray_r&quot;</span><span class="p">)</span>
-<span class="n">ax_2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">mnist</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">idx_8</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray_r&quot;</span><span class="p">);</span>
+<span class="n">ax_1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">mnist_data</span><span class="p">[</span><span class="n">idx_3</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray_r&quot;</span><span class="p">)</span>
+<span class="n">ax_2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">mnist_data</span><span class="p">[</span><span class="n">idx_8</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray_r&quot;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/b91c11b3f96f2909bd0d2758baf706b37e55a5cebf7ac1109c9396a3376aa91c.svg" src="../_images/b91c11b3f96f2909bd0d2758baf706b37e55a5cebf7ac1109c9396a3376aa91c.svg" /></div>
+<img alt="../_images/4edc5da062ab3fdde91bca07ccb6948897c310ada53975568b841603dcc7f9ca.svg" src="../_images/4edc5da062ab3fdde91bca07ccb6948897c310ada53975568b841603dcc7f9ca.svg" /></div>
 </div>
-<p>Although meaning a series may be famillar action to represent many examples into one,</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax_1</span><span class="p">,</span> <span class="n">ax_2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Variance within 3 and 8&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Maxed 3 and 8&quot;</span><span class="p">)</span>
 
-<span class="n">ax_1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">mnist</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">idx_3</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray_r&quot;</span><span class="p">)</span>
-<span class="n">ax_2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">mnist</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">idx_8</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray_r&quot;</span><span class="p">);</span>
+<span class="n">ax_1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">mnist_data</span><span class="p">[</span><span class="n">idx_3</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray_r&quot;</span><span class="p">)</span>
+<span class="n">ax_2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">mnist_data</span><span class="p">[</span><span class="n">idx_8</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray_r&quot;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/828d62bf178884edc969f9b7891cb8977b3a5158692169219b0de11bf17513db.svg" src="../_images/828d62bf178884edc969f9b7891cb8977b3a5158692169219b0de11bf17513db.svg" /></div>
+<img alt="../_images/b8cf16527d5a592ca1a1c7ce44e2d0c93920424952090c020c6d0cd84117d1d3.svg" src="../_images/b8cf16527d5a592ca1a1c7ce44e2d0c93920424952090c020c6d0cd84117d1d3.svg" /></div>
 </div>
+<p>We can also take a look at the variance which measures the average amount of deviation from the mean value.
+For a discrete <em>random variable</em> <span class="math notranslate nohighlight">\(X\)</span> this is defined via</p>
+<div class="math notranslate nohighlight">
+\[
+\text{Var}(X) = \frac{1}{n} \sum_{i=1}^{n} \left( x_i - \mu \right)^2 
+\]</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Difference between meaned classes 3 and 8&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax_1</span><span class="p">,</span> <span class="n">ax_2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Variance of 3 and 8&quot;</span><span class="p">)</span>
 
-<span class="n">mean_3</span> <span class="o">=</span> <span class="n">mnist</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">idx_3</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">mean_8</span> <span class="o">=</span> <span class="n">mnist</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">idx_8</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">ax_1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">mnist_data</span><span class="p">[</span><span class="n">idx_3</span><span class="p">]</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray_r&quot;</span><span class="p">)</span>
+<span class="n">ax_2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">mnist_data</span><span class="p">[</span><span class="n">idx_8</span><span class="p">]</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray_r&quot;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/467c51afc516adf2cc3ed91fd49e1f9f26653179e77d39a0d7119f28f5926b71.svg" src="../_images/467c51afc516adf2cc3ed91fd49e1f9f26653179e77d39a0d7119f28f5926b71.svg" /></div>
+</div>
+<p>It is interesting to see that the variance at the center of <span class="math notranslate nohighlight">\(8\)</span> is quite low, which tells us that nearly all samples of our 8 go through the center.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span>
 
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">mean_3</span> <span class="o">-</span> <span class="n">mean_8</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;seismic&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Difference between mean of digits 3 and 8&quot;</span><span class="p">)</span>
+
+<span class="n">mean_3</span> <span class="o">=</span> <span class="n">mnist_data</span><span class="p">[</span><span class="n">idx_3</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">mean_8</span> <span class="o">=</span> <span class="n">mnist_data</span><span class="p">[</span><span class="n">idx_8</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+    <span class="n">mean_3</span> <span class="o">-</span> <span class="n">mean_8</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;seismic&quot;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">mpl</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">vmin</span><span class="o">=-</span><span class="mi">150</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
+<span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">();</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/960ed1f4a6ccce959a42f5e90501edb475a70c11b5bf8d2e5f5ed5b90977fd54.svg" src="../_images/960ed1f4a6ccce959a42f5e90501edb475a70c11b5bf8d2e5f5ed5b90977fd54.svg" /></div>
+<img alt="../_images/0c8c75e1a57ab3bb371454aa7a374c94f4e99733a18e9aae26f4acc6933b5e85.svg" src="../_images/0c8c75e1a57ab3bb371454aa7a374c94f4e99733a18e9aae26f4acc6933b5e85.svg" /></div>
 </div>
-<p>Just by taking a look at the difference between the meaned two classes we can spot</p>
+</section>
+<section id="what-to-derive-from-data-analysis">
+<h2><span class="section-number">3.2. </span>What to derive from data analysis<a class="headerlink" href="#what-to-derive-from-data-analysis" title="Permalink to this heading">#</a></h2>
+<p>This analysis can already help us to formulate a first, very naive model to guess if the shown sample is either a <span class="math notranslate nohighlight">\(3\)</span> or an <span class="math notranslate nohighlight">\(8\)</span>, based on a single pixel.
+We start again by calculating the mean image for each class.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Mean 8&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">mnist</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">idx_8</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray_r&quot;</span><span class="p">);</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mean_3</span> <span class="o">=</span> <span class="n">mnist_data</span><span class="p">[</span><span class="n">idx_3</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+<span class="n">mean_8</span> <span class="o">=</span> <span class="n">mnist_data</span><span class="p">[</span><span class="n">idx_8</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we will use this mean values to find the actual pixel which has the biggest absolute difference between both classes.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pixel_differences</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">mean_3</span> <span class="o">-</span> <span class="n">mean_8</span><span class="p">)</span>
+<span class="n">idx_highest_pixel_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">pixel_differences</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;Pixel with highest difference is #</span><span class="si">{</span><span class="n">idx_highest_pixel_diff</span><span class="si">}</span><span class="s2"> with value </span><span class="si">{</span><span class="n">pixel_differences</span><span class="p">[</span><span class="n">idx_highest_pixel_diff</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/8f483aacbab0555cea507919b14226cba062ea0227cf3dae7518c59b07b93b96.svg" src="../_images/8f483aacbab0555cea507919b14226cba062ea0227cf3dae7518c59b07b93b96.svg" /></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## variance</span>
-
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Mean 8&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">mnist</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">idx_8</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray_r&quot;</span><span class="p">);</span>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Pixel with highest difference is #488 with value 151.27191629148817
 </pre></div>
 </div>
 </div>
 </div>
-<section id="artificial-neural-networks">
-<h2><span class="section-number">3.1. </span>Artificial neural networks<a class="headerlink" href="#artificial-neural-networks" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">image_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">)</span>
+
+<span class="n">best_pixel_coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unravel_index</span><span class="p">(</span><span class="n">idx_highest_pixel_diff</span><span class="p">,</span> <span class="n">image_shape</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax_1</span><span class="p">,</span> <span class="n">ax_2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Variance of 3 and 8&quot;</span><span class="p">)</span>
+
+<span class="n">ax_1</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">mean_3</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">image_shape</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray_r&quot;</span><span class="p">)</span>
+<span class="n">ax_1</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="n">best_pixel_coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="p">[</span><span class="n">best_pixel_coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+
+<span class="n">ax_2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">mean_8</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">image_shape</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray_r&quot;</span><span class="p">)</span>
+<span class="n">ax_2</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="n">best_pixel_coords</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="p">[</span><span class="n">best_pixel_coords</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pixel for differentiating 3 and 8 at </span><span class="si">{</span><span class="n">best_pixel_coords</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/3dec90dcbfb1a269ac65501a0ed6097db0814057a7ef60eca240b7f940682ace.svg" src="../_images/3dec90dcbfb1a269ac65501a0ed6097db0814057a7ef60eca240b7f940682ace.svg" /></div>
+</div>
+<p>By taking a look if this given pixel is closer to the corresponding value of the mean of <span class="math notranslate nohighlight">\(3\)</span> and <span class="math notranslate nohighlight">\(8\)</span>, we will decide accordingly.
+We can do this by calculating the mean between both values.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">threshold</span> <span class="o">=</span> <span class="p">(</span><span class="n">mean_3</span><span class="p">[</span><span class="n">idx_highest_pixel_diff</span><span class="p">]</span> <span class="o">+</span> <span class="n">mean_8</span><span class="p">[</span><span class="n">idx_highest_pixel_diff</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+
+
+<span class="k">def</span> <span class="nf">is_it_3_or_8</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">pixel_index</span><span class="p">,</span> <span class="n">threshold</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mi">3</span> <span class="k">if</span> <span class="n">sample</span><span class="p">[</span><span class="n">pixel_index</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">threshold</span> <span class="k">else</span> <span class="mi">8</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">&quot;Prediction of 3 and 8 based on single pixel&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axs</span><span class="o">.</span><span class="n">flatten</span><span class="p">():</span>
+    <span class="n">rand_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">idx_3</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">idx_8</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">flatten</span><span class="p">()])</span>
+    <span class="p">)</span>
+    <span class="n">rand_im</span> <span class="o">=</span> <span class="n">mnist_data</span><span class="p">[</span><span class="n">rand_index</span><span class="p">]</span>
+    <span class="n">predicted_number</span> <span class="o">=</span> <span class="n">is_it_3_or_8</span><span class="p">(</span>
+        <span class="n">sample</span><span class="o">=</span><span class="n">rand_im</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span>
+        <span class="n">pixel_index</span><span class="o">=</span><span class="n">idx_highest_pixel_diff</span><span class="p">,</span>
+        <span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">rand_im</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gray_r&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">title</span><span class="o">.</span><span class="n">set_text</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Pred </span><span class="si">{</span><span class="n">predicted_number</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/8e8d88c6958bbb585f67cdf658a42f121f843bc326c084f813e95962356e5ff7.svg" src="../_images/8e8d88c6958bbb585f67cdf658a42f121f843bc326c084f813e95962356e5ff7.svg" /></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="n">mnist_data</span><span class="p">[</span><span class="n">idx_3</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">28</span> <span class="o">*</span> <span class="mi">28</span><span class="p">),</span>
+        <span class="n">mnist_data</span><span class="p">[</span><span class="n">idx_8</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">28</span> <span class="o">*</span> <span class="mi">28</span><span class="p">),</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">idx_3</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">idx_8</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)),</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="n">idx_highest_pixel_diff</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">threshold</span>
+
+<span class="c1"># Calculate accuracy</span>
+<span class="n">accuracy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y_pred</span> <span class="o">==</span> <span class="n">y</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model accuracy: </span><span class="si">{</span><span class="n">accuracy</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model accuracy: 0.83
+</pre></div>
+</div>
+</div>
+</div>
+<p>An accuracy of around <span class="math notranslate nohighlight">\(86\%\)</span> is not great, but also not terrible, considering we’re only using a single pixel.
+We’ve identified the two key parameters: the pixel and its threshold value, which help distinguish the classes.
+However, remember that random guessing would give us <span class="math notranslate nohighlight">\(50\%\)</span> accuracy.</p>
+<div class="admonition-task admonition">
+<p class="admonition-title">Task</p>
+<ul class="simple">
+<li><p>Do this for another pair of numbers</p></li>
+<li><p>How can we find the 2nd most significant pixel if we settled already for the first pixel?</p></li>
+</ul>
+</div>
+</section>
 <section id="mcculloch-and-pitts-model">
-<h3><span class="section-number">3.1.1. </span>McCulloch and Pitts model<a class="headerlink" href="#mcculloch-and-pitts-model" title="Permalink to this heading">#</a></h3>
-<p>In 1943 Warren McCulloch and Walter Pitts proposed a model of artificial neurons which cover tho <span id="id1">[<a class="reference internal" href="../bibliography.html#id3" title="Warren S. McCulloch and Walter Pitts. A logical calculus of the ideas immanent in nervous activity. The Bulletin of Mathematical Biophysics, 5(4):115-133, December 1943. URL: http://dx.doi.org/10.1007/bf02478259, doi:10.1007/bf02478259.">MP43</a>]</span></p>
-<p>These basic networks should provide us also a good exercise in order to obtain familiarity with constructing artifical neural networks.</p>
+<h2><span class="section-number">3.3. </span>McCulloch and Pitts model<a class="headerlink" href="#mcculloch-and-pitts-model" title="Permalink to this heading">#</a></h2>
+<p>In 1943 Warren McCulloch and Walter Pitts proposed a model of an artificial neuron <span id="id1">[<a class="reference internal" href="../bibliography.html#id3" title="Warren S. McCulloch and Walter Pitts. A logical calculus of the ideas immanent in nervous activity. The Bulletin of Mathematical Biophysics, 5(4):115-133, December 1943. URL: http://dx.doi.org/10.1007/bf02478259, doi:10.1007/bf02478259.">MP43</a>]</span>, called the McCulloch Pitts cell and acts very similar to our efforts by separating the values of <span class="math notranslate nohighlight">\(3\)</span> and <span class="math notranslate nohighlight">\(8\)</span> based on a single pixel.
+It is one of the earliest models of a neuron in the field of machine learning, as it was designed to mimic the behavior of biological neurons in a simplified manner.</p>
+<p>Mathematically, an <span class="math notranslate nohighlight">\(n\)</span>-dimensional neuron can be described via the summation of an <span class="math notranslate nohighlight">\(n\)</span> dimensional binary input vector <span class="math notranslate nohighlight">\(x\)</span>, which gets compared to a threshold <span class="math notranslate nohighlight">\(\Theta\)</span>, which can be written as</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+y = f(x) = \begin{cases}
+    1 &amp; \text{ if } ~ \sum_{i=1}^{n} x_i  \geq \Theta \\
+    0 &amp; \text{else}
+\end{cases}
+\end{split}\]</div>
+<figure class="align-default" id="id4">
+<img alt="https://upload.wikimedia.org/wikipedia/commons/a/a7/Diagram_of_a_McCulloch-Pitts-cell.svg" src="https://upload.wikimedia.org/wikipedia/commons/a/a7/Diagram_of_a_McCulloch-Pitts-cell.svg" /><figcaption>
+<p><span class="caption-number">Fig. 3.3 </span><span class="caption-text">A graphical representation of a McCulloch-Pitts cell with <span class="math notranslate nohighlight">\(n\)</span> inputs and <span class="math notranslate nohighlight">\(\Theta\)</span> as activation threshold. Source <a class="reference external" href="https://commons.wikimedia.org/wiki/File:Diagram_of_a_McCulloch-Pitts-cell.svg">https://commons.wikimedia.org/wiki/File:Diagram_of_a_McCulloch-Pitts-cell.svg</a>.</span><a class="headerlink" href="#id4" title="Permalink to this image">#</a></p>
+</figcaption>
+</figure>
+<div class="admonition-task admonition">
+<p class="admonition-title">Task</p>
+<ul>
+<li><p>Can you implement the following functions with said model?</p>
+<ul class="simple">
+<li><p>and</p></li>
+<li><p>or</p></li>
+<li><p>not</p></li>
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Exclusive_or">xor</a></p></li>
+</ul>
+<p>If, what are the thresholds of the neuron?</p>
+</li>
+<li><p>Read <a class="reference external" href="https://towardsdatascience.com/mcculloch-pitts-model-5fdf65ac5dd1">https://towardsdatascience.com/mcculloch-pitts-model-5fdf65ac5dd1</a></p></li>
+</ul>
+</div>
+<section id="perceptron">
+<h3><span class="section-number">3.3.1. </span>Perceptron<a class="headerlink" href="#perceptron" title="Permalink to this heading">#</a></h3>
+<p>In 1957, Frank Rosenblatt suggested an extension to the McCulloch pitts model called a <a class="reference external" href="https://en.wikipedia.org/wiki/Perceptron"><em>Perceptron</em></a>.
+The model changes the <span class="math notranslate nohighlight">\(n\)</span>-dimensional binary input vector <span class="math notranslate nohighlight">\(x\)</span> to a real-valued input vector,
+Additionally, each of the values <span class="math notranslate nohighlight">\(x_i\)</span> of this vector <span class="math notranslate nohighlight">\(x\)</span> as a <em>weight</em> <span class="math notranslate nohighlight">\(w_i\)</span> associated, which are collected in the vector <span class="math notranslate nohighlight">\(w\)</span>.
+These <em>weights</em> act as a scaling for our input data and can be adjusted.</p>
+<p>The perceptron can therefore be described via</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+y = f(x) = \begin{cases}
+    1 &amp; \text{ if } ~ \sum_{i=1}^{n} w_i x_i  \geq \Theta \\
+    0 &amp; \text{else}
+\end{cases}
+\end{split}\]</div>
+<p>Instead of adjusting the weights manually we can describe an algorithm to approximate those weights.</p>
+<p>We start by transforming the pixels of each square <span class="math notranslate nohighlight">\(28 \times 28\)</span> image into a <span class="math notranslate nohighlight">\(784\)</span> dimensional vector.
+Additionally, we will create a vector <span class="math notranslate nohighlight">\(y\)</span> which maps <span class="math notranslate nohighlight">\(3\)</span> to <span class="math notranslate nohighlight">\(0\)</span> and <span class="math notranslate nohighlight">\(8\)</span> to <span class="math notranslate nohighlight">\(1\)</span> for each value.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># prepare dataset</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+    <span class="p">[</span><span class="n">mnist_data</span><span class="p">[</span><span class="n">idx_3</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">28</span> <span class="o">*</span> <span class="mi">28</span><span class="p">),</span> <span class="n">mnist_data</span><span class="p">[</span><span class="n">idx_8</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">28</span> <span class="o">*</span> <span class="mi">28</span><span class="p">)]</span>
+<span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">idx_3</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)),</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">idx_8</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">)),</span>
+    <span class="p">]</span>
+<span class="p">)</span>
 
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">McCullochPitts</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weights</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span> <span class="o">=</span> <span class="n">threshold</span>
-
-    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="n">weight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inner</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">weights</span><span class="p">])</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">weight</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">threshold</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int8</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">product</span>
-
-
-<span class="k">def</span> <span class="nf">test_mcp</span><span class="p">(</span><span class="n">mcp</span><span class="p">:</span> <span class="n">McCullochPitts</span><span class="p">,</span> <span class="n">num_input_dims</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">):</span>
-    <span class="n">possible_values</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
-    <span class="n">permutations</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">product</span><span class="p">(</span><span class="n">possible_values</span><span class="p">,</span> <span class="n">repeat</span><span class="o">=</span><span class="n">num_input_dims</span><span class="p">)))</span>
-    <span class="n">results</span> <span class="o">=</span> <span class="n">mcp</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">permutations</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">permutations</span><span class="p">,</span> <span class="n">results</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">permutations</span><span class="p">,</span> <span class="n">results</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">and_mcp</span> <span class="o">=</span> <span class="n">McCullochPitts</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
-
-<span class="n">test_mcp</span><span class="p">(</span><span class="n">and_mcp</span><span class="p">);</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;X: </span><span class="si">{</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;y: </span><span class="si">{</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0 0] -&gt; [0]
-[0 1] -&gt; [0]
-[1 0] -&gt; [0]
-[1 1] -&gt; [1]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>X: (11982, 784)
+y: (11982,)
 </pre></div>
 </div>
 </div>
 </div>
+<p>As we transferred the images and the number it is representing into a vector, we can now take a look how to find some good weights, such that we can calculate what we did prior manually on a single pixel now for the whole image.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">or_mcp</span> <span class="o">=</span> <span class="n">McCullochPitts</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># makes the outcome deterministic</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
-<span class="n">test_mcp</span><span class="p">(</span><span class="n">or_mcp</span><span class="p">);</span>
+<span class="c1"># create a random weight for each input vector</span>
+<span class="n">weights</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="c1"># create a random threshold value to begin with - this is often also called a bias</span>
+<span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">()</span>
+
+<span class="c1"># python implementation of the formula above</span>
+
+
+<span class="k">def</span> <span class="nf">mc_culloch_pitts_neuron</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">1</span> <span class="k">if</span> <span class="n">y</span> <span class="o">&gt;=</span> <span class="n">theta</span> <span class="k">else</span> <span class="mi">0</span>
+
+
+<span class="c1"># learning parameters</span>
+<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="c1"># number of iterations through our dataset</span>
+<span class="n">num_epochs</span> <span class="o">=</span> <span class="mi">100</span>
+
+<span class="c1"># the actual training loop</span>
+<span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_epochs</span><span class="p">):</span>
+    <span class="c1"># we shuffle our dataset so we don&#39;t start by seeing all examples of a</span>
+    <span class="c1"># 3 first and afterwards all 8s</span>
+    <span class="n">random_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">random_indices</span><span class="p">)</span>
+
+    <span class="c1"># now iterate over our dataset</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">random_indices</span><span class="p">:</span>
+        <span class="c1"># calculate the current outcome</span>
+        <span class="n">prediction</span> <span class="o">=</span> <span class="n">mc_culloch_pitts_neuron</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">weights</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span>
+
+        <span class="c1"># calculate our error which is the difference between our outcome</span>
+        <span class="c1"># and the actual value</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">prediction</span>
+
+        <span class="c1"># we will try to adjust the weights by adjusting the weights</span>
+        <span class="c1"># into the &quot;proper&quot; direction. We limit how much we can move into</span>
+        <span class="c1"># this direction by the learning_rate</span>
+        <span class="n">weights</span> <span class="o">+=</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">error</span> <span class="o">*</span> <span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+
+        <span class="c1"># we do the same for our threshold/theta/bias</span>
+        <span class="n">theta</span> <span class="o">+=</span> <span class="n">learning_rate</span> <span class="o">*</span> <span class="n">error</span>
+
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">mc_culloch_pitts_neuron</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">X</span><span class="p">])</span>
+
+<span class="c1"># calculate accuracy</span>
+<span class="n">accuracy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y_pred</span> <span class="o">==</span> <span class="n">y</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model accuracy: </span><span class="si">{</span><span class="n">accuracy</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># visualize the weights</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span>
+    <span class="n">weights</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">),</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;seismic&quot;</span><span class="p">,</span>
+    <span class="n">norm</span><span class="o">=</span><span class="n">mpl</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">vmin</span><span class="o">=-</span><span class="mi">150</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">150</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Weights Visualization&quot;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0 0] -&gt; [0]
-[0 1] -&gt; [1]
-[1 0] -&gt; [1]
-[1 1] -&gt; [1]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Model accuracy: 0.97
 </pre></div>
 </div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">not_mcp</span> <span class="o">=</span> <span class="n">McCullochPitts</span><span class="p">(</span><span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">threshold</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-
-<span class="n">test_mcp</span><span class="p">(</span><span class="n">not_mcp</span><span class="p">,</span> <span class="n">num_input_dims</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0] -&gt; [1]
-[1] -&gt; [0]
-</pre></div>
-</div>
-</div>
+<img alt="../_images/c068ba40c4ad3a31fc50fe7f0f810933ac9738fe7c03c3e3588513ed132d0d1c.svg" src="../_images/c068ba40c4ad3a31fc50fe7f0f810933ac9738fe7c03c3e3588513ed132d0d1c.svg" /></div>
 </div>
 <div class="admonition-task admonition">
 <p class="admonition-title">Task</p>
-<ol class="arabic simple">
-<li><p>Implement a NOT mcp cell. What must be the activation weights?</p></li>
-</ol>
+<ul class="simple">
+<li><p>Why is our model performing better than our previous model?</p></li>
+<li><p>What represents blue, what red in the visualization?</p></li>
+<li><p>Is it possible to implement the following functions?</p>
+<ul>
+<li><p>and</p></li>
+<li><p>or</p></li>
+<li><p>xor</p></li>
+</ul>
+</li>
+<li><p>Try to implement this <em>training</em> algorithm in SuperCollider - first in sclang, afterwards on the server.</p></li>
+<li><p>How could we leverage this model to predict not just binary classes but maybe all digits between <span class="math notranslate nohighlight">\(0\)</span> and <span class="math notranslate nohighlight">\(9\)</span>?</p></li>
+<li><p>Read <a class="reference external" href="https://www.oranlooney.com/post/adaptive-basis-functions/">https://www.oranlooney.com/post/adaptive-basis-functions/</a> as a primer on how to use taylor and fourier approximation</p></li>
+</ul>
 </div>
-</section>
-<section id="taylor-and-fourier-series">
-<h3><span class="section-number">3.1.2. </span>Taylor and Fourier series<a class="headerlink" href="#taylor-and-fourier-series" title="Permalink to this heading">#</a></h3>
-<p>Another way to approximate an unknown function by its in- and output values is the use of Taylor or Fourier series.</p>
-<p>Where Taylor series uses an infinite sum of powers to approximate a function, a fourier series uses an infinite sum of trigonometric (i.e. (co-)sine) functions.</p>
-<div class="admonition-todo admonition">
-<p class="admonition-title">ToDo</p>
-<p><a class="reference external" href="https://www.oranlooney.com/post/adaptive-basis-functions/">https://www.oranlooney.com/post/adaptive-basis-functions/</a></p>
-</div>
-</section>
-<section id="perceptron">
-<h3><span class="section-number">3.1.3. </span>Perceptron<a class="headerlink" href="#perceptron" title="Permalink to this heading">#</a></h3>
-<p>In 1957, Frank Rosenblatt suggested an extension to the McCulloch pitts model called a <em>Perceptron</em>.
-The model uses a number instead of binary on/off values as input <span class="math notranslate nohighlight">\(x\)</span> of a neuron, and each of these inputs of a cell has an associated <em>weight</em> <span class="math notranslate nohighlight">\(w\)</span>.
-The neuron calculates the weighted sum of its inputs (<span class="math notranslate nohighlight">\(z=w_1 x_1 + w_2 x_2 + \dots + w_n x_n = = x^T w\)</span>) which then is used as an input of a <em>step function</em>.</p>
-<section id="multi-layered-perceptron">
-<h4><span class="section-number">3.1.3.1. </span>Multi layered perceptron<a class="headerlink" href="#multi-layered-perceptron" title="Permalink to this heading">#</a></h4>
-</section>
 </section>
 </section>
 </section>
@@ -674,13 +865,10 @@ The neuron calculates the weighted sum of its inputs (<span class="math notransl
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#artificial-neural-networks">3.1. Artificial neural networks</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mcculloch-and-pitts-model">3.1.1. McCulloch and Pitts model</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#taylor-and-fourier-series">3.1.2. Taylor and Fourier series</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#perceptron">3.1.3. Perceptron</a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#multi-layered-perceptron">3.1.3.1. Multi layered perceptron</a></li>
-</ul>
-</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analyzing-data">3.1. Analyzing data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-to-derive-from-data-analysis">3.2. What to derive from data analysis</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mcculloch-and-pitts-model">3.3. McCulloch and Pitts model</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#perceptron">3.3.1. Perceptron</a></li>
 </ul>
 </li>
 </ul>

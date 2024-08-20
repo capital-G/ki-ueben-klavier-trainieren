@@ -23,5 +23,6 @@ parts:
       - file: chapters/09_rnn
   - caption: Appendices
     chapters:
+      - file: player_piano_evening
       - file: bibliography.md
       - file: glossary

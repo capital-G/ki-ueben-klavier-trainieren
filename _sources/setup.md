@@ -46,13 +46,13 @@ One particular focus of SuperCollider is its reactivity to live events - either 
 
 ### Control a piano via MIDI
 
-```{admonition}note
+```{admonition} note
 todo
 ```
 
 ### Control a VST via MIDI
 
 
-```{admonition}note
+```{admonition} note
 todo
 ```

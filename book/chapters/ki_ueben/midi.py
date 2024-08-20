@@ -2,9 +2,6 @@ import asyncio
 import mido
 import pandas as pd
 import dataclasses
-from pathlib import Path
-import music21
-from collections import defaultdict
 import enum
 from typing import List, Optional
 
@@ -51,6 +48,9 @@ def to_piano_roll(midi_file_path: str, resolution: int = 256) -> None:
 
 
 class PianoRoll:
+    """Helper class to parse and extract information
+    of a MIDI file into different representations"""
+
     def __init__(self, midi_file_path: str):
         self._midi_file_path = midi_file_path
         self.midi_file = mido.MidiFile(self._midi_file_path)
@@ -63,7 +63,15 @@ class PianoRoll:
         return None
 
     def events(self, hold_notes_with_pedal: bool = False) -> pd.DataFrame:
-        """ """
+        """Generates a DataFrame in which each consecutive MIDI event is stored.
+
+        Columns are
+            - `note` (0-127)
+            - `velocity` (0-127)
+            - `time` (in float secs)
+
+        :param hold_notes_with_pedal: If true, the note ote off event is delayed until a pedal lift.
+        """
         if hold_notes_with_pedal:
             raise NotImplementedError()
 
@@ -93,6 +101,15 @@ class PianoRoll:
         return df_events
 
     def piano_roll(self, fill_empty_notes: bool = True) -> pd.DataFrame:
+        """Generates a DataFrame which builds a piano roll from the
+        given MIDI events.
+        Columns are `note` (21-107), index is `time` and
+        velocity (0-127) is the value of the cell.
+
+        :param fill_empty_notes: If e.g. note 33 never appears in the
+            dataset it will still be inserted as an empty column into the dataframe.
+            This yields a deterministic layout of the output, defaults to True
+        """
         events = self.events()
         events = events.pivot_table(
             values="velocity", index="time", columns="note", aggfunc="max"

@@ -1,6 +1,6 @@
 .PHONY: book
 book:
-	jupyter-book build book/
+	PYTHONPATH="./book/chapters" jupyter-book build book/
 
 .PHONY: clean
 clean:

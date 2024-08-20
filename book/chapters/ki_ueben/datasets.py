@@ -5,7 +5,7 @@ from typing import TypedDict
 
 from pathlib import Path
 from typing import Iterator, List
-from torch.utils.data import DataLoader, IterableDataset, get_worker_info
+from torch.utils.data import IterableDataset, get_worker_info
 import math
 
 import pandas as pd
@@ -21,6 +21,8 @@ class MIDIFileRecord(TypedDict):
 
 
 class MIDIFilesDataset(torch.utils.data.Dataset):
+    """Wrapper for MIDI file dataset."""
+
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self.midi_file_paths: List[Path] = []
@@ -38,6 +40,10 @@ class MIDIFilesDataset(torch.utils.data.Dataset):
 
 
 class Maestro3Dataset(MIDIFilesDataset):
+    """Download helper class for the Masestro dataset v3.0.0.
+    For more information see https://magenta.tensorflow.org/datasets/maestro.
+    """
+
     def __init__(
         self,
         base_path: Optional[Path] = None,
@@ -144,7 +150,15 @@ class MIDIEventDataset(torch.utils.data.IterableDataset):
 
 
 class PianoRollDataset(IterableDataset):
-    def __init__(self, midi_files: List[Path], window_size):
+    """Iterates in a distributed manner over a given set of MIDI files
+    and outputs a PianoRoll as seen in :func:`ki_ueben.midi.PianoRoll.piano_roll`"""
+
+    def __init__(self, midi_files: List[Path], window_size: int):
+        """
+
+        :param midi_files: List of midi files
+        :param window_size: Number of past samples for each block in X.
+        """
         super().__init__()
         self.midi_files = midi_files
         self.window_size = window_size

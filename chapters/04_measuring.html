@@ -369,8 +369,6 @@ document.write(`
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practicing-piano">4.3. Practicing piano</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tuning-and-learning">4.4. Tuning and learning</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tuning-as-a-performance">4.5. Tuning as a performance</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reading-assignments">4.6. Reading assignments</a></li>
 </ul>
             </nav>
         </div>
@@ -384,30 +382,32 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="measuring">
 <h1><span class="section-number">4. </span>Measuring<a class="headerlink" href="#measuring" title="Link to this heading">#</a></h1>
-<p>With the age of enlightenment in the 17th century, people start to quantify everything which is reflected by the motivation of geography and the introduction of mathematics into science.
-Nowadays measuring is the crucial aspect of the capitalist society, where the constant question “What <em>is</em> the measure of a product” creates demand, supply and therefore tension.
-Within organization structures this is also reflected by the implication of bureaucracy and controlling, which tries to separate the issue from the person through objective laws, and these organizational structures shaped the humankind of the 20th century as discussed by Foucault?</p>
-<p>Wittgenstein already once proposed the mathematization of language, and with the advent of LLMs this proposal seems to be implemented, although in a different manner than thought by Wittgenstein.
-Where Wittgenstein wanted to make use of the formal power and correctness of mathematics within natural language, LLMs use mathematics to calculate the most likely next <a class="reference internal" href="../glossary.html#term-token"><span class="xref std std-term">token</span></a> based on multivariate statistical analysis, therefore LLMs do not follow a formalistic construction of language, but instead the formal programming language creates a room of possibilities in which the LLM can hallucinate.</p>
+<p>The age of enlightenment in the 17th century marked the beginning of humanity’s deep interest in quantification, driven by the influence of geography and the integration of mathematics into the sciences.
+Today, measurement is a cornerstone of capitalist society, where the constant question, “What <em>is</em> the measure of a product?” drives supply, demand, and inherent tension.
+This obsession with measurement extends to organizational structures, where bureaucracy and control seek to objectify issues through impersonal laws, a theme often discussed and explored by philosophers such as Foucault in his analysis of the social frameworks of the 20th century.</p>
+<p>Wittgenstein once proposed the mathematization of language, an idea that finds a modern parallel in the development of Large Language Models (LLMs).
+However, whereas Wittgenstein envisioned a formal, mathematical structure for natural language, LLMs use mathematics to predict the most likely next {term} {token} using multivariate statistical analysis.
+Rather than adhering to a formalistic language structure, LLMs operate within a probabilistic framework that allows them to generate content that sometimes veers off in creative or unexpected directions - what some might call “hallucinations”.</p>
 <section id="the-limits-of-measurability-within-mathematics">
 <h2><span class="section-number">4.1. </span>The limits of measurability within mathematics<a class="headerlink" href="#the-limits-of-measurability-within-mathematics" title="Link to this heading">#</a></h2>
-<p>Measurability within mathematics is a fundamental aspect in mathematics as already the measurement of the area of a circle is an old and non-trivial question.
-Also, the measurement within the real numbers can quickly become non-trivial: For example the given subset <span class="math notranslate nohighlight">\([0,1] \subset \mathbb{R}\)</span> has the attributed <em>length</em> of <span class="math notranslate nohighlight">\(1\)</span>, and <span class="math notranslate nohighlight">\([0, 0.25] \cup [0.75, 1] \subset \mathbb{R}\)</span> has a length of <span class="math notranslate nohighlight">\(0.5\)</span>.
-But what is the length of all rational numbers between <span class="math notranslate nohighlight">\(0\)</span> and <span class="math notranslate nohighlight">\(1\)</span>, so <span class="math notranslate nohighlight">\([0, 1] \cap \mathbb{Q}\)</span>?
-As the rational numbers are <a class="reference external" href="https://en.wikipedia.org/wiki/Diophantine_approximation">dense</a> within the real numbers, this value could be anything between <span class="math notranslate nohighlight">\(0\)</span> and <span class="math notranslate nohighlight">\(1\)</span>. (Through lesbuege measures it is possible to show that every countable subset within <span class="math notranslate nohighlight">\(\mathbb{R}\)</span> has a length/mass of 0).</p>
-<p>This shows that mathematics itself is not limited to research objects that are quantifiable, often enough mathematics is more about the classification of objects, and that even within mathematics there is a limit to what can be measured.</p>
+<p>Measurability is a fundamental concept in mathematics which delves deep into our understanding of numbers and set.
+Consider the challenge of calculating the area of a circle — a problem that has engaged mathematicians for centuries.
+Even within the realm of real numbers, measurement can quickly become non-trivial.
+For instance, the real interval <span class="math notranslate nohighlight">\([0,1] \subset \mathbb{R}\)</span> has an attributed “length” of 1, while the disjoint union <span class="math notranslate nohighlight">\([0, 0.25] \cup [0.75, 1] \subset \mathbb{R}\)</span> has a “length” of 0.5.
+But what is the “length” of the set of all rational numbers between 0 and 1, <span class="math notranslate nohighlight">\([0, 1] \cap \mathbb{Q}\)</span>?
+Despite the density of rational numbers within the real numbers, the <a class="reference external" href="https://en.wikipedia.org/wiki/Lebesgue_measure">Lebesgue measure</a> suggests that any countable subset of <span class="math notranslate nohighlight">\(\mathbb{R}\)</span>, including this one, has a “length” of zero.</p>
 </section>
 <section id="social-measuring">
 <h2><span class="section-number">4.2. </span>Social measuring<a class="headerlink" href="#social-measuring" title="Link to this heading">#</a></h2>
-<p>Social media is also driven by an measuring engagement - its measuring and amplification through recommendation algorithms, it contains <a class="reference external" href="https://www.deceptive.design/">dark patterns</a> to trick people into doing actions they do not want to perform.</p>
-<p>Although something like a <a class="reference internal" href="../glossary.html#term-social-score"><span class="xref std std-term">social score</span></a>` is often disregarded within western societies, the very same is already in place through ratings: “Where you happy with your service?” will be used within a statistical analysis, and many AI services are relying on services such as Mechanical Turk by AWS, which is also based upon measuring the success of people, which gets evaluated onto.</p>
+<p>Social media operates on the principle of measuring engagement, with algorithms amplifying this engagement through recommendation systems, which are often driven by machine learning algorithms.
+These systems often employ <a class="reference external" href="https://www.deceptive.design/">dark patterns</a> to manipulate user behavior, leading to actions that users may not consciously choose.</p>
+<p>While the notion of a <a class="reference internal" href="../glossary.html#term-social-score"><span class="xref std std-term">social score</span></a> is frequently dismissed in Western societies, similar mechanisms are already in place through ratings and feedback systems.
+Questions like “Were you happy with your service?” are used for statistical analyses, and many AI services depend on platforms like <a class="reference external" href="https://www.mturk.com/">Amazon’s Mechanical Turk</a>, outsource the task of measurement and evaluation of tasks.</p>
 <section id="what-are-the-concerns-with-this">
 <h3><span class="section-number">4.2.1. </span>What are the concerns with this<a class="headerlink" href="#what-are-the-concerns-with-this" title="Link to this heading">#</a></h3>
-<p>Individuality freedom vs. collective knowledge shows as a perfect example of controversial opinions in the covid 19 pandemic.</p>
-<p>Additionally, derived from the data points of the many, the dataset of a single person can be enhanced quite impressive through statistical calculations (this is basically what a recommendation algorithm implements).
-While recommendations itself may seem not problematic, they sure create a lot of tensions when used for estimation about sensitive data such as.</p>
-<p>Additionally, many data is just collected on the fly and even anonymous data can give insights which can be used to target marginal groups.
-Uber once posted an infamous blog post which tries to <a class="reference external" href="https://web.archive.org/web/20140827195715/http://blog.uber.com/ridesofglory">estimate potential one night stand users based on their booked routes</a>.<a class="footnote-reference brackets" href="#uber" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p>
+<p>Data aggregation allows for an enhancement of individual datasets through statistical means — a practice that recommendation algorithms implement routinely.
+While recommendations may seem not very problematic, they can lead to significant ethical concerns, especially when applied to sensitive data.</p>
+<p>Additionally, much of the data collected online is done so passively, and even anonymized data can yield insights that target vulnerable groups. A notorious example is an <a class="reference external" href="https://web.archive.org/web/20140827195715/http://blog.uber.com/ridesofglory">Uber blog post</a> that attempts to identify users involved in one-night stands based on their ride patterns.<a class="footnote-reference brackets" href="#uber" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p>
 </section>
 </section>
 <section id="practicing-piano">
@@ -416,7 +416,6 @@ Uber once posted an infamous blog post which tries to <a class="reference extern
 The creation of an image from a given text prompt also seem like a non-trivial task to measure, yet there were measurements which guided the neural network during training to produce a desired output based on the stated input.</p>
 <p>Taking a look how Chat-GPT is trained, it is trained on as much data as possible, but still it does not have a sense of how this should work?
 After the initial training has been performed, there will be another round to fine tune the existing models through human feedback, which is called <a class="reference external" href="https://en.wikipedia.org/wiki/Reinforcement_learning_from_human_feedback">reinforcement learning from human feedback (RLHF)</a>.</p>
-<p>Therefore</p>
 </section>
 <section id="tuning-and-learning">
 <h2><span class="section-number">4.4. </span>Tuning and learning<a class="headerlink" href="#tuning-and-learning" title="Link to this heading">#</a></h2>
@@ -431,30 +430,21 @@ This imbalance can be heard as <em>beating</em>, which becomes audible as the di
 Afterwards the tuner adjusts the system, which tries to balance, tweak and <em>tune</em> the output of the default setting.</p>
 <p>Of course, there are different kind of tuning which have been established, the pure tonal.
 Yet the preciseness and sureness of tactility can only be given when the tuning foundation has been made properly.</p>
-</section>
-<section id="tuning-as-a-performance">
-<h2><span class="section-number">4.5. </span>Tuning as a performance<a class="headerlink" href="#tuning-as-a-performance" title="Link to this heading">#</a></h2>
-<p>Although tuning is essential to any kind of music, this tuning is rarely tweaked within performances (other than to get the instrument back into tune).</p>
-<div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p>What could be the whammy bar on a guitar on a neural network? Maybe how loose let it be?
-Maybe this could be an interesting lead.</p>
-</div>
 <div class="tip admonition">
 <p class="admonition-title">Discussion</p>
 <ul class="simple">
 <li><p>What impact do recommendation algorithms have on contemporary piano playing practice?</p></li>
 <li><p>Do these algorithms favor streamlined processes which establishes a new normative structure?</p></li>
-<li><p>How are utopias represented on these platforms?</p></li>
+<li><p>How are utopias, dystopias and norms represented on these platforms and how do they shape them outside of these platforms?</p></li>
 </ul>
 </div>
-</section>
-<section id="reading-assignments">
-<h2><span class="section-number">4.6. </span>Reading assignments<a class="headerlink" href="#reading-assignments" title="Link to this heading">#</a></h2>
+<div class="tip admonition">
+<p class="admonition-title">Further reading</p>
 <ul class="simple">
-<li><p><a class="reference external" href="https://www.deutschlandfunk.de/es-zaehlt-was-sich-zaehlen-laesst-100.html">https://www.deutschlandfunk.de/es-zaehlt-was-sich-zaehlen-laesst-100.html</a></p></li>
-<li><p>Deleuze - Postscript on the Societies of Control</p></li>
+<li><p><a class="reference external" href="https://www.deutschlandfunk.de/es-zaehlt-was-sich-zaehlen-laesst-100.html">Die Logik des Digitalen: Es zählt, was sich zählen lässt!</a> - a german radio essay about the quantity as central quality criteria in our times.</p></li>
+<li><p><a class="reference external" href="https://theanarchistlibrary.org/library/gilles-deleuze-postscript-on-the-societies-of-control">Gilles Deleuze - Postscript on the Societies of Control</a></p></li>
 </ul>
+</div>
 <hr class="footnotes docutils" />
 <aside class="footnote-list brackets">
 <aside class="footnote brackets" id="uber" role="doc-footnote">
@@ -544,8 +534,6 @@ Maybe this could be an interesting lead.</p>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practicing-piano">4.3. Practicing piano</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tuning-and-learning">4.4. Tuning and learning</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tuning-as-a-performance">4.5. Tuning as a performance</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reading-assignments">4.6. Reading assignments</a></li>
 </ul>
   </nav></div>
 

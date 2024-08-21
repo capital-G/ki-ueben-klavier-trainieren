@@ -1,36 +1,36 @@
 # Measuring
 
-With the age of enlightenment in the 17th century, people start to quantify everything which is reflected by the motivation of geography and the introduction of mathematics into science.
-Nowadays measuring is the crucial aspect of the capitalist society, where the constant question "What *is* the measure of a product" creates demand, supply and therefore tension.
-Within organization structures this is also reflected by the implication of bureaucracy and controlling, which tries to separate the issue from the person through objective laws, and these organizational structures shaped the humankind of the 20th century as discussed by Foucault?
+The age of enlightenment in the 17th century marked the beginning of humanity's deep interest in quantification, driven by the influence of geography and the integration of mathematics into the sciences.
+Today, measurement is a cornerstone of capitalist society, where the constant question, "What *is* the measure of a product?" drives supply, demand, and inherent tension.
+This obsession with measurement extends to organizational structures, where bureaucracy and control seek to objectify issues through impersonal laws, a theme often discussed and explored by philosophers such as Foucault in his analysis of the social frameworks of the 20th century.
 
-Wittgenstein already once proposed the mathematization of language, and with the advent of LLMs this proposal seems to be implemented, although in a different manner than thought by Wittgenstein.
-Where Wittgenstein wanted to make use of the formal power and correctness of mathematics within natural language, LLMs use mathematics to calculate the most likely next {term}`token` based on multivariate statistical analysis, therefore LLMs do not follow a formalistic construction of language, but instead the formal programming language creates a room of possibilities in which the LLM can hallucinate.
+Wittgenstein once proposed the mathematization of language, an idea that finds a modern parallel in the development of Large Language Models (LLMs).
+However, whereas Wittgenstein envisioned a formal, mathematical structure for natural language, LLMs use mathematics to predict the most likely next {term} {token} using multivariate statistical analysis.
+Rather than adhering to a formalistic language structure, LLMs operate within a probabilistic framework that allows them to generate content that sometimes veers off in creative or unexpected directions - what some might call "hallucinations".
 
 ## The limits of measurability within mathematics
 
-Measurability within mathematics is a fundamental aspect in mathematics as already the measurement of the area of a circle is an old and non-trivial question.
-Also, the measurement within the real numbers can quickly become non-trivial: For example the given subset $[0,1] \subset \mathbb{R}$ has the attributed *length* of $1$, and $[0, 0.25] \cup [0.75, 1] \subset \mathbb{R}$ has a length of $0.5$.
-But what is the length of all rational numbers between $0$ and $1$, so $[0, 1] \cap \mathbb{Q}$?
-As the rational numbers are [dense](https://en.wikipedia.org/wiki/Diophantine_approximation) within the real numbers, this value could be anything between $0$ and $1$. (Through lesbuege measures it is possible to show that every countable subset within $\mathbb{R}$ has a length/mass of 0).
-
-This shows that mathematics itself is not limited to research objects that are quantifiable, often enough mathematics is more about the classification of objects, and that even within mathematics there is a limit to what can be measured.
+Measurability is a fundamental concept in mathematics which delves deep into our understanding of numbers and set.
+Consider the challenge of calculating the area of a circle — a problem that has engaged mathematicians for centuries.
+Even within the realm of real numbers, measurement can quickly become non-trivial.
+For instance, the real interval $[0,1] \subset \mathbb{R}$ has an attributed "length" of 1, while the disjoint union $[0, 0.25] \cup [0.75, 1] \subset \mathbb{R}$ has a "length" of 0.5.
+But what is the "length" of the set of all rational numbers between 0 and 1, $[0, 1] \cap \mathbb{Q}$?
+Despite the density of rational numbers within the real numbers, the [Lebesgue measure](https://en.wikipedia.org/wiki/Lebesgue_measure) suggests that any countable subset of $\mathbb{R}$, including this one, has a "length" of zero.
 
 ## Social measuring
 
-Social media is also driven by an measuring engagement - its measuring and amplification through recommendation algorithms, it contains [dark patterns](https://www.deceptive.design/) to trick people into doing actions they do not want to perform.
+Social media operates on the principle of measuring engagement, with algorithms amplifying this engagement through recommendation systems, which are often driven by machine learning algorithms.
+These systems often employ [dark patterns](https://www.deceptive.design/) to manipulate user behavior, leading to actions that users may not consciously choose.
 
-Although something like a {term}`social score`` is often disregarded within western societies, the very same is already in place through ratings: "Where you happy with your service?" will be used within a statistical analysis, and many AI services are relying on services such as Mechanical Turk by AWS, which is also based upon measuring the success of people, which gets evaluated onto.
+While the notion of a {term}`social score` is frequently dismissed in Western societies, similar mechanisms are already in place through ratings and feedback systems.
+Questions like "Were you happy with your service?" are used for statistical analyses, and many AI services depend on platforms like [Amazon's Mechanical Turk](https://www.mturk.com/), outsource the task of measurement and evaluation of tasks.
 
 ### What are the concerns with this
 
-Individuality freedom vs. collective knowledge shows as a perfect example of controversial opinions in the covid 19 pandemic.
+Data aggregation allows for an enhancement of individual datasets through statistical means — a practice that recommendation algorithms implement routinely.
+While recommendations may seem not very problematic, they can lead to significant ethical concerns, especially when applied to sensitive data.
 
-Additionally, derived from the data points of the many, the dataset of a single person can be enhanced quite impressive through statistical calculations (this is basically what a recommendation algorithm implements).
-While recommendations itself may seem not problematic, they sure create a lot of tensions when used for estimation about sensitive data such as.
-
-Additionally, many data is just collected on the fly and even anonymous data can give insights which can be used to target marginal groups.
-Uber once posted an infamous blog post which tries to [estimate potential one night stand users based on their booked routes](https://web.archive.org/web/20140827195715/http://blog.uber.com/ridesofglory).[^uber]
+Additionally, much of the data collected online is done so passively, and even anonymized data can yield insights that target vulnerable groups. A notorious example is an [Uber blog post](https://web.archive.org/web/20140827195715/http://blog.uber.com/ridesofglory) that attempts to identify users involved in one-night stands based on their ride patterns.[^uber]
 
 ## Practicing piano
 
@@ -39,8 +39,6 @@ The creation of an image from a given text prompt also seem like a non-trivial t
 
 Taking a look how Chat-GPT is trained, it is trained on as much data as possible, but still it does not have a sense of how this should work?
 After the initial training has been performed, there will be another round to fine tune the existing models through human feedback, which is called [reinforcement learning from human feedback (RLHF)](https://en.wikipedia.org/wiki/Reinforcement_learning_from_human_feedback).
-
-Therefore
 
 ## Tuning and learning
 
@@ -60,27 +58,22 @@ Afterwards the tuner adjusts the system, which tries to balance, tweak and *tune
 Of course, there are different kind of tuning which have been established, the pure tonal.
 Yet the preciseness and sureness of tactility can only be given when the tuning foundation has been made properly.
 
-## Tuning as a performance
-
-Although tuning is essential to any kind of music, this tuning is rarely tweaked within performances (other than to get the instrument back into tune).
-
-:::{tip}
-What could be the whammy bar on a guitar on a neural network? Maybe how loose let it be?
-Maybe this could be an interesting lead.
-:::
 
 :::{admonition} Discussion
 :class: tip
 
 * What impact do recommendation algorithms have on contemporary piano playing practice?
 * Do these algorithms favor streamlined processes which establishes a new normative structure?
-* How are utopias represented on these platforms?
+* How are utopias, dystopias and norms represented on these platforms and how do they shape them outside of these platforms?
 :::
 
-## Reading assignments
 
-* <https://www.deutschlandfunk.de/es-zaehlt-was-sich-zaehlen-laesst-100.html>
-* Deleuze - Postscript on the Societies of Control
+:::{admonition} Further reading
+:class: tip
+
+* [Die Logik des Digitalen: Es zählt, was sich zählen lässt!](https://www.deutschlandfunk.de/es-zaehlt-was-sich-zaehlen-laesst-100.html) - a german radio essay about the quantity as central quality criteria in our times.
+* [Gilles Deleuze - Postscript on the Societies of Control](https://theanarchistlibrary.org/library/gilles-deleuze-postscript-on-the-societies-of-control)
+:::
 
 [^uber]: The blog post in question is remarkable on its own - it is a perfect example of invasion into privacy for the sake of profit, even trying to embedd advertisment onto this story
 

@@ -367,7 +367,6 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-processing">5.2.1. Data processing</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#maestro-dataset">5.3. Maestro dataset</a></li>
 </ul>
             </nav>
         </div>
@@ -385,7 +384,7 @@ document.write(`
 Although in principle this is not false, it does not capture why LLMs can often provide rather convincing results.</p>
 <p>The concept of the likelihood of the next word or chapter to follow is though an essential question in stochastic and has been first investigated by Andrey Markov.
 In 1906, he used the <span class="math notranslate nohighlight">\(20,000\)</span> letters of <em>Eugene Onegin</em> by <em>Alexander Pushkin</em> to analyze the distribution and patterns of vowels and consonants, and developed a model which nowadays is called <em>Markov chain</em> which still finds applications in such algorithms as Google’s <a class="reference external" href="https://en.wikipedia.org/wiki/PageRank">PageRank</a> algorithm.</p>
-<p>Therefore we can come up with the first basic generative analysis of our dataset: What is the most likely key to be struck for a given key, which we can then just continue indefinitely.</p>
+<p>Therefore we can come up with a first basic generative analysis of our dataset: What is the most likely successive key to be struck for a given key, which we then can continue indefinitely.</p>
 <section id="markov-chain">
 <h2><span class="section-number">5.1. </span>Markov chain<a class="headerlink" href="#markov-chain" title="Link to this heading">#</a></h2>
 <p>In order to create a common understanding of the capabilities and construction of Markov chains it is fruitful to inspect it from a formalistic perspective.</p>
@@ -395,27 +394,22 @@ These variables are called a <em>markov chain</em> iff</p>
 \[
 \mathbb{P}(X_{n+1} = x ~ | ~ X_1 = x_1, X_2 = x_2 \dots X_n = x_n) = \mathbb{P}(X_{n+1} = x | X_n = x_n)
 \]</div>
-<p>The motivation behind the motivation that within a successive series of random events, the outcome of the next event only depends on the current event and not to any other prior events, therefore the memory of our series is limited to a depth of <span class="math notranslate nohighlight">\(1\)</span>, and therefore this definition defines a <em>first order</em> markov chain.</p>
+<p>The motivation behind the motivation that within a successive series of random events, the outcome of the next event <span class="math notranslate nohighlight">\(\mathbb{P}(X_{n+1} = x ~ | ~ X_1 = x_1, X_2 = x_2 \dots X_n = x_n)\)</span> only depends on the current event and not to any other prior events <span class="math notranslate nohighlight">\(\mathbb{P}(X_{n+1} = x | X_n = x_n)\)</span>, therefore the memory of our series is limited to a depth of <span class="math notranslate nohighlight">\(1\)</span>, and therefore this definition defines a <em>first order</em> markov chain.</p>
 </section>
 <section id="implementing">
 <h2><span class="section-number">5.2. </span>Implementing<a class="headerlink" href="#implementing" title="Link to this heading">#</a></h2>
-<p>Markov chains have the benefit of being easy to model and program, therefore it is not necessary to rely on additional libraries (although the are harder problems associated with markov chains like stationary distribution which will not be covered here).</p>
-<p>As markov chains can be used to model existing data, it is necessary to first prepare the necessary data.</p>
+<p>Markov chains have the benefit of being easy to model and program, therefore it is not necessary to rely on additional libraries (although the are harder problems associated with markov chains like <a class="reference external" href="https://en.wikipedia.org/wiki/Discrete-time_Markov_chain#Stationary_distributions">stationary distribution</a> which will not be covered here).</p>
+<p>As markov chains need a dataset to create a probability distribution from which we can samlpe, it is necessary to first prepare the necessary data.</p>
 <section id="data-processing">
 <h3><span class="section-number">5.2.1. </span>Data processing<a class="headerlink" href="#data-processing" title="Link to this heading">#</a></h3>
-<p>One of the most obvious things to model is the succession of played notes on the keyboard, therefore it is necessary to extract this data from the <em>Maestro</em> data.</p>
+<p>One of the most obvious things to model is the succession of played notes on the keyboard, therefore it is necessary to extract this data from the <a class="reference external" href="https://magenta.tensorflow.org/datasets/maestro"><em>Maestro</em> dataset</a>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ki_ueben.datasets</span> <span class="kn">import</span> <span class="n">Maestro3</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ki_ueben.datasets</span> <span class="kn">import</span> <span class="n">Maestro3Dataset</span>
 <span class="kn">from</span> <span class="nn">ki_ueben.midi</span> <span class="kn">import</span> <span class="n">PianoRoll</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dataset</span> <span class="o">=</span> <span class="n">Maestro3</span><span class="p">()</span>
-<span class="n">midi_files</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">get_midi_files</span><span class="p">()</span>
+
+<span class="n">dataset</span> <span class="o">=</span> <span class="n">Maestro3Dataset</span><span class="p">()</span>
+<span class="n">midi_files</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">midi_file_paths</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">midi_files</span><span class="p">)</span><span class="si">}</span><span class="s2"> midi_files&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -539,25 +533,57 @@ These variables are called a <em>markov chain</em> iff</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">notes</span> <span class="o">=</span> <span class="n">events</span><span class="p">[(</span><span class="n">events</span><span class="p">[</span><span class="s2">&quot;note&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="s2">&quot;velocity&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)]</span><span class="o">.</span><span class="n">note</span>
+<span class="c1"># remove the notes which can not be played on a piano keyboard</span>
+<span class="n">notes</span> <span class="o">=</span> <span class="n">notes</span> <span class="o">-</span> <span class="mi">21</span>
 <span class="n">notes</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1       77
-2       49
-4       73
-6       68
-8       73
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1       56
+2       28
+4       52
+6       47
+8       52
         ..
-4949    37
-4950    61
-4951    65
-4952    68
-4953    73
+4949    16
+4950    40
+4951    44
+4952    47
+4953    52
 Name: note, Length: 2235, dtype: int64
 </pre></div>
 </div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">notes</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>count    2235.000000
+mean       43.182103
+std        10.118919
+min        16.000000
+25%        35.000000
+50%        44.000000
+75%        52.000000
+max        63.000000
+Name: note, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">notes</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Distribution of notes&quot;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">notes</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">notes</span><span class="o">.</span><span class="n">min</span><span class="p">());</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/6349f5b1e1cf02fa1c12c3b590b2d8eee98fd6ce52f1452092e171bb97f4294c.png" src="../_images/6349f5b1e1cf02fa1c12c3b590b2d8eee98fd6ce52f1452092e171bb97f4294c.png" />
 </div>
 </div>
 <p>In order to generate new samples based on a markov chain principle one can rely on the construction of a state transition matrix, which notes the probability of stepping from state <span class="math notranslate nohighlight">\(i \in \Omega\)</span> to <span class="math notranslate nohighlight">\(j \in \Omega\)</span>, so</p>
@@ -571,25 +597,26 @@ p_{i,j} = \mathbb{P}(X_{n+1} = j | X_n = i) | i,j \in \Omega
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<span class="n">transition_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">127</span><span class="p">,</span> <span class="mi">127</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+<span class="n">NUM_NOTES</span> <span class="o">=</span> <span class="mi">88</span>
 
+<span class="n">transition_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">NUM_NOTES</span><span class="p">,</span> <span class="n">NUM_NOTES</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+
+<span class="c1"># iterate over our list of notes</span>
 <span class="k">for</span> <span class="n">cur_note</span><span class="p">,</span> <span class="n">next_note</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">notes</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">notes</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
     <span class="n">transition_matrix</span><span class="p">[</span><span class="n">cur_note</span><span class="p">,</span> <span class="n">next_note</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 
-<span class="c1"># take a look at the transitions from note 77 away</span>
-<span class="n">transition_matrix</span><span class="p">[</span><span class="mi">77</span><span class="p">]</span>
+<span class="c1"># take a look at the transitions from note 51 away</span>
+<span class="n">transition_matrix</span><span class="p">[</span><span class="mi">51</span><span class="p">]</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([ 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
+        0,  0,  0,  1,  0,  1,  3,  0,  1,  0,  0,  1,  0,  6,  1,  4,  4,
+        1, 12,  0,  3,  0,  4,  8,  0,  4,  0,  4,  1,  1,  9,  0,  3,  0,
+        0,  7,  1,  5,  0,  0,  0,  0,  3,  0,  0,  0,  1,  0,  0,  0,  0,
         0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-        0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  1,  0,  0,  3,  3,
-        1,  0,  8,  2,  1, 11,  0,  4,  1,  3, 11,  0,  6,  0,  0,  0,  0,
-        1,  0,  1,  0,  2,  8,  0, 13,  2,  0, 13,  1,  1,  0,  0,  0,  0,
-        0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-        0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,
-        0,  0,  0,  0,  0,  0,  0,  0], dtype=int32)
+        0,  0,  0], dtype=int32)
 </pre></div>
 </div>
 </div>
@@ -598,7 +625,7 @@ p_{i,j} = \mathbb{P}(X_{n+1} = j | X_n = i) | i,j \in \Omega
 This can be done by scaling every row of the transition matrix by the sum of it.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scaled</span> <span class="o">=</span> <span class="n">transition_matrix</span><span class="p">[</span><span class="mi">77</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">transition_matrix</span><span class="p">[</span><span class="mi">77</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scaled</span> <span class="o">=</span> <span class="n">transition_matrix</span><span class="p">[</span><span class="mi">51</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">transition_matrix</span><span class="p">[</span><span class="mi">51</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
 <span class="n">scaled</span>
 </pre></div>
 </div>
@@ -608,32 +635,25 @@ This can be done by scaling every row of the transition matrix by the sum of it.
        0.        , 0.        , 0.        , 0.        , 0.        ,
        0.        , 0.        , 0.        , 0.        , 0.        ,
        0.        , 0.        , 0.        , 0.        , 0.        ,
+       0.01123596, 0.        , 0.01123596, 0.03370787, 0.        ,
+       0.01123596, 0.        , 0.        , 0.01123596, 0.        ,
+       0.06741573, 0.01123596, 0.04494382, 0.04494382, 0.01123596,
+       0.13483146, 0.        , 0.03370787, 0.        , 0.04494382,
+       0.08988764, 0.        , 0.04494382, 0.        , 0.04494382,
+       0.01123596, 0.01123596, 0.1011236 , 0.        , 0.03370787,
+       0.        , 0.        , 0.07865169, 0.01123596, 0.05617978,
+       0.        , 0.        , 0.        , 0.        , 0.03370787,
+       0.        , 0.        , 0.        , 0.01123596, 0.        ,
        0.        , 0.        , 0.        , 0.        , 0.        ,
        0.        , 0.        , 0.        , 0.        , 0.        ,
        0.        , 0.        , 0.        , 0.        , 0.        ,
        0.        , 0.        , 0.        , 0.        , 0.        ,
-       0.        , 0.        , 0.        , 0.        , 0.        ,
-       0.        , 0.01030928, 0.        , 0.        , 0.03092784,
-       0.03092784, 0.01030928, 0.        , 0.08247423, 0.02061856,
-       0.01030928, 0.11340206, 0.        , 0.04123711, 0.01030928,
-       0.03092784, 0.11340206, 0.        , 0.06185567, 0.        ,
-       0.        , 0.        , 0.        , 0.01030928, 0.        ,
-       0.01030928, 0.        , 0.02061856, 0.08247423, 0.        ,
-       0.13402062, 0.02061856, 0.        , 0.13402062, 0.01030928,
-       0.01030928, 0.        , 0.        , 0.        , 0.        ,
-       0.        , 0.        , 0.        , 0.        , 0.        ,
-       0.        , 0.        , 0.        , 0.        , 0.        ,
-       0.        , 0.        , 0.        , 0.        , 0.        ,
-       0.        , 0.        , 0.        , 0.        , 0.        ,
-       0.        , 0.        , 0.        , 0.        , 0.        ,
-       0.        , 0.        , 0.        , 0.        , 0.        ,
-       0.        , 0.        , 0.        , 0.        , 0.        ,
-       0.        , 0.        , 0.        , 0.        , 0.        ,
-       0.        , 0.        ])
+       0.        , 0.        , 0.        ])
 </pre></div>
 </div>
 </div>
 </div>
+<p>Often it is easier to estimate if the data makes sense by plotting it into a graphic representation.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
@@ -643,16 +663,32 @@ This can be done by scaling every row of the transition matrix by the sum of it.
 
 <span class="n">matplotlib_inline</span><span class="o">.</span><span class="n">backend_inline</span><span class="o">.</span><span class="n">set_matplotlib_formats</span><span class="p">(</span><span class="s2">&quot;svg&quot;</span><span class="p">)</span>
 
-<span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">127</span><span class="p">),</span> <span class="n">height</span><span class="o">=</span><span class="n">scaled</span><span class="p">)</span>
-<span class="c1"># @todo highlight key 77</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">NUM_NOTES</span><span class="p">),</span> <span class="n">height</span><span class="o">=</span><span class="n">scaled</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">vlines</span><span class="p">(</span><span class="mi">51</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Reference note 51&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">();</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/050547ba37069d31b42caaf5cc046569df6490f2228b8e4aee7893e33eb65fa6.svg" src="../_images/050547ba37069d31b42caaf5cc046569df6490f2228b8e4aee7893e33eb65fa6.svg" />
+<img alt="../_images/c4c187ed1224ce9748a58f8fe5b6ab9c91c3ae3066695487c74052ab9dc3f19f.svg" src="../_images/c4c187ed1224ce9748a58f8fe5b6ab9c91c3ae3066695487c74052ab9dc3f19f.svg" />
 </div>
 </div>
+<p>Instead of taking a look at just a single note, we can create a 2 dimensional plot which tells us the number occurrences going from one note to another by attaching these two variables to the axis.
+Each co-ordinate is mapped to a color which co-relates with the number of occurrences.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">transition_matrix</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;YlGn&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/0513348e4cfe37f9843e3e46c30262d00c6da551220a2ed8f3e621ce35fef1c7.svg" src="../_images/0513348e4cfe37f9843e3e46c30262d00c6da551220a2ed8f3e621ce35fef1c7.svg" />
+</div>
+</div>
+<p>We can now use this calculated transition matrix within a markov chain to check for the next successive note by sampling the next note according to the associated probability distribution which we just generated.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -664,469 +700,39 @@ This can be done by scaling every row of the transition matrix by the sum of it.
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">init_state</span>
 
     <span class="k">def</span> <span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
-            <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transition_matrix</span><span class="p">),</span> <span class="n">p</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">transition_matrix</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">]</span>
-        <span class="p">)</span>
+        <span class="n">prob</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">transition_matrix</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">state</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">transition_matrix</span><span class="p">),</span> <span class="n">p</span><span class="o">=</span><span class="n">prob</span> <span class="o">/</span> <span class="n">prob</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>The concept of carfeul crafting algorithms to analyze music has been a long part of music informatics, but with the advent of powerful neural networks.</p>
-<p>Yet, this still allows for fruitful investigations, as the algorithms can be tweaked and influenced, aligned and trained much easier than a neural network, and do not consume such vast amounts of resources.</p>
-<p>Some other approaches follow the use of generative grammar, which can be found in …?</p>
+<p>We need to provide a starting point for the markov chain to iterate through - we will set this arbitrarily to <span class="math notranslate nohighlight">\(51\)</span>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mido</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">midi</span> <span class="o">=</span> <span class="n">mido</span><span class="o">.</span><span class="n">MidiFile</span><span class="p">(</span><span class="s2">&quot;/home/dennis/Downloads/kolessova04.mid&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">midi</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-    <span class="k">break</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MetaMessage(&#39;track_name&#39;, name=&#39;Sonata No. 2    TatianaKolessova&#39;, time=0)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">midi</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;set_tempo&quot;</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">tempo</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>512820
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mido</span><span class="o">.</span><span class="n">tempo2bpm</span><span class="p">(</span><span class="mi">512820</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>117.000117000117
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">m</span> <span class="o">=</span> <span class="kc">None</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">markov_piano</span> <span class="o">=</span> <span class="n">MarkovPiano</span><span class="p">(</span><span class="n">transition_matrix</span><span class="o">=</span><span class="n">transition_matrix</span><span class="p">,</span> <span class="n">init_state</span><span class="o">=</span><span class="mi">51</span><span class="p">)</span>
 
-<span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">midi</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;note_on&quot;</span><span class="p">:</span>
-        <span class="n">m</span> <span class="o">=</span> <span class="n">msg</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">m</span><span class="o">.</span><span class="n">time</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">markov_piano</span><span class="o">.</span><span class="n">next</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>35
+44
+47
+45
+35
+37
+45
+32
+54
+30
 </pre></div>
 </div>
 </div>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">events</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">time</span> <span class="o">=</span> <span class="mf">0.0</span>
-<span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">midi</span><span class="p">:</span>
-    <span class="n">time</span> <span class="o">+=</span> <span class="n">msg</span><span class="o">.</span><span class="n">time</span>
-    <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="n">x</span> <span class="o">==</span> <span class="n">msg</span><span class="o">.</span><span class="n">type</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;note_on&quot;</span><span class="p">,</span> <span class="s2">&quot;note_off&quot;</span><span class="p">]]):</span>
-        <span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;note&quot;</span><span class="p">:</span> <span class="n">msg</span><span class="o">.</span><span class="n">note</span><span class="p">,</span>
-                <span class="s2">&quot;velocity&quot;</span><span class="p">:</span> <span class="n">msg</span><span class="o">.</span><span class="n">velocity</span> <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;note_on&quot;</span> <span class="k">else</span> <span class="mi">0</span><span class="p">,</span>
-                <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="n">time</span><span class="p">,</span>
-            <span class="p">}</span>
-        <span class="p">)</span>
-    <span class="k">elif</span> <span class="n">msg</span><span class="o">.</span><span class="n">is_cc</span><span class="p">(</span><span class="mi">64</span><span class="p">):</span>
-        <span class="n">events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="p">{</span>
-                <span class="s2">&quot;note&quot;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
-                <span class="s2">&quot;velocity&quot;</span><span class="p">:</span> <span class="n">msg</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
-                <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="n">time</span><span class="p">,</span>
-            <span class="p">}</span>
-        <span class="p">)</span>
-<span class="n">events</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">events</span><span class="p">)</span>
-<span class="n">events</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">events</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">events</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
-    <span class="n">values</span><span class="o">=</span><span class="s2">&quot;velocity&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;note&quot;</span><span class="p">,</span> <span class="n">aggfunc</span><span class="o">=</span><span class="s2">&quot;max&quot;</span>
-<span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">ffill</span><span class="p">()</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">T</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">300</span><span class="p">])</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x7f82c3e1f880&gt;
-</pre></div>
-</div>
-<img alt="../_images/ec50e064226a819afde792ea64885b6e780705c5f87e8981c1e8c5501866165b.png" src="../_images/ec50e064226a819afde792ea64885b6e780705c5f87e8981c1e8c5501866165b.png" />
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">events</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
-    <span class="p">{</span>
-        <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
-        <span class="s2">&quot;note&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;C&quot;</span><span class="p">,</span> <span class="s2">&quot;B&quot;</span><span class="p">,</span> <span class="s2">&quot;A&quot;</span><span class="p">],</span>
-        <span class="s2">&quot;velocity&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">60</span><span class="p">],</span>
-    <span class="p">}</span>
-<span class="p">)</span>
-
-<span class="c1"># Create a new index by combining &#39;time&#39; and &#39;note&#39;</span>
-<span class="n">events</span><span class="p">[</span><span class="s2">&quot;time_note&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">events</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="n">events</span><span class="p">[</span><span class="s2">&quot;note&quot;</span><span class="p">]</span>
-
-<span class="c1"># Pivot the table</span>
-<span class="n">pivot_table</span> <span class="o">=</span> <span class="n">events</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
-    <span class="n">values</span><span class="o">=</span><span class="s2">&quot;velocity&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="s2">&quot;time_note&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;note&quot;</span><span class="p">,</span> <span class="n">aggfunc</span><span class="o">=</span><span class="s2">&quot;first&quot;</span>
-<span class="p">)</span>
-
-<span class="c1"># Drop the temporary &#39;time_note&#39; column</span>
-<span class="n">pivot_table</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;time_note&quot;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</section>
-</section>
-<section id="maestro-dataset">
-<h2><span class="section-number">5.3. </span>Maestro dataset<a class="headerlink" href="#maestro-dataset" title="Link to this heading">#</a></h2>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ki_ueben.datasets</span> <span class="kn">import</span> <span class="n">Maestro3</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">maestro_dataset</span> <span class="o">=</span> <span class="n">Maestro3</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">midi_files</span> <span class="o">=</span> <span class="n">maestro_dataset</span><span class="o">.</span><span class="n">get_midi_files</span><span class="p">(</span><span class="s2">&quot;2013/*.midi&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>Building a simple markov chain by checking each transition.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ki_ueben.midi</span> <span class="kn">import</span> <span class="n">PianoRoll</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
-
-
-<span class="k">def</span> <span class="nf">calculate_transition_matrix</span><span class="p">(</span><span class="n">midi_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-    <span class="n">transition_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">127</span><span class="p">,</span> <span class="mi">127</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
-
-    <span class="n">events</span> <span class="o">=</span> <span class="n">PianoRoll</span><span class="p">(</span><span class="n">midi_file</span><span class="p">)</span><span class="o">.</span><span class="n">events</span><span class="p">()</span>
-    <span class="n">played_notes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">events</span><span class="p">[(</span><span class="n">events</span><span class="p">[</span><span class="s2">&quot;velocity&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="s2">&quot;note&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">note</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">current_note</span><span class="p">,</span> <span class="n">next_node</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">played_notes</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">played_notes</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
-        <span class="n">transition_matrix</span><span class="p">[</span><span class="n">current_note</span><span class="p">,</span> <span class="n">next_node</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="k">return</span> <span class="n">transition_matrix</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">foo</span> <span class="o">=</span> <span class="n">calculate_transition_matrix</span><span class="p">(</span><span class="n">midi_files</span><span class="p">[</span><span class="mi">10</span><span class="p">])</span>
-<span class="n">bar</span> <span class="o">=</span> <span class="n">calculate_transition_matrix</span><span class="p">(</span><span class="n">midi_files</span><span class="p">[</span><span class="mi">100</span><span class="p">])</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">midi_files</span><span class="p">[</span><span class="mi">100</span><span class="p">]</span><span class="o">.</span><span class="n">name</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;ORIG-MIDI_01_7_7_13_Group__MID--AUDIO_11_R1_2013_wav--4.midi&#39;
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">midi_files</span> <span class="o">=</span> <span class="n">maestro_dataset</span><span class="o">.</span><span class="n">get_midi_files</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">maestro_dataset</span><span class="o">.</span><span class="n">dataset_dir</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;2013/*.midi&quot;</span><span class="p">)))</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>127
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">foo</span> <span class="o">-</span> <span class="n">bar</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x14745ec80&gt;
-</pre></div>
-</div>
-<a class="reference internal image-reference" href="../_images/aedea01f001d2189822b7b8d1ba5121c5d37e3dba6a05296fcdc41bcbdc7b620.png"><img alt="../_images/aedea01f001d2189822b7b8d1ba5121c5d37e3dba6a05296fcdc41bcbdc7b620.png" src="../_images/aedea01f001d2189822b7b8d1ba5121c5d37e3dba6a05296fcdc41bcbdc7b620.png" style="width: 425px; height: 417px;" /></a>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">midi_files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">midi_files</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>False
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">calculate_transition_matrix</span><span class="p">(</span><span class="n">midi_files</span><span class="p">[</span><span class="mi">400</span><span class="p">]),</span> <span class="n">interpolation</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.image.AxesImage at 0x151c6f6d0&gt;
-</pre></div>
-</div>
-<a class="reference internal image-reference" href="../_images/8f53453c7253129a6f64ec3817d888ff54f5db12b0510d8e2f83e2be5d47d294.png"><img alt="../_images/8f53453c7253129a6f64ec3817d888ff54f5db12b0510d8e2f83e2be5d47d294.png" src="../_images/8f53453c7253129a6f64ec3817d888ff54f5db12b0510d8e2f83e2be5d47d294.png" style="width: 425px; height: 417px;" /></a>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">transitions</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=-</span><span class="mi">2</span><span class="p">)(</span>
-    <span class="n">delayed</span><span class="p">(</span><span class="n">calculate_transition_matrix</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">maestro_dataset</span><span class="o">.</span><span class="n">get_midi_files</span><span class="p">(</span><span class="s2">&quot;2013/*.midi&quot;</span><span class="p">)</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">transitions</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">interpolation</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../_images/478ffb827ee723f3042eeec8f7cb6ecdc49e87c19a329a88570f1d73652e9efe.png"><img alt="../_images/478ffb827ee723f3042eeec8f7cb6ecdc49e87c19a329a88570f1d73652e9efe.png" src="../_images/478ffb827ee723f3042eeec8f7cb6ecdc49e87c19a329a88570f1d73652e9efe.png" style="width: 509px; height: 417px;" /></a>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">summed_transition_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">transitions</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">summed_transition_matrix</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">();</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../_images/06526824b2b2b6b15a5d4ea5387491ad3887da55b13c1afcbf100fc062dcfd38.png"><img alt="../_images/06526824b2b2b6b15a5d4ea5387491ad3887da55b13c1afcbf100fc062dcfd38.png" src="../_images/06526824b2b2b6b15a5d4ea5387491ad3887da55b13c1afcbf100fc062dcfd38.png" style="width: 514px; height: 417px;" /></a>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">summed_transition_matrix</span><span class="p">[</span><span class="mi">60</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([   0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-          0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-          0,    0,    3,    0,    0,    1,    4,   28,   10,    5,   23,
-         39,   11,   18,  115,   26,   47,   51,   72,  105,   37,   94,
-         93,  133,  135,   59,  789,   90,  154,  293,  255,  480,  235,
-        555,  413,  878,  539,  317,  166,  223,  589, 1028,  683,  713,
-        319,  624,  365,  543,  270,  157,  846,   89,  206,  394,  279,
-        277,  137,  234,  153,  206,  101,   57,  239,   26,   50,   86,
-         93,   47,   25,   57,   29,   25,   14,   10,   33,    8,    7,
-          9,    2,    6,    1,    0,    0,    0,    0,    0,    0,    0,
-          0,    0,    0,    0,    0,    0,    0,    0,    0,    0,    0,
-          0,    0,    0,    0,    0,    0], dtype=int32)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
-    <span class="nb">range</span><span class="p">(</span><span class="n">summed_transition_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">p</span><span class="o">=</span><span class="n">summed_transition_matrix</span><span class="p">[</span><span class="mi">60</span><span class="p">]</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">ValueError</span><span class="g g-Whitespace">                                </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">32</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
-<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">summed_transition_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">p</span><span class="o">=</span><span class="n">summed_transition_matrix</span><span class="p">[</span><span class="mi">60</span><span class="p">])</span>
-
-<span class="nn">File numpy/random/mtrand.pyx:974,</span> in <span class="ni">numpy.random.mtrand.RandomState.choice</span><span class="nt">()</span>
-
-<span class="ne">ValueError</span>: probabilities do not sum to 1
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">summed_transition_matrix</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([    0,     0,     0,     0,     0,     0,     0,     0,     0,
-           0,     0,     0,     0,     0,     0,     0,     0,     0,
-           0,     0,     0,     9,    17,    25,    90,   107,   153,
-         298,   315,   798,   945,  1085,  1171,  2055,  1685,  2016,
-        2919,  2967,  2866,  3074,  3388,  4670,  3868,  5277,  4603,
-        6290,  6321,  5922,  8726,  6956,  9580,  8140,  9345, 12212,
-        9419, 13376, 10368, 13988, 15045, 11886, 15533, 12926, 16722,
-       14068, 14968, 16937, 11945, 16390, 13330, 15765, 14319, 13026,
-       15285, 12718, 14313, 12529, 11412, 11882,  8805, 10453,  8208,
-        8471,  7283,  6376,  6622,  4864,  5439,  4693,  4158,  3854,
-        2665,  2974,  2292,  2295,  1909,  1688,  1309,  1467,  1038,
-        1181,   908,   487,   214,   124,    54,    48,     5,     5,
-           2,     0,     0,     0,     0,     0,     0,     0,     0,
-           0,     0,     0,     0,     0,     0,     0,     0,     0,
-           0])
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0, 1])
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Markov</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">transition_matrix</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">m</span> <span class="o">=</span> <span class="n">transition_matrix</span>
-
-    <span class="k">def</span> <span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span>
-            <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">m</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">p</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">m</span><span class="p">[</span><span class="n">state</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">m</span><span class="p">[</span><span class="n">state</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
-        <span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">markov</span> <span class="o">=</span> <span class="n">Markov</span><span class="p">(</span><span class="n">transition_matrix</span><span class="o">=</span><span class="n">summed_transition_matrix</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">markov</span><span class="o">.</span><span class="n">next</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>57
-</pre></div>
-</div>
-</div>
-</div>
+<p>We can also playback this series via a MIDI instrument controlled via Python.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">asyncio</span>
@@ -1134,14 +740,10 @@ This can be done by scaling every row of the transition matrix by the sum of it.
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
 
 <span class="kn">import</span> <span class="nn">mido</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MidiPlayer</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;MIDILINK-mini&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+
+
+<span class="k">class</span> <span class="nc">MidiPlayer</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">device_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">midi_out</span> <span class="o">=</span> <span class="n">mido</span><span class="o">.</span><span class="n">open_output</span><span class="p">(</span><span class="n">device_name</span><span class="p">)</span>
 
     <span class="nd">@staticmethod</span>
@@ -1188,28 +790,24 @@ This can be done by scaling every row of the transition matrix by the sum of it.
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">m</span> <span class="o">=</span> <span class="n">MidiPlayer</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># adjust this to your MIDI device</span>
+<span class="n">midi_player</span> <span class="o">=</span> <span class="n">MidiPlayer</span><span class="p">(</span><span class="n">device_name</span><span class="o">=</span><span class="s2">&quot;MIDILINK-mini&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">time</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">):</span>
+    <span class="n">note</span> <span class="o">=</span> <span class="n">markov_piano</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+    <span class="k">await</span> <span class="n">midi_player</span><span class="o">.</span><span class="n">async_play_note</span><span class="p">(</span><span class="n">note</span><span class="p">,</span> <span class="n">sustain</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
 
-<span class="c1"># start note</span>
-<span class="n">n</span> <span class="o">=</span> <span class="mi">60</span>
-
-<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">):</span>
-    <span class="n">n</span> <span class="o">=</span> <span class="n">markov</span><span class="o">.</span><span class="n">next</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
-    <span class="k">await</span> <span class="n">m</span><span class="o">.</span><span class="n">async_play_note</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">sustain</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
-
-<span class="n">m</span><span class="o">.</span><span class="n">stop_all</span><span class="p">()</span>
+<span class="n">midi_player</span><span class="o">.</span><span class="n">stop_all</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>This plays back the most likely note derived from out dataset, but we will soon realize that this does not capture</p>
+<p>This plays back the most likely note derived from out dataset, but we will soon realize that this does not capture any kind of</p>
 <ul class="simple">
 <li><p>rhythm</p></li>
 <li><p>phrasing</p></li>
@@ -1221,243 +819,16 @@ This can be done by scaling every row of the transition matrix by the sum of it.
 Yet this increases our transition matrix from a <span class="math notranslate nohighlight">\(m \times m\)</span> matrix to a <span class="math notranslate nohighlight">\(n \times m \times m\)</span> matrix, where <span class="math notranslate nohighlight">\(m\)</span> is the number of possible states.</p>
 <p>Our <em>state space</em> increases further if we take polyphony into account, and at this point it is clear that while markov chain are a very interesting mathematical objects, they do not perform well on tasks such as generalization as if the state space is too restrictive.
 This is, because markov chain rely on independence of its state variables, yet music happens within a context and the articulation of a single note also correlates with the <em>function</em> of said note.</p>
-<p>Nonetheless, we must not use markov chains to create a perfect replications of something already existing, but can instead use this as a generative method on its own.</p>
-<p>To make the system more expressive, it is possible to create a markov chain for multiple parameters, which then can be used in a serial manner.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">midi_file</span> <span class="o">=</span> <span class="n">midi_files</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">piano_roll</span> <span class="o">=</span> <span class="n">PianoRoll</span><span class="p">(</span><span class="n">midi_file</span><span class="p">)</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">piano_roll</span><span class="o">.</span><span class="n">events</span><span class="p">()</span>
-</pre></div>
+<p>Nonetheless, Markov chains and also <a class="reference external" href="https://en.wikipedia.org/wiki/Hidden_Markov_model">Hidden Markov Models</a> are a very powerful tool as which allow us to take a look inside and to tinker with its state.</p>
+<div class="admonition-task admonition">
+<p class="admonition-title">Task</p>
+<ul class="simple">
+<li><p>Run the markov analysis on not just one but multiple files</p></li>
+<li><p>Try to do an additional markov chain for the timing of each note</p></li>
+<li><p>Implement a markov chain in SuperColider.</p></li>
+</ul>
 </div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">cut</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">diff</span><span class="p">()[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span> <span class="o">/</span> <span class="mi">100</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1                NaN
-2        (0.0, 0.01]
-3       (0.08, 0.09]
-4       (0.02, 0.03]
-5       (0.06, 0.07]
-            ...     
-5000     (0.0, 0.01]
-5001     (0.0, 0.01]
-5002     (0.0, 0.01]
-5003    (0.02, 0.03]
-5004    (0.01, 0.02]
-Name: time, Length: 5004, dtype: category
-Categories (19, interval[float64, right]): [(0.0, 0.01] &lt; (0.01, 0.02] &lt; (0.02, 0.03] &lt; (0.03, 0.04] ... (0.15, 0.16] &lt; (0.16, 0.17] &lt; (0.17, 0.18] &lt; (0.18, 0.19]]
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;note&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">77</span><span class="p">]</span><span class="o">.</span><span class="n">diff</span><span class="p">()[</span><span class="mi">1</span><span class="p">::</span><span class="mi">2</span><span class="p">][</span><span class="s2">&quot;time&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">16</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">()</span> <span class="o">/</span> <span class="mi">16</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>3       0.0625
-14      0.0625
-85      0.1250
-91      0.1250
-100     0.1250
-         ...  
-4265    0.1250
-4282    0.9375
-4291    0.2500
-4385    0.8125
-4701    0.0625
-Name: time, Length: 97, dtype: float64
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
-
-
-<span class="k">def</span> <span class="nf">additional_matrix</span><span class="p">(</span><span class="n">midi_file</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-    <span class="n">events</span> <span class="o">=</span> <span class="n">PianoRoll</span><span class="p">(</span><span class="n">midi_file</span><span class="p">)</span><span class="o">.</span><span class="n">events</span><span class="p">()</span>
-
-    <span class="c1"># extract notes</span>
-    <span class="n">note_transition</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">127</span><span class="p">,</span> <span class="mi">127</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
-    <span class="n">played_notes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">events</span><span class="p">[(</span><span class="n">events</span><span class="p">[</span><span class="s2">&quot;velocity&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="s2">&quot;note&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">note</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">current_note</span><span class="p">,</span> <span class="n">next_node</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">played_notes</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">played_notes</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
-        <span class="n">note_transition</span><span class="p">[</span><span class="n">current_note</span><span class="p">,</span> <span class="n">next_node</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-
-    <span class="n">velocity_transition</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">127</span><span class="p">,</span> <span class="mi">127</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
-    <span class="n">played_velocities</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span>
-        <span class="n">events</span><span class="p">[(</span><span class="n">events</span><span class="p">[</span><span class="s2">&quot;velocity&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="s2">&quot;note&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">velocity</span>
-    <span class="p">)</span>
-    <span class="k">for</span> <span class="n">current_note</span><span class="p">,</span> <span class="n">next_node</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">played_velocities</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">played_velocities</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
-        <span class="n">note_transition</span><span class="p">[</span><span class="n">current_note</span><span class="p">,</span> <span class="n">next_node</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-
-    <span class="n">duration_transition</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">127</span><span class="p">,</span> <span class="mi">127</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
-    <span class="n">played_notes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">events</span><span class="p">[(</span><span class="n">events</span><span class="p">[</span><span class="s2">&quot;velocity&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="s2">&quot;note&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">note</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">current_note</span><span class="p">,</span> <span class="n">next_node</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">played_notes</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">played_notes</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
-        <span class="n">duration_transition</span><span class="p">[</span><span class="n">current_note</span><span class="p">,</span> <span class="n">next_node</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-
-    <span class="k">return</span> <span class="p">(</span><span class="n">note_transition</span><span class="p">,)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[0., 0., 0., ..., 0., 0., 0.],
-       [0., 0., 0., ..., 0., 0., 0.],
-       [0., 0., 0., ..., 0., 0., 0.],
-       ...,
-       [0., 0., 0., ..., 0., 0., 0.],
-       [0., 0., 0., ..., 0., 0., 0.],
-       [0., 0., 0., ..., 0., 0., 0.]])
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">m</span><span class="o">.</span><span class="n">play_note</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">m</span><span class="o">.</span><span class="n">stop_all</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">transition_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">127</span><span class="p">,</span> <span class="mi">127</span><span class="p">))</span>
-
-<span class="k">for</span> <span class="n">midi_file</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">maestro_dataset</span><span class="o">.</span><span class="n">get_midi_files</span><span class="p">(</span><span class="s2">&quot;2013/*.midi&quot;</span><span class="p">)):</span>
-    <span class="n">piano_roll</span> <span class="o">=</span> <span class="n">PianoRoll</span><span class="p">(</span><span class="n">midi_file</span><span class="p">)</span><span class="o">.</span><span class="n">piano_roll</span><span class="p">()</span>
-    <span class="n">played_notes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">events</span><span class="p">[(</span><span class="n">events</span><span class="p">[</span><span class="s2">&quot;velocity&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="s2">&quot;note&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">note</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">current_note</span><span class="p">,</span> <span class="n">next_node</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">played_notes</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">played_notes</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
-        <span class="n">transition_matrix</span><span class="p">[</span><span class="n">current_note</span><span class="p">,</span> <span class="n">next_node</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 22%|██▏       | 280/1276 [06:05&lt;21:40,  1.31s/it]
-</pre></div>
-</div>
-<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
-<span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">64</span><span class="p">],</span> <span class="n">line</span> <span class="mi">4</span>
-<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="n">transition_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">127</span><span class="p">,</span> <span class="mi">127</span><span class="p">))</span>
-<span class="g g-Whitespace">      </span><span class="mi">3</span> <span class="k">for</span> <span class="n">midi_file</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">maestro_dataset</span><span class="o">.</span><span class="n">get_midi_files</span><span class="p">(</span><span class="s2">&quot;2013/*.midi&quot;</span><span class="p">)):</span>
-<span class="ne">----&gt; </span><span class="mi">4</span>     <span class="n">piano_roll</span> <span class="o">=</span> <span class="n">PianoRoll</span><span class="p">(</span><span class="n">midi_file</span><span class="p">)</span><span class="o">.</span><span class="n">piano_roll</span><span class="p">()</span>
-<span class="g g-Whitespace">      </span><span class="mi">5</span>     <span class="n">played_notes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">events</span><span class="p">[(</span><span class="n">events</span><span class="p">[</span><span class="s1">&#39;velocity&#39;</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">events</span><span class="p">[</span><span class="s1">&#39;note&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">)]</span><span class="o">.</span><span class="n">note</span><span class="p">)</span>
-<span class="g g-Whitespace">      </span><span class="mi">6</span>     <span class="k">for</span> <span class="n">current_note</span><span class="p">,</span> <span class="n">next_node</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">played_notes</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">played_notes</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
-
-<span class="nn">File ~/github/ki-ueben-klavier-trainieren/book/chapters/ki_ueben/midi.py:97,</span> in <span class="ni">PianoRoll.piano_roll</span><span class="nt">(self)</span>
-<span class="g g-Whitespace">     </span><span class="mi">95</span> <span class="n">events</span> <span class="o">=</span> <span class="n">events</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span><span class="n">values</span><span class="o">=</span><span class="s2">&quot;velocity&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;note&quot;</span><span class="p">,</span> <span class="n">aggfunc</span><span class="o">=</span><span class="s2">&quot;max&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">96</span> <span class="n">events</span> <span class="o">=</span> <span class="n">events</span><span class="o">.</span><span class="n">ffill</span><span class="p">()</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
-<span class="ne">---&gt; </span><span class="mi">97</span> <span class="n">events</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">TimedeltaIndex</span><span class="p">(</span><span class="n">events</span><span class="o">.</span><span class="n">index</span><span class="o">*</span><span class="mf">10e8</span><span class="p">)</span>
-<span class="g g-Whitespace">     </span><span class="mi">98</span> <span class="k">return</span> <span class="n">events</span>
-
-<span class="nn">File ~/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/pandas/core/indexes/timedeltas.py:211,</span> in <span class="ni">TimedeltaIndex.__new__</span><span class="nt">(cls, data, unit, freq, closed, dtype, copy, name)</span>
-<span class="g g-Whitespace">    </span><span class="mi">207</span>         <span class="k">return</span> <span class="n">data</span><span class="o">.</span><span class="n">_view</span><span class="p">()</span>
-<span class="g g-Whitespace">    </span><span class="mi">209</span> <span class="c1"># - Cases checked above all return/raise before reaching here - #</span>
-<span class="ne">--&gt; </span><span class="mi">211</span> <span class="n">tdarr</span> <span class="o">=</span> <span class="n">TimedeltaArray</span><span class="o">.</span><span class="n">_from_sequence_not_strict</span><span class="p">(</span>
-<span class="g g-Whitespace">    </span><span class="mi">212</span>     <span class="n">data</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">freq</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="n">copy</span>
-<span class="g g-Whitespace">    </span><span class="mi">213</span> <span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">214</span> <span class="n">refs</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="g g-Whitespace">    </span><span class="mi">215</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">copy</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="n">ABCSeries</span><span class="p">,</span> <span class="n">Index</span><span class="p">)):</span>
-
-<span class="nn">File ~/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/pandas/core/arrays/timedeltas.py:260,</span> in <span class="ni">TimedeltaArray._from_sequence_not_strict</span><span class="nt">(cls, data, dtype, copy, freq, unit)</span>
-<span class="g g-Whitespace">    </span><span class="mi">256</span>     <span class="n">dtype</span> <span class="o">=</span> <span class="n">_validate_td64_dtype</span><span class="p">(</span><span class="n">dtype</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">258</span> <span class="k">assert</span> <span class="n">unit</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;M&quot;</span><span class="p">]</span>  <span class="c1"># caller is responsible for checking</span>
-<span class="ne">--&gt; </span><span class="mi">260</span> <span class="n">data</span><span class="p">,</span> <span class="n">inferred_freq</span> <span class="o">=</span> <span class="n">sequence_to_td64ns</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="n">copy</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">unit</span><span class="p">)</span>
-<span class="g g-Whitespace">    </span><span class="mi">262</span> <span class="k">if</span> <span class="n">dtype</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-<span class="g g-Whitespace">    </span><span class="mi">263</span>     <span class="n">data</span> <span class="o">=</span> <span class="n">astype_overflowsafe</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-<span class="nn">File ~/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/pandas/core/arrays/timedeltas.py:1059,</span> in <span class="ni">sequence_to_td64ns</span><span class="nt">(data, copy, unit, errors)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1056</span> <span class="k">else</span><span class="p">:</span>
-<span class="g g-Whitespace">   </span><span class="mi">1057</span>     <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-<span class="ne">-&gt; </span><span class="mi">1059</span> <span class="n">data</span> <span class="o">=</span> <span class="n">cast_from_unit_vectorized</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">unit</span> <span class="ow">or</span> <span class="s2">&quot;ns&quot;</span><span class="p">)</span>
-<span class="g g-Whitespace">   </span><span class="mi">1060</span> <span class="n">data</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span> <span class="o">=</span> <span class="n">iNaT</span>
-<span class="g g-Whitespace">   </span><span class="mi">1061</span> <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="s2">&quot;m8[ns]&quot;</span><span class="p">)</span>
-
-<span class="ne">KeyboardInterrupt</span>: 
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">current_note</span><span class="p">,</span> <span class="n">next_node</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">played_notes</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">played_notes</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
-    <span class="n">transition_matrix</span><span class="p">[</span><span class="n">current_note</span><span class="p">,</span> <span class="n">next_node</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">transition_matrix</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">transition_matrix</span><span class="o">.</span><span class="n">shape</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(127, 127)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">transition_matrix</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[0., 0., 0., ..., 0., 0., 0.],
-       [0., 0., 0., ..., 0., 0., 0.],
-       [0., 0., 0., ..., 0., 0., 0.],
-       ...,
-       [0., 0., 0., ..., 0., 0., 0.],
-       [0., 0., 0., ..., 0., 0., 0.],
-       [0., 0., 0., ..., 0., 0., 0.]])
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">transition_matrix</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../_images/ff271b53185f571a1caea857c47d180c41cc778bc28e081045ed90199b41ef1a.png"><img alt="../_images/ff271b53185f571a1caea857c47d180c41cc778bc28e081045ed90199b41ef1a.png" src="../_images/ff271b53185f571a1caea857c47d180c41cc778bc28e081045ed90199b41ef1a.png" style="width: 496px; height: 417px;" /></a>
-</div>
-</div>
+</section>
 </section>
 </section>
 
@@ -1530,7 +901,6 @@ Name: time, Length: 97, dtype: float64
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-processing">5.2.1. Data processing</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#maestro-dataset">5.3. Maestro dataset</a></li>
 </ul>
   </nav></div>
 

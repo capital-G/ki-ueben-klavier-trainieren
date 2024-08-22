@@ -399,7 +399,7 @@ document.write(`
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fully-connected-neural-networks">7.3. Fully connected neural networks</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-and-iteration">7.4. Implementation and iteration</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-fcnn">7.4.1. Simple FCNN</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#making-the-model-more-complex">7.4.2. Making the model more complex</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#predicting-probabilities">7.4.2. Predicting probabilities</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-context">7.4.3. Adding context</a></li>
 </ul>
 </li>
@@ -434,7 +434,7 @@ But only due to the wide and cheap availability of GPUs through the gaming indus
 <p>There are lots of variations of how this topology or this training process can be constructed, and new paths in the structuring of these</p>
 <p>This setup still requires the use a combination of different crucial algorithms such as <a class="reference external" href="https://en.wikipedia.org/wiki/Automatic_differentiation">AutoDiff</a> (an algorithm for automatic partial differentiation) or optimizing algorithms such as <a class="reference external" href="https://en.wikipedia.org/wiki/Stochastic_gradient_descent#Adam">Adam</a>.
 Instead of implementing those algorithms oneself, it is possible to use libraries which implement a variety of these algorithms and also have optimized versions for GPU available and there is a variety of libraries available these days.</p>
-<p>This course will use <em>PyTorch</em> which provides a Python interface to all the necessary algorithms with a high level abstraction.</p>
+<p>This course will use <a class="reference external" href="https://lightning.ai/docs/pytorch/stable/"><em>PyTorch Lightning</em></a> which implement common default and is build on top of <a class="reference external" href="https://pytorch.org/"><em>PyTorch</em></a>, which provides a Python interface to all the necessary algorithms for the following chapters.</p>
 </section>
 <section id="fully-connected-neural-networks">
 <h2><span class="section-number">7.3. </span>Fully connected neural networks<a class="headerlink" href="#fully-connected-neural-networks" title="Link to this heading">#</a></h2>
@@ -458,14 +458,14 @@ Source: <a class="reference external" href="https://en.wikipedia.org/wiki/File:C
 <section id="simple-fcnn">
 <h3><span class="section-number">7.4.1. </span>Simple FCNN<a class="headerlink" href="#simple-fcnn" title="Link to this heading">#</a></h3>
 <p>As a first introduction to neural networks, we will formulate, train, and evaluate a fully connected neural network that simply predicts the next note given the current note.
-This is very similar to the Markov chain discussed earlier.</p>
-<p>To implement such a network, we will use <a class="reference external" href="https://lightning.ai/docs/pytorch/stable/">Lightning</a>, which is build on top of <a class="reference external" href="https://pytorch.org/">PyTorch</a>.</p>
+This is somehow similar to the previous discussed Perceptron and Markov chain discussed earlier.</p>
+<p>Our goal is to predict the next note given a sequence of notes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">lightning</span> <span class="k">as</span> <span class="nn">L</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">pytorch_lightning.utilities.model_summary</span> <span class="kn">import</span> <span class="n">summarize</span>
-<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">nn</span><span class="p">,</span> <span class="n">optim</span><span class="p">,</span> <span class="n">utils</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
 
 
 <span class="k">class</span> <span class="nc">SimpleFCNN</span><span class="p">(</span><span class="n">L</span><span class="o">.</span><span class="n">LightningModule</span><span class="p">):</span>
@@ -481,35 +481,40 @@ This is very similar to the Markov chain discussed earlier.</p>
             <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">training_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">):</span>
-        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">batch</span>
-        <span class="c1"># scalar value needs to be put into a vector</span>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="c1"># scalar value needs to be wrapped into a an</span>
+        <span class="c1"># additional dimension</span>
         <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
         <span class="c1"># z is the predicted note</span>
         <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="c1"># print(&quot;x&quot;, x.shape, &quot;y&quot;, y.shape, &quot;z&quot;, z.shape)</span>
-        <span class="c1"># we calculate the loss here</span>
-        <span class="n">loss</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">z</span>
+
+    <span class="k">def</span> <span class="nf">training_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">batch</span>
+
+        <span class="n">y_hat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">y_hat</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;train_loss&quot;</span><span class="p">,</span> <span class="n">loss</span><span class="p">,</span> <span class="n">prog_bar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
         <span class="k">return</span> <span class="n">loss</span>
 
     <span class="k">def</span> <span class="nf">test_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">):</span>
         <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">batch</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-        <span class="n">test_loss</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">y_hat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">test_loss</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">y_hat</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;test_loss&quot;</span><span class="p">,</span> <span class="n">test_loss</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">test_loss</span>
 
     <span class="k">def</span> <span class="nf">configure_optimizers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
 
 
 <span class="n">simple_fcnn</span> <span class="o">=</span> <span class="n">SimpleFCNN</span><span class="p">()</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">simple_fcnn</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Summary:&quot;</span><span class="p">)</span>
-<span class="n">summarize</span><span class="p">(</span><span class="n">simple_fcnn</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -521,9 +526,19 @@ This is very similar to the Markov chain discussed earlier.</p>
     (2): Linear(in_features=4, out_features=1, bias=True)
   )
 )
-Summary:
 </pre></div>
 </div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pytorch_lightning.utilities.model_summary</span> <span class="kn">import</span> <span class="n">ModelSummary</span>
+
+<span class="n">ModelSummary</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">simple_fcnn</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  | Name | Type       | Params | Mode 
 --------------------------------------------
 0 | net  | Sequential | 13     | train
@@ -561,8 +576,11 @@ In the <code class="docutils literal notranslate"><span class="pre">training_ste
 <span class="n">note_dfs</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="n">maestro_files</span> <span class="o">=</span> <span class="n">Maestro3Dataset</span><span class="p">()</span>
 
+<span class="c1"># limit files - set to -1 for no limits</span>
+<span class="n">NUM_FILES</span> <span class="o">=</span> <span class="mi">100</span>
+
 <span class="c1"># limit to first 100</span>
-<span class="k">for</span> <span class="n">midi_path</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">maestro_files</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">100</span><span class="p">][</span><span class="s2">&quot;file_path&quot;</span><span class="p">]):</span>
+<span class="k">for</span> <span class="n">midi_path</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">maestro_files</span><span class="p">[:</span><span class="n">NUM_FILES</span><span class="p">][</span><span class="s2">&quot;file_path&quot;</span><span class="p">]):</span>
     <span class="n">piano_roll</span> <span class="o">=</span> <span class="n">PianoRoll</span><span class="p">(</span><span class="n">midi_path</span><span class="p">)</span>
     <span class="n">df_events</span> <span class="o">=</span> <span class="n">piano_roll</span><span class="o">.</span><span class="n">events</span><span class="p">()</span>
     <span class="c1"># filter out pedal (note=-1) and note_off events (velocity=0)</span>
@@ -576,10 +594,7 @@ In the <code class="docutils literal notranslate"><span class="pre">training_ste
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 100/100 [00:40&lt;00:00,  2.48it/s]
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 100/100 [00:39&lt;00:00,  2.50it/s]
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -677,11 +692,11 @@ In the <code class="docutils literal notranslate"><span class="pre">training_ste
 <p>458219 rows × 3 columns</p>
 </div></div></div>
 </div>
+<p>As we want to predict the <em>next</em> note, we need to create a pair of the given sequence (<span class="math notranslate nohighlight">\(X\)</span>) and the target value (<span class="math notranslate nohighlight">\(y\)</span>).
+This can by simply shifting the data indices by 1.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">torch.utils</span>
-<span class="kn">import</span> <span class="nn">torch.utils.data</span>
-<span class="kn">from</span> <span class="nn">torch.utils.data.dataset</span> <span class="kn">import</span> <span class="n">TensorDataset</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torch.utils.data.dataset</span> <span class="kn">import</span> <span class="n">TensorDataset</span>
 
 <span class="c1"># offset the data by 1 between X and y</span>
 <span class="n">simple_data_X</span> <span class="o">=</span> <span class="n">simple_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;note&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
@@ -713,24 +728,32 @@ In the <code class="docutils literal notranslate"><span class="pre">training_ste
 </div>
 </div>
 </div>
+<p>To actually feed a stream of data into a neural network we use a <a class="reference external" href="https://pytorch.org/tutorials/beginner/basics/data_tutorial.html"><code class="docutils literal notranslate"><span class="pre">DataLoader</span></code></a>.
+This is necessary as we most likely can’t fit all data at once through our neural network.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span>
 
 <span class="n">train_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
-    <span class="n">simple_train</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">persistent_workers</span><span class="o">=</span><span class="kc">True</span>
+    <span class="n">simple_train</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">persistent_workers</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">)</span>
 <span class="n">test_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">simple_test</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">512</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
+<p>Now we are set and we can start the actual training process.
+We will limit our training to 5 <em>epochs</em> - we will</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pytorch_lightning.loggers</span> <span class="kn">import</span> <span class="n">CSVLogger</span>
 
 <span class="n">simple_trainer</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">Trainer</span><span class="p">(</span>
-    <span class="n">max_epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="p">[</span><span class="n">CSVLogger</span><span class="p">(</span><span class="n">save_dir</span><span class="o">=</span><span class="s2">&quot;logs&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;simple_fcnn&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="mi">0</span><span class="p">)]</span>
+    <span class="n">max_epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">logger</span><span class="o">=</span><span class="p">[</span>
+        <span class="c1"># we store the metrics into a CSV file so we can take a look at its progress later</span>
+        <span class="n">CSVLogger</span><span class="p">(</span><span class="n">save_dir</span><span class="o">=</span><span class="s2">&quot;logs&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;simple_fcnn&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="p">],</span>
 <span class="p">)</span>
 <span class="n">simple_trainer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">simple_fcnn</span><span class="p">,</span> <span class="n">train_dataloaders</span><span class="o">=</span><span class="n">train_loader</span><span class="p">)</span>
 </pre></div>
@@ -740,8 +763,8 @@ In the <code class="docutils literal notranslate"><span class="pre">training_ste
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>GPU available: False, used: False
 TPU available: False, using: 0 TPU cores
 HPU available: False, using: 0 HPUs
-/Users/scheiba/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/lightning_fabric/loggers/csv_logs.py:268: Experiment logs directory logs/simple_fcnn/simple_fcnn exists and is not empty. Previous log files in this directory will be deleted when the new ones are saved!
-/Users/scheiba/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/lightning/pytorch/callbacks/model_checkpoint.py:654: Checkpoint directory logs/simple_fcnn/simple_fcnn/checkpoints exists and is not empty.
+/Users/scheiba/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/lightning_fabric/loggers/csv_logs.py:268: Experiment logs directory logs/simple_fcnn/version_0 exists and is not empty. Previous log files in this directory will be deleted when the new ones are saved!
+/Users/scheiba/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/lightning/pytorch/callbacks/model_checkpoint.py:654: Checkpoint directory logs/simple_fcnn/version_0/checkpoints exists and is not empty.
 
   | Name | Type       | Params | Mode 
 --------------------------------------------
@@ -755,30 +778,54 @@ HPU available: False, using: 0 HPUs
 0         Modules in eval mode
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 4: 100%|██████████| 716/716 [00:06&lt;00:00, 108.29it/s, v_num=fcnn, train_loss=249.0]  
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 0:   1%|          | 25/2864 [00:00&lt;01:16, 37.03it/s, v_num=0, train_loss=8.28e+3]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/v0/7q67mljd4v9_frk_1p_mr2ph0000gn/T/ipykernel_11183/2857180159.py:37: UserWarning: Using a target size (torch.Size([128])) that is different to the input size (torch.Size([128, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  loss = nn.functional.mse_loss(y_hat, y)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 1:   1%|          | 20/2864 [00:00&lt;00:26, 106.37it/s, v_num=0, train_loss=385.0]   
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/var/folders/v0/7q67mljd4v9_frk_1p_mr2ph0000gn/T/ipykernel_11183/2857180159.py:37: UserWarning: Using a target size (torch.Size([110])) that is different to the input size (torch.Size([110, 1])). This will likely lead to incorrect results due to broadcasting. Please ensure they have the same size.
+  loss = nn.functional.mse_loss(y_hat, y)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 4: 100%|██████████| 2864/2864 [00:21&lt;00:00, 134.30it/s, v_num=0, train_loss=258.0]
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>`Trainer.fit` stopped: `max_epochs=5` reached.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 4: 100%|██████████| 716/716 [00:06&lt;00:00, 108.14it/s, v_num=fcnn, train_loss=249.0]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 4: 100%|██████████| 2864/2864 [00:21&lt;00:00, 134.26it/s, v_num=0, train_loss=258.0]
 </pre></div>
 </div>
 </div>
 </div>
+<p>The training of even such a very simple network takes some time, but hopefully we will see that the loss will lower over time.
+To read the CSV data into Python we will use pandas again.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_simple_metrics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;logs/simple_fcnn/version_0/metrics.csv&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;svg&#39;
+
+<span class="n">df_simple_metrics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;logs/simple_fcnn/version_0/metrics.csv&quot;</span><span class="p">)</span>
 <span class="n">df_simple_metrics</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span>
-    <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Simple FCNN loss&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;step&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;train_loss&quot;</span><span class="p">,</span> <span class="n">logy</span><span class="o">=</span><span class="kc">True</span>
+    <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Simple FCNN loss&quot;</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="s2">&quot;step&quot;</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="s2">&quot;train_loss&quot;</span><span class="p">,</span>
 <span class="p">);</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../_images/2f2b585941769e07731caca4f4977b222b4f344b66f873120090b3ecd29e6ff7.png"><img alt="../_images/2f2b585941769e07731caca4f4977b222b4f344b66f873120090b3ecd29e6ff7.png" src="../_images/2f2b585941769e07731caca4f4977b222b4f344b66f873120090b3ecd29e6ff7.png" style="width: 549px; height: 454px;" /></a>
+<img alt="../_images/3be38253ccfd38b06bf32c1d9a21d3caa7c08ceefbe5cf96ac043f983730c13d.svg" src="../_images/3be38253ccfd38b06bf32c1d9a21d3caa7c08ceefbe5cf96ac043f983730c13d.svg" />
 </div>
 </div>
+<p>We can now evaluate the model on our test data.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">simple_trainer</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">simple_fcnn</span><span class="p">,</span> <span class="n">dataloaders</span><span class="o">=</span><span class="n">test_loader</span><span class="p">);</span>
@@ -789,19 +836,20 @@ HPU available: False, using: 0 HPUs
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/scheiba/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:424: The &#39;test_dataloader&#39; does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=15` in the `DataLoader` to improve performance.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Testing DataLoader 0: 100%|██████████| 179/179 [00:01&lt;00:00, 105.73it/s]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Testing DataLoader 0: 100%|██████████| 179/179 [00:01&lt;00:00, 119.90it/s]
 ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
        Test metric             DataLoader 0
 ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-        test_loss           244.32211303710938
+        test_loss            176.2259521484375
 ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 </pre></div>
 </div>
 </div>
 </div>
+<p>Like previously in our mark chain, we can now iterate over the net by guessing the next note.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">latest_note</span> <span class="o">=</span> <span class="mi">58</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">latest_note</span> <span class="o">=</span> <span class="mi">38</span>
 
 <span class="n">notes</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -814,98 +862,145 @@ HPU available: False, using: 0 HPUs
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[58, 56, 54, 53, 52, 51, 50, 49, 48, 47]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[38, 54, 60, 62, 62, 62, 62, 62, 62, 62]
 </pre></div>
 </div>
 </div>
 </div>
 </section>
-<section id="making-the-model-more-complex">
-<h3><span class="section-number">7.4.2. </span>Making the model more complex<a class="headerlink" href="#making-the-model-more-complex" title="Link to this heading">#</a></h3>
-<p>We can also make the model a bit more complex, by adding an additional hidden layer and increase its dimensions.</p>
+<section id="predicting-probabilities">
+<h3><span class="section-number">7.4.2. </span>Predicting probabilities<a class="headerlink" href="#predicting-probabilities" title="Link to this heading">#</a></h3>
+<p>So training neural networks is not too hard, but the network is not too complex yet.</p>
+<p>One problem at the moment, however, is that it will always output the same <em>road</em> for a given starting note, because the network has been trained to output a value based on an input.</p>
+<p>To make our output more flexible, we want to output, similar to the Markov chain, a probability distribution for the next note, given the current note.</p>
+<p>To get this work we will need to adapt the in- and output dimensions of the neural network as it now needs to predict the probability for each possible successive note.
+We also need to transform our dataset as it needs now to be <a class="reference external" href="https://en.wikipedia.org/wiki/One-hot">one-hot vectors</a>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">AdvancedSimpleFCNN</span><span class="p">(</span><span class="n">L</span><span class="o">.</span><span class="n">LightningModule</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ProbabilityFCNN</span><span class="p">(</span><span class="n">L</span><span class="o">.</span><span class="n">LightningModule</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
-            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="c1"># 1 input neuron -&gt; hidden layer w/ 4 neurons</span>
+            <span class="c1"># we add a bias neuron to account for offsets</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">88</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="c1"># relu layer as activation</span>
             <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
-            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
-            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
-            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="c1"># hidden layer w/ 4 neurons -&gt; 1 output neuron</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">24</span><span class="p">,</span> <span class="mi">88</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
         <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">z</span>
 
     <span class="k">def</span> <span class="nf">training_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">):</span>
         <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">batch</span>
-        <span class="c1"># scalar value needs to be put into a vector</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-        <span class="c1"># z is the predicted note</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="c1"># print(&quot;x&quot;, x.shape, &quot;y&quot;, y.shape, &quot;z&quot;, z.shape)</span>
-        <span class="c1"># we calculate the loss here</span>
-        <span class="n">loss</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+        <span class="n">y_hat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="p">(</span><span class="n">y_hat</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;train_loss&quot;</span><span class="p">,</span> <span class="n">loss</span><span class="p">,</span> <span class="n">prog_bar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
         <span class="k">return</span> <span class="n">loss</span>
 
-    <span class="k">def</span> <span class="nf">test_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">):</span>
-        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">batch</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-        <span class="n">test_loss</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;test_loss&quot;</span><span class="p">,</span> <span class="n">test_loss</span><span class="p">)</span>
-
     <span class="k">def</span> <span class="nf">configure_optimizers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
 
 
-<span class="n">advanced_simple_fcnn</span> <span class="o">=</span> <span class="n">AdvancedSimpleFCNN</span><span class="p">()</span>
+<span class="n">probability_fcnn</span> <span class="o">=</span> <span class="n">ProbabilityFCNN</span><span class="p">()</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">advanced_simple_fcnn</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Summary:&quot;</span><span class="p">)</span>
-<span class="n">summarize</span><span class="p">(</span><span class="n">advanced_simple_fcnn</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">probability_fcnn</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>AdvancedSimpleFCNN(
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ProbabilityFCNN(
   (net): Sequential(
-    (0): Linear(in_features=1, out_features=8, bias=True)
+    (0): Linear(in_features=88, out_features=24, bias=True)
     (1): ReLU()
-    (2): Linear(in_features=8, out_features=8, bias=True)
-    (3): ReLU()
-    (4): Linear(in_features=8, out_features=8, bias=True)
-    (5): ReLU()
-    (6): Linear(in_features=8, out_features=1, bias=True)
+    (2): Linear(in_features=24, out_features=88, bias=True)
   )
+  (criterion): CrossEntropyLoss()
 )
-Summary:
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  | Name | Type       | Params | Mode 
---------------------------------------------
-0 | net  | Sequential | 169    | train
---------------------------------------------
-169       Trainable params
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ModelSummary</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">probability_fcnn</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  | Name      | Type             | Params | Mode 
+-------------------------------------------------------
+0 | net       | Sequential       | 4.3 K  | train
+1 | criterion | CrossEntropyLoss | 0      | train
+-------------------------------------------------------
+4.3 K     Trainable params
 0         Non-trainable params
-169       Total params
-0.001     Total estimated model params size (MB)
-8         Modules in train mode
+4.3 K     Total params
+0.017     Total estimated model params size (MB)
+5         Modules in train mode
 0         Modules in eval mode
 </pre></div>
 </div>
 </div>
 </div>
+<p>That is already a lot more parameters - sit down for one moment and try to understand why there are now so much more parameters by calculating the number of parameters manually.</p>
+<p>We will continue by transforming our dataset.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">advanced_simple_trainer</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">Trainer</span><span class="p">(</span>
-    <span class="n">max_epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
-    <span class="n">logger</span><span class="o">=</span><span class="p">[</span><span class="n">CSVLogger</span><span class="p">(</span><span class="n">save_dir</span><span class="o">=</span><span class="s2">&quot;logs&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;advanced_simple_fcnn&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="mi">0</span><span class="p">)],</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># -21 to scale data down to 0</span>
+<span class="n">one_hot_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">88</span><span class="p">)[</span><span class="n">simple_df</span><span class="p">[</span><span class="s2">&quot;note&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">-</span> <span class="mi">21</span><span class="p">]</span>
+
+<span class="c1"># offset the data by 1 between X and y</span>
+<span class="n">probability_data_X</span> <span class="o">=</span> <span class="n">one_hot_data</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">probability_data_y</span> <span class="o">=</span> <span class="n">one_hot_data</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+<span class="n">probability_dataset</span> <span class="o">=</span> <span class="n">TensorDataset</span><span class="p">(</span>
+    <span class="c1"># convert midi note (int) to float as neural networks require floating</span>
+    <span class="c1"># point numbers to calculate gradients, not discrete integers</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">probability_data_X</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">probability_data_y</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
 <span class="p">)</span>
-<span class="n">advanced_simple_trainer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">advanced_simple_fcnn</span><span class="p">,</span> <span class="n">train_dataloaders</span><span class="o">=</span><span class="n">train_loader</span><span class="p">)</span>
+
+<span class="c1"># one sample vector</span>
+<span class="n">one_hot_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0.])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">probability_train_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
+    <span class="n">probability_dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">persistent_workers</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="n">probability_trainer</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">Trainer</span><span class="p">(</span>
+    <span class="n">max_epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">logger</span><span class="o">=</span><span class="p">[</span>
+        <span class="c1"># we store the metrics into a CSV file so we can take a look at its progress later</span>
+        <span class="n">CSVLogger</span><span class="p">(</span><span class="n">save_dir</span><span class="o">=</span><span class="s2">&quot;logs&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;probability_fcnn&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+
+<span class="n">probability_trainer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+    <span class="n">model</span><span class="o">=</span><span class="n">probability_fcnn</span><span class="p">,</span> <span class="n">train_dataloaders</span><span class="o">=</span><span class="n">probability_train_loader</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -913,181 +1008,277 @@ Summary:
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>GPU available: False, used: False
 TPU available: False, using: 0 TPU cores
 HPU available: False, using: 0 HPUs
+/Users/scheiba/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/lightning_fabric/loggers/csv_logs.py:268: Experiment logs directory logs/probability_fcnn/version_0 exists and is not empty. Previous log files in this directory will be deleted when the new ones are saved!
+/Users/scheiba/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/lightning/pytorch/callbacks/model_checkpoint.py:654: Checkpoint directory logs/probability_fcnn/version_0/checkpoints exists and is not empty.
 
-  | Name | Type       | Params | Mode 
---------------------------------------------
-0 | net  | Sequential | 169    | train
---------------------------------------------
-169       Trainable params
+  | Name      | Type             | Params | Mode 
+-------------------------------------------------------
+0 | net       | Sequential       | 4.3 K  | train
+1 | criterion | CrossEntropyLoss | 0      | train
+-------------------------------------------------------
+4.3 K     Trainable params
 0         Non-trainable params
-169       Total params
-0.001     Total estimated model params size (MB)
-8         Modules in train mode
+4.3 K     Total params
+0.017     Total estimated model params size (MB)
+5         Modules in train mode
 0         Modules in eval mode
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 4: 100%|██████████| 716/716 [00:06&lt;00:00, 109.89it/s, v_num=0, train_loss=218.0] 
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 4: 100%|██████████| 3580/3580 [00:30&lt;00:00, 117.22it/s, v_num=0, train_loss=3.660]
 </pre></div>
 </div>
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>`Trainer.fit` stopped: `max_epochs=5` reached.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 4: 100%|██████████| 716/716 [00:06&lt;00:00, 109.72it/s, v_num=0, train_loss=218.0]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 4: 100%|██████████| 3580/3580 [00:30&lt;00:00, 117.19it/s, v_num=0, train_loss=3.660]
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metrics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;logs/advanced_simple_fcnn/version_0/metrics.csv&quot;</span><span class="p">)</span>
-<span class="n">metrics</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span>
-    <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Advanced Simple FCNN loss&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;step&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;train_loss&quot;</span><span class="p">,</span> <span class="n">logy</span><span class="o">=</span><span class="kc">True</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_prob_metrics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;logs/probability_fcnn/version_0/metrics.csv&quot;</span><span class="p">)</span>
+<span class="n">df_prob_metrics</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span>
+    <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Prob FCNN loss&quot;</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="s2">&quot;step&quot;</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="s2">&quot;train_loss&quot;</span><span class="p">,</span>
 <span class="p">);</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../_images/e06f2adce5b3afffc80ab68e46e1dbbb72cfadfb7d411081be4ce6e92ebea711.png"><img alt="../_images/e06f2adce5b3afffc80ab68e46e1dbbb72cfadfb7d411081be4ce6e92ebea711.png" src="../_images/e06f2adce5b3afffc80ab68e46e1dbbb72cfadfb7d411081be4ce6e92ebea711.png" style="width: 549px; height: 454px;" /></a>
+<img alt="../_images/e8954f1a28b54bf4092f39c251ff43582cc2ed278db01a222f55663a00aea9cf.svg" src="../_images/e8954f1a28b54bf4092f39c251ff43582cc2ed278db01a222f55663a00aea9cf.svg" />
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">advanced_simple_trainer</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">advanced_simple_fcnn</span><span class="p">,</span> <span class="n">dataloaders</span><span class="o">=</span><span class="n">test_loader</span><span class="p">);</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">START_NOTE</span> <span class="o">=</span> <span class="mi">60</span>
+
+<span class="n">start_vector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">88</span><span class="p">)[</span><span class="n">START_NOTE</span> <span class="o">-</span> <span class="mi">21</span><span class="p">]</span>
+
+<span class="n">logits_vector</span> <span class="o">=</span> <span class="n">probability_fcnn</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">start_vector</span><span class="p">))</span>
+<span class="n">prob_vector</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">logits_vector</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+
+<span class="n">prob_vector</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/scheiba/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:424: The &#39;test_dataloader&#39; does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=15` in the `DataLoader` to improve performance.
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([5.3904032e-06, 9.7931224e-06, 6.5958493e-06, 1.1832035e-04,
+       2.0422945e-05, 7.9910802e-05, 2.0841567e-04, 2.4010161e-04,
+       2.8074645e-03, 3.2075937e-04, 8.9785451e-04, 1.3693562e-03,
+       1.7685634e-03, 5.4534886e-04, 1.3101222e-03, 1.1381200e-02,
+       1.0323367e-03, 3.5103934e-03, 3.4037919e-03, 4.4841897e-03,
+       7.0898021e-03, 2.4060169e-03, 9.7995587e-03, 3.7993125e-03,
+       8.2788365e-03, 6.7118732e-03, 4.8370576e-03, 6.3701861e-02,
+       4.1270871e-03, 1.3559097e-02, 1.3995913e-02, 1.0293804e-02,
+       2.6983807e-02, 7.9926075e-03, 4.3171227e-02, 1.5701288e-02,
+       5.1756598e-02, 2.3058120e-02, 1.7784920e-02, 1.9332737e-02,
+       7.0023746e-03, 3.7463475e-02, 6.4986460e-02, 3.7811551e-02,
+       4.0689424e-02, 1.5034327e-02, 4.5700327e-02, 1.7222449e-02,
+       3.2818682e-02, 1.6703313e-02, 1.2920220e-02, 6.1218675e-02,
+       4.2455150e-03, 1.8142229e-02, 2.6042564e-02, 1.2941089e-02,
+       1.8677060e-02, 4.6163960e-03, 2.7335418e-02, 9.3086008e-03,
+       1.6528221e-02, 7.7258451e-03, 5.0773569e-03, 2.0772977e-02,
+       2.7441760e-03, 5.1642167e-03, 4.9710879e-03, 7.4942741e-03,
+       6.3071973e-03, 2.1137653e-03, 7.4743587e-03, 1.8489923e-03,
+       2.5457256e-03, 2.1587887e-03, 1.4705472e-03, 3.4613395e-03,
+       2.8797289e-04, 7.9179934e-04, 7.4524642e-04, 6.9696095e-04,
+       6.1217818e-04, 7.7609555e-05, 7.9020203e-05, 2.9790672e-05,
+       3.8298407e-05, 2.0419321e-07, 9.4376702e-08, 2.2757520e-08],
+      dtype=float32)
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Testing DataLoader 0: 100%|██████████| 179/179 [00:01&lt;00:00, 109.51it/s]
-────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-       Test metric             DataLoader 0
-────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-        test_loss           215.78521728515625
-────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Probabilites for the next note, starting from </span><span class="si">{</span><span class="n">START_NOTE</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">88</span><span class="p">)</span> <span class="o">+</span> <span class="mi">21</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">prob_vector</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/056b3ebb79feb5c0e4a0dfa70e2eff2a36b90173ca6a6f4a544021c9a4604db0.svg" src="../_images/056b3ebb79feb5c0e4a0dfa70e2eff2a36b90173ca6a6f4a544021c9a4604db0.svg" />
+</div>
+</div>
+<p>We can now turn this into a series again.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">prob_vector</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">p</span><span class="o">=</span><span class="n">prob_vector</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>29
 </pre></div>
 </div>
 </div>
 </div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">START_NOTE</span> <span class="o">=</span> <span class="mi">60</span>
+
+<span class="n">start_vector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">88</span><span class="p">)[</span><span class="n">START_NOTE</span> <span class="o">-</span> <span class="mi">21</span><span class="p">]</span>
+<span class="n">notes</span> <span class="o">=</span> <span class="p">[</span><span class="n">START_NOTE</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">40</span><span class="p">):</span>
+    <span class="n">logits_vector</span> <span class="o">=</span> <span class="n">probability_fcnn</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">start_vector</span><span class="p">))</span>
+    <span class="n">prob_vector</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">logits_vector</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+    <span class="n">next_note</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">prob_vector</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">p</span><span class="o">=</span><span class="n">prob_vector</span><span class="p">)</span>
+    <span class="n">notes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_note</span><span class="p">)</span>
+    <span class="n">start_vector</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">prob_vector</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="n">next_note</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span>
+    <span class="p">)</span>
+
+<span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">note</span><span class="p">)</span> <span class="k">for</span> <span class="n">note</span> <span class="ow">in</span> <span class="n">notes</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;60, 39, 66, 63, 67, 44, 27, 39, 26, 34, 55, 46, 48, 50, 58, 58, 54, 49, 43, 24, 12, 19, 36, 46, 58, 39, 43, 56, 45, 48, 39, 44, 53, 51, 48, 49, 11, 9, 23, 40, 52&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>We already are not stuck anymore on a single note!</p>
 </section>
 <section id="adding-context">
 <h3><span class="section-number">7.4.3. </span>Adding context<a class="headerlink" href="#adding-context" title="Link to this heading">#</a></h3>
-<p>Although it manages to perform a bit better, its loss is still immense.
-One way to improve could be, instead of making the net bigger and bigger, provide some additional context, e.g. the latest 10 notes.</p>
+<p>Although the model already improved, we can still improve it by providing some context through a series of notes as input, e.g. the latest 5.</p>
+<p>As we currently don’t want to go into details about multi-dimensional input data with means such as convolution, we will simply concatenate the 5 vectors into one long vector as input and will output only 1 vector.
+The network should figure out the importance of each input-dimension by itself.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ContextFCNN</span><span class="p">(</span><span class="n">L</span><span class="o">.</span><span class="n">LightningModule</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_notes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">CONTEXT_NUM_NOTES</span> <span class="o">=</span> <span class="mi">5</span>
+
+
+<span class="k">class</span> <span class="nc">ContextFCNN</span><span class="p">(</span><span class="n">L</span><span class="o">.</span><span class="n">LightningModule</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_notes</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">net</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
-            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">num_notes</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">num_notes</span> <span class="o">*</span> <span class="mi">88</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
             <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
-            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
-            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
-            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
-            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">24</span><span class="p">,</span> <span class="mi">88</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
         <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+        <span class="c1"># turn 5x88 matrix into 440 dim vector</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">z</span>
 
     <span class="k">def</span> <span class="nf">training_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">):</span>
         <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">batch</span>
-        <span class="c1"># z is the predicted note</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="c1"># we calculate the loss here</span>
-        <span class="n">loss</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+        <span class="n">y_hat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+        <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="p">(</span><span class="n">y_hat</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;train_loss&quot;</span><span class="p">,</span> <span class="n">loss</span><span class="p">,</span> <span class="n">prog_bar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
         <span class="k">return</span> <span class="n">loss</span>
 
-    <span class="k">def</span> <span class="nf">test_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">):</span>
-        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">batch</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="n">test_loss</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;test_loss&quot;</span><span class="p">,</span> <span class="n">test_loss</span><span class="p">)</span>
-
     <span class="k">def</span> <span class="nf">configure_optimizers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
 
 
-<span class="n">context_fcnn</span> <span class="o">=</span> <span class="n">ContextFCNN</span><span class="p">()</span>
+<span class="n">context_fcnn</span> <span class="o">=</span> <span class="n">ContextFCNN</span><span class="p">(</span><span class="n">num_notes</span><span class="o">=</span><span class="n">CONTEXT_NUM_NOTES</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">context_fcnn</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Summary:&quot;</span><span class="p">)</span>
-<span class="n">summarize</span><span class="p">(</span><span class="n">context_fcnn</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>ContextFCNN(
   (net): Sequential(
-    (0): Linear(in_features=10, out_features=16, bias=True)
+    (0): Linear(in_features=440, out_features=24, bias=True)
     (1): ReLU()
-    (2): Linear(in_features=16, out_features=32, bias=True)
-    (3): ReLU()
-    (4): Linear(in_features=32, out_features=16, bias=True)
-    (5): ReLU()
-    (6): Linear(in_features=16, out_features=1, bias=True)
+    (2): Linear(in_features=24, out_features=88, bias=True)
   )
+  (criterion): CrossEntropyLoss()
 )
-Summary:
-</pre></div>
-</div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  | Name | Type       | Params | Mode 
---------------------------------------------
-0 | net  | Sequential | 1.3 K  | train
---------------------------------------------
-1.3 K     Trainable params
-0         Non-trainable params
-1.3 K     Total params
-0.005     Total estimated model params size (MB)
-8         Modules in train mode
-0         Modules in eval mode
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">maestro_files</span> <span class="o">=</span> <span class="n">Maestro3Dataset</span><span class="p">()</span>
-
-<span class="n">NUM_CONTEXT_INPUT</span> <span class="o">=</span> <span class="mi">10</span>
-<span class="n">NUM_CONTEXT_OUTPUT</span> <span class="o">=</span> <span class="mi">1</span>
-
-<span class="n">context_x</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">context_y</span> <span class="o">=</span> <span class="p">[]</span>
-
-<span class="c1"># limit to first 100</span>
-<span class="k">for</span> <span class="n">midi_path</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">maestro_files</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">100</span><span class="p">][</span><span class="s2">&quot;file_path&quot;</span><span class="p">]):</span>
-    <span class="n">piano_roll</span> <span class="o">=</span> <span class="n">PianoRoll</span><span class="p">(</span><span class="n">midi_path</span><span class="p">)</span>
-    <span class="n">df_events</span> <span class="o">=</span> <span class="n">piano_roll</span><span class="o">.</span><span class="n">events</span><span class="p">()</span>
-
-    <span class="c1"># filter out pedal (note=-1) and note_off events (velocity=0)</span>
-    <span class="n">df_events</span> <span class="o">=</span> <span class="n">df_events</span><span class="p">[(</span><span class="n">df_events</span><span class="p">[</span><span class="s2">&quot;note&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df_events</span><span class="p">[</span><span class="s2">&quot;velocity&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)]</span>
-
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df_events</span><span class="p">)</span> <span class="o">-</span> <span class="n">NUM_CONTEXT_INPUT</span> <span class="o">-</span> <span class="n">NUM_CONTEXT_OUTPUT</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="n">context_x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_events</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">NUM_CONTEXT_INPUT</span><span class="p">][</span><span class="s2">&quot;note&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
-        <span class="n">context_y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="n">df_events</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span>
-                <span class="n">i</span> <span class="o">+</span> <span class="n">NUM_CONTEXT_INPUT</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">NUM_CONTEXT_INPUT</span> <span class="o">+</span> <span class="n">NUM_CONTEXT_OUTPUT</span>
-            <span class="p">][</span><span class="s2">&quot;note&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-        <span class="p">)</span>
-
-<span class="n">context_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">context_x</span><span class="p">)</span>
-<span class="n">context_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">context_y</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;x: </span><span class="si">{</span><span class="n">context_x</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> - y: </span><span class="si">{</span><span class="n">context_y</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ModelSummary</span><span class="p">(</span><span class="n">context_fcnn</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  | Name      | Type             | Params | Mode 
+-------------------------------------------------------
+0 | net       | Sequential       | 12.8 K | train
+1 | criterion | CrossEntropyLoss | 0      | train
+-------------------------------------------------------
+12.8 K    Trainable params
+0         Non-trainable params
+12.8 K    Total params
+0.051     Total estimated model params size (MB)
+5         Modules in train mode
+0         Modules in eval mode
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 100/100 [01:46&lt;00:00,  1.07s/it]
+</div>
+</div>
+<p>Again, we also need to adjust our data transformation workflow.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># -21 to scale data down to 0</span>
+<span class="n">one_hot_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">88</span><span class="p">)[</span><span class="n">simple_df</span><span class="p">[</span><span class="s2">&quot;note&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">-</span> <span class="mi">21</span><span class="p">]</span>
+
+<span class="c1"># offset the data by 1 between X and y</span>
+<span class="n">probability_data_X</span> <span class="o">=</span> <span class="n">one_hot_data</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">probability_data_y</span> <span class="o">=</span> <span class="n">one_hot_data</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+<span class="n">probability_dataset</span> <span class="o">=</span> <span class="n">TensorDataset</span><span class="p">(</span>
+    <span class="c1"># convert midi note (int) to float as neural networks require floating</span>
+    <span class="c1"># point numbers to calculate gradients, not discrete integers</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">probability_data_X</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">probability_data_y</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="c1"># one sample vector</span>
+<span class="n">one_hot_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>x: (457219, 10) - y: (457219, 1)
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.,
+       0., 0., 0.])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">context_X</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">context_y</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># not efficient, but works</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">one_hot_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">CONTEXT_NUM_NOTES</span><span class="p">):</span>
+    <span class="n">context_X</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">one_hot_data</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">CONTEXT_NUM_NOTES</span><span class="p">])</span>
+    <span class="n">context_y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">one_hot_data</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">CONTEXT_NUM_NOTES</span><span class="p">])</span>
+
+<span class="n">context_X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">context_X</span><span class="p">)</span>
+<span class="n">context_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">context_y</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;context_X: </span><span class="si">{</span><span class="n">context_X</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, context_y: </span><span class="si">{</span><span class="n">context_y</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>context_X: (458214, 5, 88), context_y: (458214, 88)
 </pre></div>
 </div>
 </div>
@@ -1097,7 +1288,7 @@ Summary:
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">context_dataset</span> <span class="o">=</span> <span class="n">TensorDataset</span><span class="p">(</span>
     <span class="c1"># convert midi note (int) to float as neural networks require floating</span>
     <span class="c1"># point numbers to calculate gradients, not discrete integers</span>
-    <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">context_x</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">context_X</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
     <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">context_y</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
 <span class="p">)</span>
 </pre></div>
@@ -1106,26 +1297,9 @@ Summary:
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">num_train_items</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">context_dataset</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.8</span><span class="p">)</span>
-<span class="n">num_test_items</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">context_dataset</span><span class="p">)</span> <span class="o">-</span> <span class="n">num_train_items</span>
-
-<span class="c1"># split the dataset</span>
-<span class="n">context_train</span><span class="p">,</span> <span class="n">context_test</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">random_split</span><span class="p">(</span>
-    <span class="n">dataset</span><span class="o">=</span><span class="n">context_dataset</span><span class="p">,</span>
-    <span class="n">lengths</span><span class="o">=</span><span class="p">[</span><span class="n">num_train_items</span><span class="p">,</span> <span class="n">num_test_items</span><span class="p">],</span>
-    <span class="c1"># manual seeding so split is deterministic</span>
-    <span class="n">generator</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">Generator</span><span class="p">()</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">42</span><span class="p">),</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">context_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
+    <span class="n">dataset</span><span class="o">=</span><span class="n">context_dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">persistent_workers</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">context_train_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span>
-    <span class="n">context_train</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">persistent_workers</span><span class="o">=</span><span class="kc">True</span>
-<span class="p">)</span>
-<span class="n">context_test_loader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">context_test</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">512</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1133,9 +1307,14 @@ Summary:
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">context_trainer</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">Trainer</span><span class="p">(</span>
-    <span class="n">max_epochs</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="p">[</span><span class="n">CSVLogger</span><span class="p">(</span><span class="n">save_dir</span><span class="o">=</span><span class="s2">&quot;logs&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;context_fcnn&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="mi">0</span><span class="p">)]</span>
+    <span class="n">max_epochs</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">logger</span><span class="o">=</span><span class="p">[</span>
+        <span class="c1"># we store the metrics into a CSV file so we can take a look at its progress later</span>
+        <span class="n">CSVLogger</span><span class="p">(</span><span class="n">save_dir</span><span class="o">=</span><span class="s2">&quot;logs&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;context_fcnn&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="p">],</span>
 <span class="p">)</span>
-<span class="n">context_trainer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">context_fcnn</span><span class="p">,</span> <span class="n">train_dataloaders</span><span class="o">=</span><span class="n">context_train_loader</span><span class="p">)</span>
+
+<span class="n">context_trainer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">context_fcnn</span><span class="p">,</span> <span class="n">train_dataloaders</span><span class="o">=</span><span class="n">context_loader</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1143,98 +1322,90 @@ Summary:
 <div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>GPU available: False, used: False
 TPU available: False, using: 0 TPU cores
 HPU available: False, using: 0 HPUs
+/Users/scheiba/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/lightning_fabric/loggers/csv_logs.py:268: Experiment logs directory logs/context_fcnn/version_0 exists and is not empty. Previous log files in this directory will be deleted when the new ones are saved!
+/Users/scheiba/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/lightning/pytorch/callbacks/model_checkpoint.py:654: Checkpoint directory logs/context_fcnn/version_0/checkpoints exists and is not empty.
 
-  | Name | Type       | Params | Mode 
---------------------------------------------
-0 | net  | Sequential | 1.3 K  | train
---------------------------------------------
-1.3 K     Trainable params
+  | Name      | Type             | Params | Mode 
+-------------------------------------------------------
+0 | net       | Sequential       | 12.8 K | train
+1 | criterion | CrossEntropyLoss | 0      | train
+-------------------------------------------------------
+12.8 K    Trainable params
 0         Non-trainable params
-1.3 K     Total params
-0.005     Total estimated model params size (MB)
-8         Modules in train mode
+12.8 K    Total params
+0.051     Total estimated model params size (MB)
+5         Modules in train mode
 0         Modules in eval mode
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 14: 100%|██████████| 715/715 [00:06&lt;00:00, 107.10it/s, v_num=0, train_loss=143.0]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 4: 100%|██████████| 7160/7160 [01:03&lt;00:00, 112.03it/s, v_num=0, train_loss=3.020]
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>`Trainer.fit` stopped: `max_epochs=15` reached.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>`Trainer.fit` stopped: `max_epochs=5` reached.
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 14: 100%|██████████| 715/715 [00:06&lt;00:00, 106.94it/s, v_num=0, train_loss=143.0]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 4: 100%|██████████| 7160/7160 [01:03&lt;00:00, 112.01it/s, v_num=0, train_loss=3.020]
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">metrics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;logs/context_fcnn/version_0/metrics.csv&quot;</span><span class="p">)</span>
-<span class="n">metrics</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span>
-    <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Context FCNN loss&quot;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;step&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;train_loss&quot;</span><span class="p">,</span> <span class="n">logy</span><span class="o">=</span><span class="kc">True</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_prob_metrics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;logs/context_fcnn/version_0/metrics.csv&quot;</span><span class="p">)</span>
+<span class="n">df_prob_metrics</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span>
+    <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Context FCNN loss&quot;</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="s2">&quot;step&quot;</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="s2">&quot;train_loss&quot;</span><span class="p">,</span>
 <span class="p">);</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<a class="reference internal image-reference" href="../_images/ab06f833472008ea5466f8cb8f93f6997b696dc65c2571adfb21cfc938210f43.png"><img alt="../_images/ab06f833472008ea5466f8cb8f93f6997b696dc65c2571adfb21cfc938210f43.png" src="../_images/ab06f833472008ea5466f8cb8f93f6997b696dc65c2571adfb21cfc938210f43.png" style="width: 573px; height: 454px;" /></a>
+<img alt="../_images/2a7e39fc7c5ed7cddf59ac31ffa4d6826b3c74cfef292fa6e6103e88a2cd6335.svg" src="../_images/2a7e39fc7c5ed7cddf59ac31ffa4d6826b3c74cfef292fa6e6103e88a2cd6335.svg" />
 </div>
 </div>
+<p>The training loss does not look very good - it is hard to say what the problem here is.
+We can still use the method form before to continue a sequence.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">context_trainer</span><span class="o">.</span><span class="n">test</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">context_fcnn</span><span class="p">,</span> <span class="n">dataloaders</span><span class="o">=</span><span class="n">context_test_loader</span><span class="p">);</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/Users/scheiba/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:424: The &#39;test_dataloader&#39; does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=15` in the `DataLoader` to improve performance.
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Testing DataLoader 0: 100%|██████████| 179/179 [00:01&lt;00:00, 113.89it/s]
-────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-       Test metric             DataLoader 0
-────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-        test_loss           141.39073181152344
-────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">note_sequence</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">])</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">note_sequence</span> <span class="o">=</span> <span class="p">[</span><span class="mi">60</span><span class="p">,</span> <span class="mi">58</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">59</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">59</span><span class="p">,</span> <span class="mi">60</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">START_SEQUENCE</span> <span class="o">=</span> <span class="p">[</span><span class="mi">60</span><span class="p">,</span> <span class="mi">58</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">53</span><span class="p">,</span> <span class="mi">55</span><span class="p">]</span>
 
-<span class="n">notes</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">start_vector</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">88</span><span class="p">)[</span><span class="n">START_SEQUENCE</span><span class="p">]</span>
+<span class="n">notes</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="n">START_SEQUENCE</span><span class="p">]</span>
 
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
-    <span class="n">latest_note</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
-        <span class="n">context_fcnn</span><span class="o">.</span><span class="n">net</span><span class="p">(</span>
-            <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">note_sequence</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">10</span><span class="p">])</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
-        <span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">40</span><span class="p">):</span>
+    <span class="n">logits_vector</span> <span class="o">=</span> <span class="n">context_fcnn</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">start_vector</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">prob_vector</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">logits_vector</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+    <span class="n">next_note</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">prob_vector</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">p</span><span class="o">=</span><span class="n">prob_vector</span><span class="p">)</span>
+    <span class="n">notes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_note</span><span class="p">)</span>
+    <span class="n">start_vector</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">88</span><span class="p">)[</span><span class="n">notes</span><span class="p">[(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">5</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span>
     <span class="p">)</span>
-    <span class="n">note_sequence</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">latest_note</span><span class="p">)</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">note_sequence</span><span class="p">)</span>
+<span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">note</span><span class="p">)</span> <span class="k">for</span> <span class="n">note</span> <span class="ow">in</span> <span class="n">notes</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[60, 58, 60, 59, 30, 60, 64, 65, 59, 60, 57, 58, 58, 58, 59, 60, 59, 59, 59, 59]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;60, 58, 60, 53, 55, 43, 57, 58, 53, 55, 58, 46, 58, 58, 52, 53, 56, 51, 46, 31, 53, 47, 43, 39, 46, 24, 34, 34, 45, 41, 50, 34, 33, 34, 43, 34, 31, 34, 27, 43, 29, 46, 29, 48, 46&#39;
 </pre></div>
 </div>
 </div>
+</div>
+<p>Although fully-connected artificial networks already gave us some insights into machine learning we will stop here.
+One problem that we are facing currently is that the size of our context needs to be of fixed size - this means our network will grow more and more if we want more context, which is problematic because it takes longer to train and also takes more data to train a bigger network.</p>
+<p>Instead we will take a look into <em>recurrent neural networks</em> (RNN), which implement a feedback loop which we can use to create a context of arbitrary size.</p>
+<div class="admonition-task admonition">
+<p class="admonition-title">Task</p>
+<ul class="simple">
+<li><p>Try to add time and/or velocity into the neural network by extending its in- and output structure</p></li>
+<li><p>Instead of the MSE (mean squared error), we now use a <em>cross entropy loss</em> - why?</p></li>
+<li><p>What is the softmax function and why do we apply it on the output of our network?</p></li>
+<li><p>Use OSC to create a communication bridge between SuperCollider and Python - try to control a melody in SuperCollider via the neural network. Take a look at <a class="reference external" href="https://github.com/attwad/python-osc"><code class="docutils literal notranslate"><span class="pre">python-osc</span></code></a></p></li>
+</ul>
 </div>
 </section>
 </section>
@@ -1309,7 +1480,7 @@ HPU available: False, using: 0 HPUs
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fully-connected-neural-networks">7.3. Fully connected neural networks</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-and-iteration">7.4. Implementation and iteration</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-fcnn">7.4.1. Simple FCNN</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#making-the-model-more-complex">7.4.2. Making the model more complex</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#predicting-probabilities">7.4.2. Predicting probabilities</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-context">7.4.3. Adding context</a></li>
 </ul>
 </li>

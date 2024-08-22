@@ -17,12 +17,12 @@ parts:
       - file: chapters/03_what-to-learn
       - file: chapters/04_measuring
       - file: chapters/05_markov
-      - file: chapters/06_player_limitations
-      - file: chapters/07_representation
-      - file: chapters/08_ann
-      - file: chapters/09_rnn
+      - file: chapters/06_representation
+      - file: chapters/07_ann
+      - file: chapters/08_rnn
   - caption: Appendices
     chapters:
+      - file: player_limitations
       - file: player_piano_evening
       - file: ki_ueben_api
       - file: bibliography.md

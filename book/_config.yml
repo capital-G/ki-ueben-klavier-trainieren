@@ -2,7 +2,8 @@
 # Learn more at https://jupyterbook.org/customize/config.html
 
 title: KI üben, Klavier trainieren
-author: Dennis Scheiba
+author: Dennis Scheiba, Institut für Musik und Medien, Robert Schumann Hochschule Düsseldorf
+copyright: 2023, 2024
 
 # Force re-execution of notebooks on each build.
 # See https://jupyterbook.org/content/execute.html
@@ -20,7 +21,7 @@ bibtex_bibfiles:
 
 # Information about where the book exists on the web
 repository:
-  url: https://github.com/executablebooks/jupyter-book  # Online location of your book
+  url: https://gitlab.com/robert-schumann-hochschule/imm/ki-ueben-klavier-trainieren # Online location of your book
   path_to_book: book  # Optional path to your book, relative to the repository root
   branch: main  # Which branch of the repository should be used when creating links (optional)
 
@@ -29,6 +30,7 @@ repository:
 html:
   use_issues_button: false
   use_repository_button: true
+  use_edit_page_button: true
 
 sphinx:
   extra_extensions:

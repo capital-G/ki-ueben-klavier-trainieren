@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>7. Representation of sonic data &#8212; KI üben, Klavier trainieren</title>
+    <title>6. Representation of sonic data &#8212; KI üben, Klavier trainieren</title>
   
   
   
@@ -60,11 +60,11 @@
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/07_representation';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/06_representation';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="8. Artificial Neural networks" href="08_ann.html" />
-    <link rel="prev" title="6. Player limitations" href="06_player_limitations.html" />
+    <link rel="next" title="7. Artificial Neural networks" href="07_ann.html" />
+    <link rel="prev" title="5. The likelihood of the successive note" href="05_markov.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -188,13 +188,13 @@
 <li class="toctree-l1"><a class="reference internal" href="03_what-to-learn.html">3. What can be learned?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="04_measuring.html">4. Measuring</a></li>
 <li class="toctree-l1"><a class="reference internal" href="05_markov.html">5. The likelihood of the successive note</a></li>
-<li class="toctree-l1"><a class="reference internal" href="06_player_limitations.html">6. Player limitations</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">7. Representation of sonic data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="08_ann.html">8. Artificial Neural networks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="09_rnn.html">9. Recursive learning of patterns via RNN</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">6. Representation of sonic data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_ann.html">7. Artificial Neural networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_rnn.html">8. Recursive learning of patterns via RNN</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendices</span></p>
 <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../player_limitations.html">Player Piano limitations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../player_piano_evening.html">Player Piano Evening</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ki_ueben_api.html">ki_ueben API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
@@ -242,18 +242,50 @@
 <div class="article-header-buttons">
 
 
-<a href="https://github.com/executablebooks/jupyter-book" target="_blank"
-   class="btn btn-sm btn-source-repository-button"
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-gitlab"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://gitlab.com/robert-schumann-hochschule/imm/ki-ueben-klavier-trainieren" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
    title="Source repository"
-   data-bs-placement="bottom" data-bs-toggle="tooltip"
+   data-bs-placement="left" data-bs-toggle="tooltip"
 >
   
 
 <span class="btn__icon-container">
-  <i class="fab fa-github"></i>
+  <i class="fab fa-gitlab"></i>
   </span>
-
+<span class="btn__text-container">Repository</span>
 </a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://gitlab.com/robert-schumann-hochschule/imm/ki-ueben-klavier-trainieren/-/edit/main/book/chapters/06_representation.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+  </ul>
+</div>
 
 
 
@@ -268,7 +300,7 @@
       
       
       
-      <li><a href="../_sources/chapters/07_representation.ipynb" target="_blank"
+      <li><a href="../_sources/chapters/06_representation.ipynb" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -362,8 +394,8 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parsing-midi-files">7.1. Parsing MIDI files</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-dataset">7.2. The dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parsing-midi-files">6.1. Parsing MIDI files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-dataset">6.2. The dataset</a></li>
 </ul>
             </nav>
         </div>
@@ -376,7 +408,7 @@ document.write(`
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="representation-of-sonic-data">
-<h1><span class="section-number">7. </span>Representation of sonic data<a class="headerlink" href="#representation-of-sonic-data" title="Link to this heading">#</a></h1>
+<h1><span class="section-number">6. </span>Representation of sonic data<a class="headerlink" href="#representation-of-sonic-data" title="Link to this heading">#</a></h1>
 <p>Musical information can be stored in a variety of ways and also evolved through history.
 One big transition was for example the capability to store the waveform of a place and time through a physical object, which then again can be re-processed and transformed back into a pressure wave of air through loudspeakers.</p>
 <p>Another common method is the notation of notes through a score, and while this inscription covers a large domain of western music history it also lacks fundamental aspects of precise information, opening the room for interpretation.</p>
@@ -393,7 +425,7 @@ Training the piano covers therefore not only the physical capability of hitting 
 <p>While within a digital domain the representation is faithful, attaching it to physical objects may introduce <em>smearing</em> as the transition between the physical action to a digital quantized information may introduce a delta.</p>
 <p>While the representation of MIDI is also limited, it also provides a sweet spot of a reasonable approximation of a given performance and has the advantage of being a standard which allows interaction with many different kind of instruments and software.</p>
 <section id="parsing-midi-files">
-<h2><span class="section-number">7.1. </span>Parsing MIDI files<a class="headerlink" href="#parsing-midi-files" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">6.1. </span>Parsing MIDI files<a class="headerlink" href="#parsing-midi-files" title="Link to this heading">#</a></h2>
 <p>Python has a variety of MIDI libraries and this course decides to go with <a class="reference external" href="https://github.com/craffel/pretty-midi"><code class="docutils literal notranslate"><span class="pre">pretty_midi</span></code></a> which provides some nice convenience methods.</p>
 <p>In order to obtain a basic understanding of MIDI data it is a good practice to parse a simple MIDI file, for example <a class="reference external" href="https://commons.wikimedia.org/wiki/File:31_Good_Night_To_You_All.mid">31 Good Night To You All.mid</a> from Wikimedia.</p>
 <div class="cell docutils container">
@@ -493,7 +525,7 @@ If a key <span class="math notranslate nohighlight">\(k\)</span> is is pressed d
 </div>
 </section>
 <section id="the-dataset">
-<h2><span class="section-number">7.2. </span>The dataset<a class="headerlink" href="#the-dataset" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">6.2. </span>The dataset<a class="headerlink" href="#the-dataset" title="Link to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
@@ -781,20 +813,20 @@ Done!
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="06_player_limitations.html"
+       href="05_markov.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">6. </span>Player limitations</p>
+        <p class="prev-next-title"><span class="section-number">5. </span>The likelihood of the successive note</p>
       </div>
     </a>
     <a class="right-next"
-       href="08_ann.html"
+       href="07_ann.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="section-number">8. </span>Artificial Neural networks</p>
+        <p class="prev-next-title"><span class="section-number">7. </span>Artificial Neural networks</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -814,8 +846,8 @@ Done!
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parsing-midi-files">7.1. Parsing MIDI files</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-dataset">7.2. The dataset</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parsing-midi-files">6.1. Parsing MIDI files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-dataset">6.2. The dataset</a></li>
 </ul>
   </nav></div>
 
@@ -830,7 +862,7 @@ Done!
   <div class="footer-item">
     
 <p class="component-author">
-By Dennis Scheiba
+By Dennis Scheiba, Institut für Musik und Medien, Robert Schumann Hochschule Düsseldorf
 </p>
 
   </div>
@@ -840,7 +872,7 @@ By Dennis Scheiba
 
   <p class="copyright">
     
-      © Copyright 2023.
+      © Copyright 2023, 2024.
       <br/>
     
   </p>

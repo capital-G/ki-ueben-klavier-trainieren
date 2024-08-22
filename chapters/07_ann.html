@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>8. Artificial Neural networks &#8212; KI üben, Klavier trainieren</title>
+    <title>7. Artificial Neural networks &#8212; KI üben, Klavier trainieren</title>
   
   
   
@@ -60,11 +60,11 @@
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/08_ann';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/07_ann';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="9. Recursive learning of patterns via RNN" href="09_rnn.html" />
-    <link rel="prev" title="7. Representation of sonic data" href="07_representation.html" />
+    <link rel="next" title="8. Recursive learning of patterns via RNN" href="08_rnn.html" />
+    <link rel="prev" title="6. Representation of sonic data" href="06_representation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -188,13 +188,13 @@
 <li class="toctree-l1"><a class="reference internal" href="03_what-to-learn.html">3. What can be learned?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="04_measuring.html">4. Measuring</a></li>
 <li class="toctree-l1"><a class="reference internal" href="05_markov.html">5. The likelihood of the successive note</a></li>
-<li class="toctree-l1"><a class="reference internal" href="06_player_limitations.html">6. Player limitations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="07_representation.html">7. Representation of sonic data</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">8. Artificial Neural networks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="09_rnn.html">9. Recursive learning of patterns via RNN</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_representation.html">6. Representation of sonic data</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">7. Artificial Neural networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_rnn.html">8. Recursive learning of patterns via RNN</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendices</span></p>
 <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../player_limitations.html">Player Piano limitations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../player_piano_evening.html">Player Piano Evening</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../ki_ueben_api.html">ki_ueben API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../bibliography.html">Bibliography</a></li>
@@ -242,18 +242,50 @@
 <div class="article-header-buttons">
 
 
-<a href="https://github.com/executablebooks/jupyter-book" target="_blank"
-   class="btn btn-sm btn-source-repository-button"
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-gitlab"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://gitlab.com/robert-schumann-hochschule/imm/ki-ueben-klavier-trainieren" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
    title="Source repository"
-   data-bs-placement="bottom" data-bs-toggle="tooltip"
+   data-bs-placement="left" data-bs-toggle="tooltip"
 >
   
 
 <span class="btn__icon-container">
-  <i class="fab fa-github"></i>
+  <i class="fab fa-gitlab"></i>
   </span>
-
+<span class="btn__text-container">Repository</span>
 </a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://gitlab.com/robert-schumann-hochschule/imm/ki-ueben-klavier-trainieren/-/edit/main/book/chapters/07_ann.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+  </ul>
+</div>
 
 
 
@@ -268,7 +300,7 @@
       
       
       
-      <li><a href="../_sources/chapters/08_ann.ipynb" target="_blank"
+      <li><a href="../_sources/chapters/07_ann.ipynb" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -362,13 +394,13 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-seasons-of-ai">8.1. The seasons of AI</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-program-a-neural-network">8.2. How to program a neural network</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fully-connected-neural-networks">8.3. Fully connected neural networks</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-and-iteration">8.4. Implementation and iteration</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-fcnn">8.4.1. Simple FCNN</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#making-the-model-more-complex">8.4.2. Making the model more complex</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-context">8.4.3. Adding context</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-seasons-of-ai">7.1. The seasons of AI</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-program-a-neural-network">7.2. How to program a neural network</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fully-connected-neural-networks">7.3. Fully connected neural networks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-and-iteration">7.4. Implementation and iteration</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-fcnn">7.4.1. Simple FCNN</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#making-the-model-more-complex">7.4.2. Making the model more complex</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-context">7.4.3. Adding context</a></li>
 </ul>
 </li>
 </ul>
@@ -383,9 +415,9 @@ document.write(`
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="artificial-neural-networks">
-<h1><span class="section-number">8. </span>Artificial Neural networks<a class="headerlink" href="#artificial-neural-networks" title="Link to this heading">#</a></h1>
+<h1><span class="section-number">7. </span>Artificial Neural networks<a class="headerlink" href="#artificial-neural-networks" title="Link to this heading">#</a></h1>
 <section id="the-seasons-of-ai">
-<h2><span class="section-number">8.1. </span>The seasons of AI<a class="headerlink" href="#the-seasons-of-ai" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">7.1. </span>The seasons of AI<a class="headerlink" href="#the-seasons-of-ai" title="Link to this heading">#</a></h2>
 <p>The development of AI have always been met with hype cycles.
 As seen with the McCulloch Pitts model, many foundations of “<em>AI</em>” have already been laid out in the 1940/1950s, but these constructs failed to meet their high expectations and promises, which finally lead to an abandonment of <em>AI</em> research, a circumstance labeled as an <a class="reference external" href="https://en.wikipedia.org/wiki/AI_winter">AI Winter</a>.</p>
 <p>In the early 1980s, new architectures in neural networks and training methods re-initiated an interest in neural networks, but the the promised advancements were not met and by the 1990s other machine learning methods such as <a class="reference external" href="https://en.wikipedia.org/wiki/Support_vector_machine">Support Vector Machine (SVM)</a> were the focus of attention, which offered more reliable results in a more comprehensive theoretical framework, therefore the AI research went out of focus in the 90s.</p>
@@ -397,7 +429,7 @@ But only due to the wide and cheap availability of GPUs through the gaming indus
 <p><em>AI</em> is therefore not a recent or new field of research, but had a coming and going which has been attached to the availability or lack of breakthroughs.</p>
 </section>
 <section id="how-to-program-a-neural-network">
-<h2><span class="section-number">8.2. </span>How to program a neural network<a class="headerlink" href="#how-to-program-a-neural-network" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">7.2. </span>How to program a neural network<a class="headerlink" href="#how-to-program-a-neural-network" title="Link to this heading">#</a></h2>
 <p>While traditional programming uses algorithms to describe the output for a given input, programming neural networks involves more setting up an environment or topology with many degrees of freedom (<em>“variables”</em>) and a <em>traning</em> process, in which these degrees of freedom are tuned to a set of <em>samples</em> which traditionally contain a <em>sample</em> of the input data and an associated desired output.</p>
 <p>There are lots of variations of how this topology or this training process can be constructed, and new paths in the structuring of these</p>
 <p>This setup still requires the use a combination of different crucial algorithms such as <a class="reference external" href="https://en.wikipedia.org/wiki/Automatic_differentiation">AutoDiff</a> (an algorithm for automatic partial differentiation) or optimizing algorithms such as <a class="reference external" href="https://en.wikipedia.org/wiki/Stochastic_gradient_descent#Adam">Adam</a>.
@@ -405,7 +437,7 @@ Instead of implementing those algorithms oneself, it is possible to use librarie
 <p>This course will use <em>PyTorch</em> which provides a Python interface to all the necessary algorithms with a high level abstraction.</p>
 </section>
 <section id="fully-connected-neural-networks">
-<h2><span class="section-number">8.3. </span>Fully connected neural networks<a class="headerlink" href="#fully-connected-neural-networks" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">7.3. </span>Fully connected neural networks<a class="headerlink" href="#fully-connected-neural-networks" title="Link to this heading">#</a></h2>
 <p>A <em>fully connected neural network</em> is one of the basic architectures of neural networks.
 It works by having multiple <em>layers</em> which each consist of multiple <em>neurons</em>.
 Each neuron of a layer is connected to every neuron of its successive layer, therefore it is called a <em>fully connected</em> layer or neural network.
@@ -414,7 +446,7 @@ All incoming connections of a neuron are then summed together, resulting in a ne
 <figure class="align-center" id="id1">
 <img alt="An artifical neural network with 3 fully connected layers" src="https://upload.wikimedia.org/wikipedia/commons/4/46/Colored_neural_network.svg" />
 <figcaption>
-<p><span class="caption-number">Fig. 8.1 </span><span class="caption-text">An artifical neural network with an input layer which consists of 3 input neurons, a hidden layer consisting of 4 neurons and an output layer with two neurons.
+<p><span class="caption-number">Fig. 7.1 </span><span class="caption-text">An artifical neural network with an input layer which consists of 3 input neurons, a hidden layer consisting of 4 neurons and an output layer with two neurons.
 As all every neuron is <em>connected</em> with every neuron in the subsequent layer, this is called a <em>fully connected</em> network.
 Note that the connections are also directed, so there is no way to introduce feedback loops - something which biological networks tend to form.
 Source: <a class="reference external" href="https://en.wikipedia.org/wiki/File:Colored_neural_network.svg">https://en.wikipedia.org/wiki/File:Colored_neural_network.svg</a></span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
@@ -422,9 +454,9 @@ Source: <a class="reference external" href="https://en.wikipedia.org/wiki/File:C
 </figure>
 </section>
 <section id="implementation-and-iteration">
-<h2><span class="section-number">8.4. </span>Implementation and iteration<a class="headerlink" href="#implementation-and-iteration" title="Link to this heading">#</a></h2>
+<h2><span class="section-number">7.4. </span>Implementation and iteration<a class="headerlink" href="#implementation-and-iteration" title="Link to this heading">#</a></h2>
 <section id="simple-fcnn">
-<h3><span class="section-number">8.4.1. </span>Simple FCNN<a class="headerlink" href="#simple-fcnn" title="Link to this heading">#</a></h3>
+<h3><span class="section-number">7.4.1. </span>Simple FCNN<a class="headerlink" href="#simple-fcnn" title="Link to this heading">#</a></h3>
 <p>As a first introduction to neural networks, we will formulate, train, and evaluate a fully connected neural network that simply predicts the next note given the current note.
 This is very similar to the Markov chain discussed earlier.</p>
 <p>To implement such a network, we will use <a class="reference external" href="https://lightning.ai/docs/pytorch/stable/">Lightning</a>, which is build on top of <a class="reference external" href="https://pytorch.org/">PyTorch</a>.</p>
@@ -789,7 +821,7 @@ HPU available: False, using: 0 HPUs
 </div>
 </section>
 <section id="making-the-model-more-complex">
-<h3><span class="section-number">8.4.2. </span>Making the model more complex<a class="headerlink" href="#making-the-model-more-complex" title="Link to this heading">#</a></h3>
+<h3><span class="section-number">7.4.2. </span>Making the model more complex<a class="headerlink" href="#making-the-model-more-complex" title="Link to this heading">#</a></h3>
 <p>We can also make the model a bit more complex, by adding an additional hidden layer and increase its dimensions.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -940,7 +972,7 @@ HPU available: False, using: 0 HPUs
 </div>
 </section>
 <section id="adding-context">
-<h3><span class="section-number">8.4.3. </span>Adding context<a class="headerlink" href="#adding-context" title="Link to this heading">#</a></h3>
+<h3><span class="section-number">7.4.3. </span>Adding context<a class="headerlink" href="#adding-context" title="Link to this heading">#</a></h3>
 <p>Although it manages to perform a bit better, its loss is still immense.
 One way to improve could be, instead of making the net bigger and bigger, provide some additional context, e.g. the latest 10 notes.</p>
 <div class="cell docutils container">
@@ -1239,20 +1271,20 @@ HPU available: False, using: 0 HPUs
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="07_representation.html"
+       href="06_representation.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title"><span class="section-number">7. </span>Representation of sonic data</p>
+        <p class="prev-next-title"><span class="section-number">6. </span>Representation of sonic data</p>
       </div>
     </a>
     <a class="right-next"
-       href="09_rnn.html"
+       href="08_rnn.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title"><span class="section-number">9. </span>Recursive learning of patterns via RNN</p>
+        <p class="prev-next-title"><span class="section-number">8. </span>Recursive learning of patterns via RNN</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -1272,13 +1304,13 @@ HPU available: False, using: 0 HPUs
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-seasons-of-ai">8.1. The seasons of AI</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-program-a-neural-network">8.2. How to program a neural network</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fully-connected-neural-networks">8.3. Fully connected neural networks</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-and-iteration">8.4. Implementation and iteration</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-fcnn">8.4.1. Simple FCNN</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#making-the-model-more-complex">8.4.2. Making the model more complex</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-context">8.4.3. Adding context</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-seasons-of-ai">7.1. The seasons of AI</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-to-program-a-neural-network">7.2. How to program a neural network</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fully-connected-neural-networks">7.3. Fully connected neural networks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implementation-and-iteration">7.4. Implementation and iteration</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#simple-fcnn">7.4.1. Simple FCNN</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#making-the-model-more-complex">7.4.2. Making the model more complex</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#adding-context">7.4.3. Adding context</a></li>
 </ul>
 </li>
 </ul>
@@ -1295,7 +1327,7 @@ HPU available: False, using: 0 HPUs
   <div class="footer-item">
     
 <p class="component-author">
-By Dennis Scheiba
+By Dennis Scheiba, Institut für Musik und Medien, Robert Schumann Hochschule Düsseldorf
 </p>
 
   </div>
@@ -1305,7 +1337,7 @@ By Dennis Scheiba
 
   <p class="copyright">
     
-      © Copyright 2023.
+      © Copyright 2023, 2024.
       <br/>
     
   </p>

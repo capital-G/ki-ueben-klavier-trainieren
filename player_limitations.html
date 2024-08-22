@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Glossary &#8212; KI üben, Klavier trainieren</title>
+    <title>Player Piano limitations &#8212; KI üben, Klavier trainieren</title>
   
   
   
@@ -60,10 +60,11 @@
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'glossary';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'player_limitations';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Bibliography" href="bibliography.html" />
+    <link rel="next" title="Player Piano Evening" href="player_piano_evening.html" />
+    <link rel="prev" title="8. Recursive learning of patterns via RNN" href="chapters/08_rnn.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -193,11 +194,11 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendices</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="player_limitations.html">Player Piano limitations</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Player Piano limitations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="player_piano_evening.html">Player Piano Evening</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ki_ueben_api.html">ki_ueben API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="bibliography.html">Bibliography</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="glossary.html">Glossary</a></li>
 </ul>
 
     </div>
@@ -269,7 +270,7 @@
       
       
       
-      <li><a href="https://gitlab.com/robert-schumann-hochschule/imm/ki-ueben-klavier-trainieren/-/edit/main/book/glossary.md" target="_blank"
+      <li><a href="https://gitlab.com/robert-schumann-hochschule/imm/ki-ueben-klavier-trainieren/-/edit/main/book/player_limitations.md" target="_blank"
    class="btn btn-sm btn-source-edit-button dropdown-item"
    title="Suggest edit"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -299,7 +300,7 @@
       
       
       
-      <li><a href="_sources/glossary.md" target="_blank"
+      <li><a href="_sources/player_limitations.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -370,7 +371,9 @@ document.write(`
   </button>
 `);
 </script>
-
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
 </div></div>
       
     </div>
@@ -381,11 +384,27 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Glossary</h1>
+    <h1>Player Piano limitations</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simultaneous-playback">Simultaneous playback</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#midi">MIDI</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#delay">Delay</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pedals">Pedals</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tuning">Tuning</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#repetition">Repetition</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alternatives">Alternatives</a></li>
+</ul>
+            </nav>
         </div>
     </div>
 </div>
@@ -395,39 +414,131 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="glossary">
-<h1>Glossary<a class="headerlink" href="#glossary" title="Link to this heading">#</a></h1>
-<dl class="glossary">
-<dt id="term-Agency">Agency<a class="headerlink" href="#term-Agency" title="Link to this term">#</a></dt><dd><p>An amazing markup language that supports glossaries</p>
-</dd>
-<dt id="term-LLM">LLM<a class="headerlink" href="#term-LLM" title="Link to this term">#</a></dt><dd><p>Large Language Model - a neural network which is based on the transformer architecture and achieved.
-<a class="reference external" href="https://en.wikipedia.org/wiki/BERT_(language_model)">BERT</a> was the first LLM to implement this architecture and made big improvements in NLP (Natural Language Processing).</p>
-<p>GPT-4, which is used by ChatGPT, is also considered a LLM, although it operates in a multi-modal domain.</p>
-</dd>
-<dt id="term-MIDI">MIDI<a class="headerlink" href="#term-MIDI" title="Link to this term">#</a></dt><dd><p>MIDI (Musical Instrument Digital Interface) is a protocol which allows to communicate events from a keyboard.
-Most values are encoded via 7 bits, which allows for <span class="math notranslate nohighlight">\(2^7=128\)</span> distinct values.</p>
-</dd>
-<dt id="term-Random-variable">Random variable<a class="headerlink" href="#term-Random-variable" title="Link to this term">#</a></dt><dd><p>A random variable is modeled as a function, which transfers a <em>sample space</em> <span class="math notranslate nohighlight">\(\Omega\)</span> to a <em>measurable</em> space such as <span class="math notranslate nohighlight">\(\mathbb{R}\)</span>.
-An example would be the flip of a coin, which has the possible states represented in <span class="math notranslate nohighlight">\(\Omega = \lbrace \text{heads}, \text{tails} \rbrace\)</span>.
-Transferring this state space to <span class="math notranslate nohighlight">\(\mathbb{R}\)</span> could be modeled for <span class="math notranslate nohighlight">\(\omega \in \Omega\)</span> via</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}
-X: \Omega \rightarrow \mathbb{R}: ~ X(\omega) = \begin{cases}
-    1 &amp; \text{if $\omega$ is tails} \\
-    0 &amp; \text{if $\omega$ is heads}
-\end{cases}
-\end{split}\]</div>
-<p><span class="math notranslate nohighlight">\(X\)</span> is then labeled as a <em>random variable</em>.</p>
-</dd>
-<dt id="term-sclang">sclang<a class="headerlink" href="#term-sclang" title="Link to this term">#</a></dt><dd><p>The programming language of <a class="reference internal" href="#term-SuperCollider"><span class="xref std std-term">SuperCollider</span></a> with a focus on conciseness for audio environments.</p>
-</dd>
-<dt id="term-social-score">social score<a class="headerlink" href="#term-social-score" title="Link to this term">#</a></dt><dd><p>Something with social score here</p>
-</dd>
-<dt id="term-SuperCollider">SuperCollider<a class="headerlink" href="#term-SuperCollider" title="Link to this term">#</a></dt><dd><p>A framework for audio synthesis and algorithmic composition, see supercollider.online](<a class="reference external" href="https://supercollider.online">https://supercollider.online</a>)</p>
-</dd>
-<dt id="term-token">token<a class="headerlink" href="#term-token" title="Link to this term">#</a></dt><dd><p>A token represents either a word, or a sign, and is used to represent</p>
-</dd>
-</dl>
+  <section class="tex2jax_ignore mathjax_ignore" id="player-piano-limitations">
+<h1>Player Piano limitations<a class="headerlink" href="#player-piano-limitations" title="Link to this heading">#</a></h1>
+<p>Sound and music have always had some kind of limitations - the most basic being the hearing range of our ears.
+But also the limits of a player on an instrument are always tried to be exceeded, something that is often called virtuosity.</p>
+<p>Therefore, a player piano seems to be a natural progression in this endeavour, transcending the human barrier by mechanical means.
+However, such a player piano is also limited by its construction and physical limitations.</p>
+<p>As the <em>Steinway Spirio r</em> is a delicate instrument, it is necessary to take precautions in order to avoid going into areas where the piano could be damaged by excessive use.
+The results of this limitations are collected here.</p>
+<section id="simultaneous-playback">
+<h2>Simultaneous playback<a class="headerlink" href="#simultaneous-playback" title="Link to this heading">#</a></h2>
+<p>The most obvious limitation of the Steinway: As soon as we tell the piano to play something via MIDI, we will not be able to record any additional input from the keyboard.
+After about 5 seconds of not sending any MIDI commands to the piano, the piano will output the input from the keyboard via MIDI again.
+Yet it is possible to physically push down additional keys while the MIDI playback is in progress.</p>
+<p>One could say: The piano can only <em>speak</em> as long as we do not <em>talk</em> to it via MIDI.</p>
+</section>
+<section id="midi">
+<h2>MIDI<a class="headerlink" href="#midi" title="Link to this heading">#</a></h2>
+<p>MIDI also has certain limitations.
+It provides <span class="math notranslate nohighlight">\(2**7=128\)</span> possible velocity values for 128 keys.
+The keys of the Steinway are mapped from <span class="math notranslate nohighlight">\(21\)</span> (lowest A) to <span class="math notranslate nohighlight">\(108\)</span> (highest C), with <span class="math notranslate nohighlight">\(60\)</span> being the middle C.</p>
+<p>Although <span class="math notranslate nohighlight">\(128\)</span> values may not seem like much, the Steinway already struggles to represent these velocities and also fails to press a key without making a noise.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Velocity</p></th>
+<th class="head"><p>Remark</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>No action (this should do something as there is a dedicated <em>note off</em> event for the release of the note)</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>The string is hit lightly, but not consistent across the keyboard. This actual likeliness of hitting the keys is also strongly related to the physical surroundings such as temperature, weather and humidity.</p></td>
+</tr>
+<tr class="row-even"><td><p>2 - 10</p></td>
+<td><p>There is no real audible difference between these 9 velocities</p></td>
+</tr>
+<tr class="row-odd"><td><p>10 - 90</p></td>
+<td><p>Proper representation, although sometimes a <span class="math notranslate nohighlight">\(20\)</span> has no audible difference to a <span class="math notranslate nohighlight">\(21\)</span>.</p></td>
+</tr>
+<tr class="row-even"><td><p>100 - 127</p></td>
+<td><p><span class="math notranslate nohighlight">\(ffff\)</span> and not suited for continuous playback over a long time, mainly used to represent hitting the keys as strong as possible</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The inability to press a key without hitting the string means that spectral changes and modifications of a piano key/string are not really feasible.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Steinway claims that they have an additional. Although this implementation fixes obvious mistakes when using MIDI <a class="footnote-reference brackets" href="#midi-playback" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>, it remains unclear how the claimed higher resolution of their proprietary format would make a difference if the lower resolution of MIDI can not create audible differences in the velocity.</p>
+</div>
+<section id="delay">
+<h3>Delay<a class="headerlink" href="#delay" title="Link to this heading">#</a></h3>
+<p>There is no significant delay in receiving MIDI events, but the execution of a MIDI event on the actual keyboard has a delay of about 500 ms.
+There is also a very slight <em>pumping</em> sound when a playback is started via a DAW.</p>
+</section>
+<section id="pedals">
+<h3>Pedals<a class="headerlink" href="#pedals" title="Link to this heading">#</a></h3>
+<p>The pedals are send via MIDI CC channels and follow the traditional MIDI CC layout.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Pedal</p></th>
+<th class="head"><p>MIDI CC</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Soft (left)</p></td>
+<td><p>67</p></td>
+</tr>
+<tr class="row-odd"><td><p>Sustenuto (middle)</p></td>
+<td><p>66</p></td>
+</tr>
+<tr class="row-even"><td><p>Damper</p></td>
+<td><p>64</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="tuning">
+<h3>Tuning<a class="headerlink" href="#tuning" title="Link to this heading">#</a></h3>
+<p>The piano is tuned to <span class="math notranslate nohighlight">\(443~\text{Hz}\)</span> like all keyboards at RSH.</p>
+</section>
+<section id="repetition">
+<h3>Repetition<a class="headerlink" href="#repetition" title="Link to this heading">#</a></h3>
+<p>A traditional grand piano can reach about 15 hits per second (for an upright about 7 hits per second)<a class="footnote-reference brackets" href="#key-repetition" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>.</p>
+<p>The weight of a key also varies along the piano’s keyboard, making the lower keys heavier and the higher keys lighter <a class="footnote-reference brackets" href="#weight" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>.</p>
+<p>The Steinway is able to play these 15 hits per second, although it depends very much on the velocity used (not too light, but not too hard).
+However, some notes “slip” through, which is actually an effect that would also occur if a human were to play too fast.
+I’ve been told that this is not really damaging the piano, but also should not be used excessively as it could be possible to “break a tongue”.</p>
+</section>
+</section>
+<section id="alternatives">
+<h2>Alternatives<a class="headerlink" href="#alternatives" title="Link to this heading">#</a></h2>
+<p>The Yamaha Disklavier is a popular player piano that offers better MIDI capabilities, such as less delay between the send event and the audible event, and also allows simultaneous playback of MIDI events on the keyboard while also outputting what additional keys are pressed on the keyboard.
+From a purely MIDI-based perspective, the Disklavier is therefore preferable to a Steinway.
+At the same time, there have been reports of motors burning out due to excessive MIDI events being sent.</p>
+<p>Conlon Nancarrow used a modified version of a Bösendorfer Ampico that had been prepared in various ways (such as adding metal braids to the hammers or removing the felt entirely to give it a <em>harder</em> sound).
+To get the high repetition rates necessary for Nancarrow’s pieces, the pneumatic-based piano was run at a much higher air pressure and the distance between hammer and string was reduced.</p>
+<p>There is also an automaton by Peter Ablinger and Winfried Ritsch in Graz that sits on top of the physical keys of a piano, where motors push down those keys.
+It was built to play excessive notes and volumes.</p>
+<hr class="footnotes docutils" />
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="midi-playback" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>When recording a performance on the piano as a MIDI file via the MIDI interface and playing this MIDI file back on the piano results in a much higher velocity of all keys.</p>
+</aside>
+<aside class="footnote brackets" id="key-repetition" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>As stated by Yamaha:</p>
+<blockquote>
+<div><p>[…] key repetition (i.e., when a player repeats notes quickly, such as when playing trills) is much smoother and faster in grand pianos than it is in upright pianos — to a maximum of roughly 15 times per second in grands, versus seven times per second in uprights.</p>
+</div></blockquote>
+<p><a class="reference external" href="https://hub.yamaha.com/pianos/p-digital/a-quick-guide-to-weighted-keys/">https://hub.yamaha.com/pianos/p-digital/a-quick-guide-to-weighted-keys/</a></p>
+</aside>
+<aside class="footnote brackets" id="weight" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">3</a><span class="fn-bracket">]</span></span>
+<p>As stated by Yamaha:</p>
+<blockquote>
+<div><p>Every single key on a grand piano keyboard is weighted differently. This is because the strings for each note are slightly thinner and shorter in the treble register, becoming thicker and longer towards the bass register. As a result, there is greater resistance when playing low notes than when playing high notes. In other words, a heavier touch is required in the left hand and a lighter touch in the right hand.</p>
+</div></blockquote>
+<p><a class="reference external" href="https://hub.yamaha.com/pianos/p-digital/a-quick-guide-to-weighted-keys/">https://hub.yamaha.com/pianos/p-digital/a-quick-guide-to-weighted-keys/</a></p>
+</aside>
+</aside>
+</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -461,13 +572,22 @@ X: \Omega \rightarrow \mathbb{R}: ~ X(\omega) = \begin{cases}
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="bibliography.html"
+       href="chapters/08_rnn.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Bibliography</p>
+        <p class="prev-next-title"><span class="section-number">8. </span>Recursive learning of patterns via RNN</p>
       </div>
+    </a>
+    <a class="right-next"
+       href="player_piano_evening.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Player Piano Evening</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
     </a>
 </div>
                 </footer>
@@ -475,6 +595,29 @@ X: \Omega \rightarrow \mathbb{R}: ~ X(\omega) = \begin{cases}
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simultaneous-playback">Simultaneous playback</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#midi">MIDI</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#delay">Delay</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pedals">Pedals</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#tuning">Tuning</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#repetition">Repetition</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#alternatives">Alternatives</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
               
             
           </div>

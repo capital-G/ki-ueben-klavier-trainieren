@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>6. Representation of sonic data &#8212; KI üben, Klavier trainieren</title>
+    <title>6. Representation of Sonic Data &#8212; KI üben, Klavier trainieren</title>
   
   
   
@@ -188,7 +188,7 @@
 <li class="toctree-l1"><a class="reference internal" href="03_what-to-learn.html">3. What can be learned?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="04_measuring.html">4. Measuring</a></li>
 <li class="toctree-l1"><a class="reference internal" href="05_markov.html">5. The likelihood of the successive note</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">6. Representation of sonic data</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">6. Representation of Sonic Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="07_ann.html">7. Artificial Neural networks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="08_rnn.html">8. Recursive learning of patterns via RNN</a></li>
 </ul>
@@ -384,7 +384,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Representation of sonic data</h1>
+    <h1>Representation of Sonic Data</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -395,7 +395,6 @@ document.write(`
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parsing-midi-files">6.1. Parsing MIDI files</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-dataset">6.2. The dataset</a></li>
 </ul>
             </nav>
         </div>
@@ -408,376 +407,1130 @@ document.write(`
                 <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="representation-of-sonic-data">
-<h1><span class="section-number">6. </span>Representation of sonic data<a class="headerlink" href="#representation-of-sonic-data" title="Link to this heading">#</a></h1>
-<p>Musical information can be stored in a variety of ways and also evolved through history.
-One big transition was for example the capability to store the waveform of a place and time through a physical object, which then again can be re-processed and transformed back into a pressure wave of air through loudspeakers.</p>
-<p>Another common method is the notation of notes through a score, and while this inscription covers a large domain of western music history it also lacks fundamental aspects of precise information, opening the room for interpretation.</p>
-<p>The idea of transcribing the action of practicing a piano into a score reveals that such a score struggles representing common topics in practicing such as</p>
+<h1><span class="section-number">6. </span>Representation of Sonic Data<a class="headerlink" href="#representation-of-sonic-data" title="Link to this heading">#</a></h1>
+<p>Musical information can be stored and represented in various ways, where different methods evolved and spawned over time and often shaped what is considered <em>music</em>.
+One significant breakthrough was the ability to capture the waveform of a specific place and moment in time onto a physical medium on wax cylinders, which were later improved to shellac and vinyl records and later transformed into the digital domain through CDs.
+This recording stores information which can be transformed into a pressure wave of air through loudspeakers, allowing a re-assemblage of the original sound to be reproduced.</p>
+<p>Another widely used and much older method is musical notation through notated scores.
+While scores have played a central role in documenting Western music history, they inherently lack precise details, leaving room for interpretation.
+The limitations of scores become evident when attempting to transcribe the nuances of piano practice, such as</p>
 <ul class="simple">
-<li><p>flucuation in tempo</p></li>
-<li><p>small deviations in timing</p></li>
-<li><p>precise articulation of a note</p></li>
+<li><p>interpretation of tempo and annotations,</p></li>
+<li><p>subtle deviations in timing and</p></li>
+<li><p>precise articulation of notes</p></li>
 </ul>
-<p>The score fails to represent this data because it favors a more idealistic proposition of a performance than to represent an actual, definitive version.</p>
-<p>The deviation between score and performance is the very essence of an interpretation of a piece.
-Training the piano covers therefore not only the physical capability of hitting keys at the right time but also their pronunciation which is hinted by the score but relies on a more direct connection to the music in order to transport the musical intention and idea of a musical idea.</p>
-<p>A common way to represent the performance on a keyboard is through <a class="reference external" href="https://en.wikipedia.org/wiki/MIDI">MIDI</a>, which allows to store the the pressing and releasing of each key at specific time points with a given pressure which is represented via <span class="math notranslate nohighlight">\(2^{7} = 128\)</span> steps.</p>
-<p>While within a digital domain the representation is faithful, attaching it to physical objects may introduce <em>smearing</em> as the transition between the physical action to a digital quantized information may introduce a delta.</p>
-<p>While the representation of MIDI is also limited, it also provides a sweet spot of a reasonable approximation of a given performance and has the advantage of being a standard which allows interaction with many different kind of instruments and software.</p>
+<p>Scores struggle to capture these elements precisely because they favor an idealized version of performance over an accurate, definitive representation.
+This gap between what is written on the score and what is performed is where interpretation comes into play.
+Learning to play the piano, then, involves more than just hitting the right keys at the right time - it requires mastering the nuances of expression that the score can only hint at.</p>
+<p>A common method for capturing the nuances of keyboard performance is <a class="reference external" href="https://en.wikipedia.org/wiki/MIDI">MIDI</a>, a digital standard that records the press and release of each key at specific points in time, along with the velocity of each keystroke, represented in 128 steps (<span class="math notranslate nohighlight">\(2^7 = 128\)</span>).</p>
+<p>While MIDI provides a faithful representation in the digital domain, converting this data back into physical sound can introduce a form of distortion known as <em>smearing</em>, where the transition from physical action to digital quantization creates small inaccuracies.</p>
+<p>Despite its limitations, MIDI strikes a balance as a practical approximation of performance for our purpose to tell the computer what happened on a keyboard.</p>
 <section id="parsing-midi-files">
 <h2><span class="section-number">6.1. </span>Parsing MIDI files<a class="headerlink" href="#parsing-midi-files" title="Link to this heading">#</a></h2>
-<p>Python has a variety of MIDI libraries and this course decides to go with <a class="reference external" href="https://github.com/craffel/pretty-midi"><code class="docutils literal notranslate"><span class="pre">pretty_midi</span></code></a> which provides some nice convenience methods.</p>
-<p>In order to obtain a basic understanding of MIDI data it is a good practice to parse a simple MIDI file, for example <a class="reference external" href="https://commons.wikimedia.org/wiki/File:31_Good_Night_To_You_All.mid">31 Good Night To You All.mid</a> from Wikimedia.</p>
+<p>In order to obtain a basic understanding of MIDI data we will take a peak at our <em>Maestro</em> dataset.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">midi_file_path</span> <span class="o">=</span> <span class="s2">&quot;../data/31_Good_Night_To_You_All.mid&quot;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">ki_ueben.datasets</span> <span class="kn">import</span> <span class="n">Maestro3Dataset</span>
 
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">midi_file_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="c1"># make &quot;random&quot; output deterministic across runs</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">random_midi_path</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">Maestro3Dataset</span><span class="p">()</span><span class="o">.</span><span class="n">midi_file_paths</span><span class="p">)</span>
+<span class="n">random_midi_path</span><span class="o">.</span><span class="n">name</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;MIDI-Unprocessed_23_R1_2011_MID--AUDIO_R1-D9_04_Track04_wav.midi&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can take a look at the raw data of this MIDI file which consists of “raw bytes”, displayed in Python via its <a class="reference external" href="https://en.wikipedia.org/wiki/Hexadecimal">hex representation</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">random_midi_path</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">midi_data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">midi_data</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">100</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">midi_data</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">50</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>b&quot;MThd\x00\x00\x00\x06\x00\x01\x00\x04\x03\xc0MTrk\x00\x00\x00)\x00\xffX\x04\x03\x02\x18\x08\x00\xffY\x02\xff\x00\x00\xffQ\x03\t&#39;\xc0\x00\xff\x02\x0cCopyright \xa9 \x01\xff/\x00MTrk\x00\x00\x02.\x8f\x00\xc0\x00\x00\xb0y\x00\x00\xb0@\x00\x00\xb0[0\x00\xb0\n3\x00\xb0\x07d\x00\xff\x03\x05P&quot;
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>b&#39;MThd\x00\x00\x00\x06\x00\x01\x00\x02\x01\x80MTrk\x00\x00\x00\x13\x00\xffQ\x03\x07\xa1 \x00\xffX\x04\x04\x02\x18\x08\x01\xff/\x00MTrk\x00\x01n6\x00&#39;
 </pre></div>
 </div>
 </div>
 </div>
-<p>Simply using the data from a MIDI file is not helpful as the data is binary encoded.
-The library <code class="docutils literal notranslate"><span class="pre">pretty_midi</span></code> allows to turn this binary data into Python objects, allowing the extraction and interaction with the data.</p>
+<p>To make sense out of this binary MIDI stream, we can use a variety of MIDI libraries for Python.
+For this course we settle for <a class="reference external" href="https://github.com/mido/mido"><code class="docutils literal notranslate"><span class="pre">mido</span></code></a> which provides us to iterate over the stream of MIDI events as Python objects.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pretty_midi</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">mido</span>
 
-<span class="n">midi_file</span> <span class="o">=</span> <span class="n">pretty_midi</span><span class="o">.</span><span class="n">PrettyMIDI</span><span class="p">(</span><span class="n">midi_file</span><span class="o">=</span><span class="n">midi_file_path</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>MIDI files are not limited to represent one instrument but can instead encapsule a multitude of instruments simultaneously.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">midi_file</span><span class="o">.</span><span class="n">instruments</span>
+<span class="n">midi_file</span> <span class="o">=</span> <span class="n">mido</span><span class="o">.</span><span class="n">MidiFile</span><span class="p">(</span><span class="n">random_midi_path</span><span class="p">)</span>
+<span class="nb">len</span><span class="p">(</span><span class="n">midi_file</span><span class="o">.</span><span class="n">tracks</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Instrument(program=0, is_drum=False, name=&quot;Piano&quot;),
- Instrument(program=0, is_drum=False, name=&quot;Piano&quot;),
- Instrument(program=0, is_drum=False, name=&quot;Piano&quot;)]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2
 </pre></div>
 </div>
 </div>
 </div>
-<p>Each instrument contains a series of events, which covers data such as when a note is pressed (<code class="docutils literal notranslate"><span class="pre">note_on</span></code>) and when a a note is released (<code class="docutils literal notranslate"><span class="pre">note_off</span></code>).
-Each note event contains the information</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># some midi events on the 2nd track</span>
+<span class="n">midi_file</span><span class="o">.</span><span class="n">tracks</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="mi">20</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>MidiTrack([
+  Message(&#39;program_change&#39;, channel=0, program=0, time=0),
+  Message(&#39;control_change&#39;, channel=0, control=64, value=58, time=0),
+  Message(&#39;control_change&#39;, channel=0, control=67, value=127, time=0),
+  Message(&#39;control_change&#39;, channel=0, control=64, value=59, time=390),
+  Message(&#39;note_on&#39;, channel=0, note=59, velocity=38, time=398),
+  Message(&#39;note_on&#39;, channel=0, note=47, velocity=25, time=11),
+  Message(&#39;control_change&#39;, channel=0, control=64, value=59, time=170),
+  Message(&#39;control_change&#39;, channel=0, control=64, value=60, time=121),
+  Message(&#39;control_change&#39;, channel=0, control=64, value=61, time=15),
+  Message(&#39;control_change&#39;, channel=0, control=64, value=62, time=16),
+  Message(&#39;control_change&#39;, channel=0, control=64, value=63, time=14),
+  Message(&#39;control_change&#39;, channel=0, control=64, value=63, time=15),
+  Message(&#39;control_change&#39;, channel=0, control=64, value=64, time=16),
+  Message(&#39;control_change&#39;, channel=0, control=64, value=65, time=15),
+  Message(&#39;control_change&#39;, channel=0, control=64, value=65, time=16),
+  Message(&#39;control_change&#39;, channel=0, control=64, value=66, time=15),
+  Message(&#39;control_change&#39;, channel=0, control=64, value=66, time=14),
+  Message(&#39;control_change&#39;, channel=0, control=64, value=67, time=16),
+  Message(&#39;control_change&#39;, channel=0, control=64, value=67, time=46),
+  Message(&#39;control_change&#39;, channel=0, control=64, value=68, time=31)])
+</pre></div>
+</div>
+</div>
+</div>
+<p>MIDI files are not limited to represent only one instrument, but can also encapsule multiple kinds of of instruments simultaneously in one file, which are referred to as <em>tracks</em>.</p>
+<p>Each MIDI track contains a series of events, which covers data such as when a note is pressed (<code class="docutils literal notranslate"><span class="pre">note_on</span></code>) and when a a note is released (<code class="docutils literal notranslate"><span class="pre">note_off</span></code>), changes in control data (which represents e.g. the pedals) or meta data.</p>
+<p>For our purposes, we want to start by extracting the information</p>
 <ul class="simple">
 <li><p>pitch</p></li>
 <li><p>time</p></li>
 <li><p>velocity</p></li>
 </ul>
-<p><code class="docutils literal notranslate"><span class="pre">pretty_midi</span></code> combines the pair of <code class="docutils literal notranslate"><span class="pre">note_on</span></code> and <code class="docutils literal notranslate"><span class="pre">note_off</span></code> to a single event which makes it more convenient to work with MIDI data.</p>
+<p>about each key that was struck.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">midi_file</span><span class="o">.</span><span class="n">instruments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">notes</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">10</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">note_on_events</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="n">time</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+<span class="k">for</span> <span class="n">midi_message</span> <span class="ow">in</span> <span class="n">midi_file</span><span class="o">.</span><span class="n">tracks</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+    <span class="c1"># time represents the offset from the previous event</span>
+    <span class="n">time</span> <span class="o">+=</span> <span class="n">midi_message</span><span class="o">.</span><span class="n">time</span>
+
+    <span class="c1"># we are only interested in &quot;note_on&quot; events</span>
+    <span class="k">if</span> <span class="n">midi_message</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="s2">&quot;note_on&quot;</span><span class="p">:</span>
+        <span class="n">note_on_events</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;time&quot;</span><span class="p">:</span> <span class="n">time</span><span class="p">,</span>
+                <span class="s2">&quot;pitch&quot;</span><span class="p">:</span> <span class="n">midi_message</span><span class="o">.</span><span class="n">note</span><span class="p">,</span>
+                <span class="s2">&quot;velocity&quot;</span><span class="p">:</span> <span class="n">midi_message</span><span class="o">.</span><span class="n">velocity</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">note_on_events</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Note(start=1.200000, end=1.800000, pitch=72, velocity=76),
- Note(start=1.800000, end=2.400000, pitch=74, velocity=77),
- Note(start=2.400000, end=3.000000, pitch=72, velocity=75),
- Note(start=3.000000, end=3.600000, pitch=70, velocity=74),
- Note(start=3.600000, end=4.800000, pitch=69, velocity=74),
- Note(start=4.800000, end=5.400000, pitch=69, velocity=76),
- Note(start=5.400000, end=6.000000, pitch=67, velocity=75),
- Note(start=6.000000, end=6.600000, pitch=65, velocity=74),
- Note(start=6.600000, end=7.200000, pitch=64, velocity=74),
- Note(start=7.200000, end=8.400000, pitch=65, velocity=76)]
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;time&#39;: 788.0, &#39;pitch&#39;: 59, &#39;velocity&#39;: 38}
 </pre></div>
 </div>
 </div>
 </div>
-<p>Although MIDI can store information such as tempo and time signature, it is not mandatory.
-For this project, these information is not important as practicing is not tied to a consistent tempo.</p>
-<p>Where traditional sheet music is derived from a visual representation, MIDI is not relying on a visual representation and instead tries to capture a stream of events of a keyboard on a timeline.
-Yet a common method to represent MIDI data in a visual way is the piano roll, which is derived from the traditional piano roll of player pianos.</p>
-<p>The <span class="math notranslate nohighlight">\(x\)</span> axis represents the progression through time, while the <span class="math notranslate nohighlight">\(y\)</span> axis represents the possible keys on a piano (which there are 88 of on a traditional grand piano).
-If a key <span class="math notranslate nohighlight">\(k\)</span> is is pressed down at a time point <span class="math notranslate nohighlight">\(t\)</span>, the spot <span class="math notranslate nohighlight">\((t, k)\)</span> is mapped to <span class="math notranslate nohighlight">\(&gt;0\)</span>, and if no key is pressed down, it is mapped to <span class="math notranslate nohighlight">\(0\)</span>.</p>
+<p>A common way in Python to organize, structure and modify data is through the help of the library <code class="docutils literal notranslate"><span class="pre">pandas</span></code> which introduces <em>DataFrames</em>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">df_note_on</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">note_on_events</span><span class="p">)</span>
+
+<span class="n">df_note_on</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>time</th>
+      <th>pitch</th>
+      <th>velocity</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>788.0</td>
+      <td>59</td>
+      <td>38</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>799.0</td>
+      <td>47</td>
+      <td>25</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1484.0</td>
+      <td>61</td>
+      <td>53</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1502.0</td>
+      <td>49</td>
+      <td>33</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1594.0</td>
+      <td>59</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>11985</th>
+      <td>526175.0</td>
+      <td>28</td>
+      <td>87</td>
+    </tr>
+    <tr>
+      <th>11986</th>
+      <td>526183.0</td>
+      <td>40</td>
+      <td>80</td>
+    </tr>
+    <tr>
+      <th>11987</th>
+      <td>526940.0</td>
+      <td>40</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>11988</th>
+      <td>528504.0</td>
+      <td>52</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>11989</th>
+      <td>528944.0</td>
+      <td>28</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+<p>11990 rows × 3 columns</p>
+</div></div></div>
+</div>
+<p>With panads we can also take a peak at our data by plotting.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
-<span class="n">piano_roll</span> <span class="o">=</span> <span class="n">midi_file</span><span class="o">.</span><span class="n">get_piano_roll</span><span class="p">()[</span><span class="mi">21</span> <span class="p">:</span> <span class="mi">21</span> <span class="o">+</span> <span class="mi">88</span><span class="p">]</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">piano_roll</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">2000</span><span class="p">],</span> <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;MIDI pitch&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;timestep&quot;</span><span class="p">)</span>
+<span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;svg&#39;
+
+<span class="n">df_note_on</span><span class="p">[</span><span class="s2">&quot;velocity&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Distribution of velocity&quot;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">127</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/b0733b81a4939d5d0d9a1871d9ef6764617c15088290376be0211a2f258d079f.svg" src="../_images/b0733b81a4939d5d0d9a1871d9ef6764617c15088290376be0211a2f258d079f.svg" />
+</div>
+</div>
+<p>We see a lot of unexpected velocities of <span class="math notranslate nohighlight">\(1\)</span>, which needs some further inspection.
+For now we will simply filter them out easily with pandas.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_note_on</span> <span class="o">=</span> <span class="n">df_note_on</span><span class="p">[</span><span class="n">df_note_on</span><span class="p">[</span><span class="s2">&quot;velocity&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">]</span>
+
+<span class="n">df_note_on</span><span class="p">[</span><span class="s2">&quot;velocity&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Distribution of velocity&quot;</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">127</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/5e321ac5a5791cd8a6be70874ac163a4b11929679a53548ab4584d2b3d22c9a7.svg" src="../_images/5e321ac5a5791cd8a6be70874ac163a4b11929679a53548ab4584d2b3d22c9a7.svg" />
+</div>
+</div>
+<p>Although MIDI can store information such as tempo and time signature, it is not required to do so.
+For this project, this information is not important because the performances in our dataset are not tied to a consistent tempo via a click track.</p>
+<p>While traditional sheet music is derived from a visual representation, MIDI does not rely on a visual representation and instead attempts to capture a stream of keyboard events on a timeline.
+However, a common method of visually representing MIDI data is the <a class="reference external" href="https://en.wikipedia.org/wiki/Piano_roll">piano roll</a>, which is derived from the traditional piano roll of player pianos.</p>
+<p>The <span class="math notranslate nohighlight">\(x\)</span> axis represents time, while the <span class="math notranslate nohighlight">\(y\)</span> axis represents the possible keys on a piano (of which there are 88 on a traditional grand piano).
+If a key <span class="math notranslate nohighlight">\(k\)</span> is pressed at a time <span class="math notranslate nohighlight">\(t\)</span>, the point <span class="math notranslate nohighlight">\((t, k)\)</span> is mapped to <span class="math notranslate nohighlight">\(&gt;0\)</span>, and if no key is pressed, it is mapped to <span class="math notranslate nohighlight">\(0\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 10e3 scales our timing from ms to ns</span>
+<span class="n">df_time</span> <span class="o">=</span> <span class="n">df_note_on</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">df_time</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_timedelta</span><span class="p">(</span><span class="n">df_note_on</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mf">10e3</span><span class="p">)</span>
+<span class="n">df_time</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>time</th>
+      <th>pitch</th>
+      <th>velocity</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0 days 00:00:00.007880</td>
+      <td>59</td>
+      <td>38</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0 days 00:00:00.007990</td>
+      <td>47</td>
+      <td>25</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0 days 00:00:00.014840</td>
+      <td>61</td>
+      <td>53</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0 days 00:00:00.015020</td>
+      <td>49</td>
+      <td>33</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0 days 00:00:00.019040</td>
+      <td>56</td>
+      <td>57</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>11975</th>
+      <td>0 days 00:00:05.251500</td>
+      <td>52</td>
+      <td>82</td>
+    </tr>
+    <tr>
+      <th>11976</th>
+      <td>0 days 00:00:05.251500</td>
+      <td>64</td>
+      <td>94</td>
+    </tr>
+    <tr>
+      <th>11984</th>
+      <td>0 days 00:00:05.261650</td>
+      <td>52</td>
+      <td>104</td>
+    </tr>
+    <tr>
+      <th>11985</th>
+      <td>0 days 00:00:05.261750</td>
+      <td>28</td>
+      <td>87</td>
+    </tr>
+    <tr>
+      <th>11986</th>
+      <td>0 days 00:00:05.261830</td>
+      <td>40</td>
+      <td>80</td>
+    </tr>
+  </tbody>
+</table>
+<p>5995 rows × 3 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_piano_roll</span> <span class="o">=</span> <span class="n">df_time</span><span class="o">.</span><span class="n">pivot_table</span><span class="p">(</span>
+    <span class="n">columns</span><span class="o">=</span><span class="s2">&quot;pitch&quot;</span><span class="p">,</span>
+    <span class="n">index</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span>
+    <span class="n">values</span><span class="o">=</span><span class="s2">&quot;velocity&quot;</span><span class="p">,</span>
+    <span class="n">aggfunc</span><span class="o">=</span><span class="s2">&quot;max&quot;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+
+<span class="n">df_piano_roll</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>pitch</th>
+      <th>24</th>
+      <th>25</th>
+      <th>26</th>
+      <th>27</th>
+      <th>28</th>
+      <th>30</th>
+      <th>31</th>
+      <th>32</th>
+      <th>33</th>
+      <th>34</th>
+      <th>...</th>
+      <th>92</th>
+      <th>93</th>
+      <th>94</th>
+      <th>95</th>
+      <th>96</th>
+      <th>97</th>
+      <th>98</th>
+      <th>99</th>
+      <th>100</th>
+      <th>101</th>
+    </tr>
+    <tr>
+      <th>time</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0 days 00:00:00.007880</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>0 days 00:00:00.007990</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>0 days 00:00:00.014840</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>0 days 00:00:00.015020</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>0 days 00:00:00.019040</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>0 days 00:00:05.251490</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>0 days 00:00:05.251500</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>0 days 00:00:05.261650</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>0 days 00:00:05.261750</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>87.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>0 days 00:00:05.261830</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>5833 rows × 77 columns</p>
+</div></div></div>
+</div>
+<p>We can already plot this pivot table now.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">df_piano_roll</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Event&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Pitch&quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">();</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/e3926424f43b833d7d11daa3f899551cbf031e212b9fc5b20e2cc2d3730b7285.png" src="../_images/e3926424f43b833d7d11daa3f899551cbf031e212b9fc5b20e2cc2d3730b7285.png" />
+<img alt="../_images/dda1b53c0d54e508b920f2d6ee40bffd58c7840cdc6d88b67b481b8752563abe.svg" src="../_images/dda1b53c0d54e508b920f2d6ee40bffd58c7840cdc6d88b67b481b8752563abe.svg" />
 </div>
 </div>
-</section>
-<section id="the-dataset">
-<h2><span class="section-number">6.2. </span>The dataset<a class="headerlink" href="#the-dataset" title="Link to this heading">#</a></h2>
+<p>But in fact, we are plotting consecutive events on the <span class="math notranslate nohighlight">\(x\)</span> axis instead of their time property.
+To use the actual <em>time</em> of our events as the <span class="math notranslate nohighlight">\(x\)</span> axis, we need to resample and aggregate our data.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
-
-<span class="n">midi_folder</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;../data/pianoteq/&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">midi_file_paths</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-
-<span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="nb">dir</span><span class="p">,</span> <span class="n">files</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">midi_folder</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.mid&quot;</span><span class="p">):</span>
-            <span class="n">midi_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">root</span><span class="p">)</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">dir</span><span class="p">),</span> <span class="n">file</span><span class="p">)</span>
-            <span class="n">midi_file_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">midi_path</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">midi_file_paths</span><span class="p">)</span><span class="si">}</span><span class="s2"> midi files&quot;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_resampled_piano_roll</span> <span class="o">=</span> <span class="n">df_piano_roll</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="s2">&quot;25ms&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+<span class="n">df_resampled_piano_roll</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Found 772 midi files
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">piano_rolls</span> <span class="o">=</span> <span class="p">[]</span>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
-<span class="k">for</span> <span class="n">midi_file_path</span> <span class="ow">in</span> <span class="n">midi_file_paths</span><span class="p">:</span>
-    <span class="n">m</span> <span class="o">=</span> <span class="n">pretty_midi</span><span class="o">.</span><span class="n">PrettyMIDI</span><span class="p">(</span><span class="n">midi_file</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">midi_file_path</span><span class="o">.</span><span class="n">absolute</span><span class="p">()))</span>
-    <span class="n">piano_rolls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">get_piano_roll</span><span class="p">())</span>
-</pre></div>
-</div>
-</div>
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>pitch</th>
+      <th>24</th>
+      <th>25</th>
+      <th>26</th>
+      <th>27</th>
+      <th>28</th>
+      <th>30</th>
+      <th>31</th>
+      <th>32</th>
+      <th>33</th>
+      <th>34</th>
+      <th>...</th>
+      <th>92</th>
+      <th>93</th>
+      <th>94</th>
+      <th>95</th>
+      <th>96</th>
+      <th>97</th>
+      <th>98</th>
+      <th>99</th>
+      <th>100</th>
+      <th>101</th>
+    </tr>
+    <tr>
+      <th>time</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0 days 00:00:00.007880</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>0 days 00:00:00.032880</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>0 days 00:00:00.057880</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>0 days 00:00:00.082880</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>0 days 00:00:00.107880</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>0 days 00:00:05.157880</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>0 days 00:00:05.182880</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>112.0</td>
+      <td>95.0</td>
+      <td>111.0</td>
+      <td>100.0</td>
+      <td>0.0</td>
+      <td>101.0</td>
+      <td>54.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>0 days 00:00:05.207880</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>93.0</td>
+      <td>55.0</td>
+      <td>0.0</td>
+      <td>80.0</td>
+      <td>4.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>0 days 00:00:05.232880</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>87.0</td>
+      <td>83.0</td>
+      <td>0.0</td>
+      <td>81.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>111.0</td>
+      <td>81.0</td>
+      <td>106.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>0 days 00:00:05.257880</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>87.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>211 rows × 77 columns</p>
+</div></div></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">piano_roll</span> <span class="o">=</span> <span class="n">piano_rolls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">piano_roll</span><span class="p">[:,</span> <span class="p">::</span><span class="mi">1000</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">df_resampled_piano_roll</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Time steps (25 ms)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Pitch&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">();</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([[0., 0., 0., ..., 0., 0., 0.],
-       [0., 0., 0., ..., 0., 0., 0.],
-       [0., 0., 0., ..., 0., 0., 0.],
-       ...,
-       [0., 0., 0., ..., 0., 0., 0.],
-       [0., 0., 0., ..., 0., 0., 0.],
-       [0., 0., 0., ..., 0., 0., 0.]])
-</pre></div>
+<img alt="../_images/1f3da571c42e5cdfedf6c39eb3abeacf9aa9954bbe41d1c4dc1f96236ced9320.svg" src="../_images/1f3da571c42e5cdfedf6c39eb3abeacf9aa9954bbe41d1c4dc1f96236ced9320.svg" />
 </div>
 </div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span>
-<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span><span class="p">,</span> <span class="n">Dataset</span>
-
-
-<span class="k">class</span> <span class="nc">PianoRollDataset</span><span class="p">(</span><span class="n">Dataset</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">piano_rolls</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">sample_length</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">):</span>
-        <span class="c1"># @todo allow padding and more arbitrary cuts</span>
-        <span class="c1"># @todo skip empty samples</span>
-        <span class="c1"># @todo allow for reduction in piano key range</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">piano_rolls</span> <span class="o">=</span> <span class="n">piano_rolls</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">sample_length</span> <span class="o">=</span> <span class="n">sample_length</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_dataset</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="nf">_prepare_dataset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">piano_roll</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">piano_rolls</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">offset</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">piano_roll</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_length</span><span class="p">):</span>
-                <span class="n">sample</span> <span class="o">=</span> <span class="n">piano_roll</span><span class="p">[:,</span> <span class="n">offset</span> <span class="p">:</span> <span class="n">offset</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_length</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span>
-                    <span class="n">np</span><span class="o">.</span><span class="n">float32</span>
-                <span class="p">)</span>
-                <span class="k">if</span> <span class="n">sample</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">sample_length</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">piano_rolls_dataset</span> <span class="o">=</span> <span class="n">PianoRollDataset</span><span class="p">(</span>
-    <span class="n">piano_rolls</span><span class="o">=</span><span class="n">piano_rolls</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="nb">len</span><span class="p">(</span><span class="n">piano_rolls_dataset</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>17062
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">piano_rolls</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(128, 90620)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">SimpleNN</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">flatten</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Flatten</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">linear_relu_stack</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
-            <span class="c1"># hardcoded - needs to be dynamic according to the input data</span>
-            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">128</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span>
-            <span class="n">nn</span><span class="o">.</span><span class="n">ReLU</span><span class="p">(),</span>
-            <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">128</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">),</span>
-        <span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-        <span class="n">logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear_relu_stack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">flatten</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">1000</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">logits</span>
-
-
-<span class="n">model</span> <span class="o">=</span> <span class="n">SimpleNN</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SimpleNN(
-  (flatten): Flatten(start_dim=1, end_dim=-1)
-  (linear_relu_stack): Sequential(
-    (0): Linear(in_features=128000, out_features=32, bias=True)
-    (1): ReLU()
-    (2): Linear(in_features=32, out_features=128000, bias=True)
-  )
-)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">64</span>
-
-<span class="c1"># Create data loaders.</span>
-<span class="n">dataloader</span> <span class="o">=</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">piano_rolls_dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">X</span> <span class="ow">in</span> <span class="n">dataloader</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Shape of X: </span><span class="si">{</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">break</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Shape of X: torch.Size([64, 128, 1000])
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">loss_fn</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">()</span>
-<span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="n">dataloader</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">loss_fn</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">):</span>
-    <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dataloader</span><span class="o">.</span><span class="n">dataset</span><span class="p">)</span>
-    <span class="n">model</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
-    <span class="k">for</span> <span class="n">batch</span><span class="p">,</span> <span class="n">X</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dataloader</span><span class="p">):</span>
-        <span class="c1"># Compute prediction error</span>
-        <span class="n">pred</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-        <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
-
-        <span class="c1"># Backpropagation</span>
-        <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
-        <span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
-        <span class="n">optimizer</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
-
-        <span class="k">if</span> <span class="n">batch</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">loss</span><span class="p">,</span> <span class="n">current</span> <span class="o">=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="p">(</span><span class="n">batch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;loss: </span><span class="si">{</span><span class="n">loss</span><span class="si">:</span><span class="s2">&gt;7f</span><span class="si">}</span><span class="s2">  [</span><span class="si">{</span><span class="n">current</span><span class="si">:</span><span class="s2">&gt;5d</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">size</span><span class="si">:</span><span class="s2">&gt;5d</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">epochs</span> <span class="o">=</span> <span class="mi">5</span>
-<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epochs</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Epoch </span><span class="si">{</span><span class="n">t</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="se">\n</span><span class="s2">-------------------------------&quot;</span><span class="p">)</span>
-    <span class="n">train</span><span class="p">(</span><span class="n">dataloader</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">loss_fn</span><span class="p">,</span> <span class="n">optimizer</span><span class="p">)</span>
-    <span class="c1"># test(test_dataloader, model, loss_fn)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done!&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 1
--------------------------------
-loss: 4577.022461  [   64/17062]
-loss: 1506.752075  [ 6464/17062]
-loss: 1539.838501  [12864/17062]
-Epoch 2
--------------------------------
-loss: 2218.559082  [   64/17062]
-loss: 1506.428467  [ 6464/17062]
-loss: 1539.534546  [12864/17062]
-Epoch 3
--------------------------------
-loss: 2218.207275  [   64/17062]
-loss: 1506.105103  [ 6464/17062]
-loss: 1539.230591  [12864/17062]
-Epoch 4
--------------------------------
-loss: 2217.855957  [   64/17062]
-loss: 1505.782227  [ 6464/17062]
-loss: 1538.927002  [12864/17062]
-Epoch 5
--------------------------------
-loss: 2217.504883  [   64/17062]
-loss: 1505.459717  [ 6464/17062]
-loss: 1538.624023  [12864/17062]
-Done!
-</pre></div>
-</div>
-</div>
+<p>Proper parsing and extraction of our data will actually be the most labor intensive task for our project, as with any data related project.</p>
+<p>Most of this task has been “outsourced” into a library <code class="docutils literal notranslate"><span class="pre">ki_ueben</span></code>, which is documented in <a class="reference internal" href="../ki_ueben_api.html"><span class="doc">ki_ueben API</span></a>.</p>
+<div class="admonition-tasks admonition">
+<p class="admonition-title">Tasks</p>
+<ul class="simple">
+<li><p>Investigate why there are so many velocity <span class="math notranslate nohighlight">\(1\)</span> events in our MIDI file.</p></li>
+<li><p>Compare two MIDI files - what different kinds of data analysis and plotting methods can you find to compare these files?</p></li>
+<li><p>Include the `note_off’ events in our piano roll so that we can distinguish how long a note is held down.</p></li>
+<li><p>What are good vector representations of our MIDI events? Find a <a class="reference external" href="https://en.wikipedia.org/wiki/One-hot"><em>a hot encoding</em></a> for the MIDI data.</p></li>
+</ul>
 </div>
 </section>
 </section>
@@ -847,7 +1600,6 @@ Done!
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parsing-midi-files">6.1. Parsing MIDI files</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-dataset">6.2. The dataset</a></li>
 </ul>
   </nav></div>
 

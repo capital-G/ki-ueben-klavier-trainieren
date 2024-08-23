@@ -22,8 +22,8 @@ parts:
       - file: chapters/08_rnn
   - caption: Appendices
     chapters:
-      - file: player_limitations
-      - file: player_piano_evening
-      - file: ki_ueben_api
-      - file: bibliography.md
-      - file: glossary
+      - file: appendices/player_limitations
+      - file: appendices/player_piano_evening
+      - file: appendices/ki_ueben_api
+      - file: appendices/bibliography.md
+      - file: appendices/glossary

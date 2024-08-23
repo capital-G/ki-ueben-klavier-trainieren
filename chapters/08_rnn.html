@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>8. Recursive learning of patterns via RNN &#8212; KI üben, Klavier trainieren</title>
+    <title>8. Recurrent learning of patterns via RNN &#8212; KI üben, Klavier trainieren</title>
   
   
   
@@ -58,6 +58,8 @@
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'chapters/08_rnn';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
@@ -188,7 +190,7 @@
 <li class="toctree-l1"><a class="reference internal" href="05_markov.html">5. The likelihood of the successive note</a></li>
 <li class="toctree-l1"><a class="reference internal" href="06_representation.html">6. Representation of Sonic Data</a></li>
 <li class="toctree-l1"><a class="reference internal" href="07_ann.html">7. Artificial Neural networks</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">8. Recursive learning of patterns via RNN</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">8. Recurrent learning of patterns via RNN</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendices</span></p>
 <ul class="nav bd-sidenav">
@@ -380,7 +382,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Recursive learning of patterns via RNN</h1>
+    <h1>Recurrent learning of patterns via RNN</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -394,564 +396,86 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="recursive-learning-of-patterns-via-rnn">
-<h1><span class="section-number">8. </span>Recursive learning of patterns via RNN<a class="headerlink" href="#recursive-learning-of-patterns-via-rnn" title="Link to this heading">#</a></h1>
-<p>After we have learned to predict the next note via a neural network, it still lacks the capability to</p>
-<ul class="simple">
-<li><p>understand and predict</p></li>
-<li><p>has no sense of time</p></li>
-<li><p>is not aware of velocity/amplitude of a note</p></li>
-</ul>
+  <section class="tex2jax_ignore mathjax_ignore" id="recurrent-learning-of-patterns-via-rnn">
+<h1><span class="section-number">8. </span>Recurrent learning of patterns via RNN<a class="headerlink" href="#recurrent-learning-of-patterns-via-rnn" title="Link to this heading">#</a></h1>
+<p>After we have taken a first look at fully connected neural networks we now want to take a look at recurrent neural networks, RNN.
+This architecture employs a feedback mechanism into the network where a previous state of a series can be analyzed and stored.
+This not just allows to provide an arbitrary number of samples as context input but also.</p>
+<p>One could think this as some kind of delay line that is analyzing past events and can provide context on how to interpret the current sample.</p>
+<figure class="align-default" id="id1">
+<img alt="https://upload.wikimedia.org/wikipedia/commons/b/b5/Recurrent_neural_network_unfold.svg" src="https://upload.wikimedia.org/wikipedia/commons/b/b5/Recurrent_neural_network_unfold.svg" />
+<figcaption>
+<p><span class="caption-number">Fig. 8.1 </span><span class="caption-text">A picture of an RNN, “unrolled” in time on the right side.</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+<div class="legend">
+<p><span class="math notranslate nohighlight">\(x\)</span> is an input vector with <span class="math notranslate nohighlight">\(n \times t\)</span> dimensions, where <span class="math notranslate nohighlight">\(n\)</span> is the number of input features and <span class="math notranslate nohighlight">\(t\)</span> the number of time steps.
+<span class="math notranslate nohighlight">\(U\)</span>, <span class="math notranslate nohighlight">\(V\)</span> and <span class="math notranslate nohighlight">\(W\)</span> are weights.
+The hidden layer <span class="math notranslate nohighlight">\(h_t\)</span> takes as input <span class="math notranslate nohighlight">\(x_t\)</span> and the state of the previous hidden state <span class="math notranslate nohighlight">\(h_{t-1}\)</span> and generates an output <span class="math notranslate nohighlight">\(o_t\)</span>.</p>
+<p>Source: <a class="reference external" href="https://upload.wikimedia.org/wikipedia/commons/b/b5/Recurrent_neural_network_unfold.svg">https://upload.wikimedia.org/wikipedia/commons/b/b5/Recurrent_neural_network_unfold.svg</a></p>
+</div>
+</figcaption>
+</figure>
+<p>We will start by simply trying, like previously, to predict the next note to get a bit familiar with the structure of an RNN.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">lightning</span> <span class="k">as</span> <span class="nn">L</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">from</span> <span class="nn">ki_ueben.datasets</span> <span class="kn">import</span> <span class="n">Maestro3Dataset</span>
-<span class="kn">from</span> <span class="nn">ki_ueben.midi</span> <span class="kn">import</span> <span class="n">PianoRoll</span>
-<span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">nn</span><span class="p">,</span> <span class="n">optim</span>
-</pre></div>
-</div>
-</div>
-</div>
-<p>Start by loading the dataset.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dataset</span> <span class="o">=</span> <span class="n">Maestro3Dataset</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dataset_record</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span>
-<span class="n">dataset_record</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;file_path&#39;: PosixPath(&#39;/Users/scheiba/github/ki-ueben-klavier-trainieren/book/chapters/data/maestro-v3.0.0/maestro-v3.0.0/2013/ORIG-MIDI_01_7_7_13_Group__MID--AUDIO_11_R1_2013_wav--1.midi&#39;)}
-</pre></div>
-</div>
-</div>
-</div>
-<p>Extract the events within a MIDI file through the <code class="docutils literal notranslate"><span class="pre">PianoRoll</span></code> class.</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">piano_roll</span> <span class="o">=</span> <span class="n">PianoRoll</span><span class="p">(</span><span class="n">dataset_record</span><span class="p">[</span><span class="s2">&quot;file_path&quot;</span><span class="p">])</span>
-<span class="n">piano_roll</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PianoRoll(/Users/scheiba/github/ki-ueben-klavier-trainieren/book/chapters/data/maestro-v3.0.0/maestro-v3.0.0/2013/ORIG-MIDI_01_7_7_13_Group__MID--AUDIO_11_R1_2013_wav--1.midi)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_events</span> <span class="o">=</span> <span class="n">piano_roll</span><span class="o">.</span><span class="n">events</span><span class="p">()</span>
-<span class="n">df_events</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>note</th>
-      <th>velocity</th>
-      <th>time</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>-1</td>
-      <td>0</td>
-      <td>0.000000</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>51</td>
-      <td>49</td>
-      <td>0.980469</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>63</td>
-      <td>57</td>
-      <td>0.997396</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>51</td>
-      <td>0</td>
-      <td>1.087240</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>50</td>
-      <td>64</td>
-      <td>1.093750</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>7301</th>
-      <td>-1</td>
-      <td>69</td>
-      <td>389.126302</td>
-    </tr>
-    <tr>
-      <th>7302</th>
-      <td>-1</td>
-      <td>64</td>
-      <td>389.145833</td>
-    </tr>
-    <tr>
-      <th>7303</th>
-      <td>-1</td>
-      <td>55</td>
-      <td>389.164062</td>
-    </tr>
-    <tr>
-      <th>7304</th>
-      <td>-1</td>
-      <td>37</td>
-      <td>389.184896</td>
-    </tr>
-    <tr>
-      <th>7305</th>
-      <td>-1</td>
-      <td>0</td>
-      <td>389.204427</td>
-    </tr>
-  </tbody>
-</table>
-<p>7306 rows × 3 columns</p>
-</div></div></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
-
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
 
 
-<span class="k">class</span> <span class="nc">MidiVectorTransform</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Transforms multiple MIDI events stored within a DataFrame,</span>
-<span class="sd">    happening at the same time into a vector.</span>
-<span class="sd">    The DataFrame needs to have the columns</span>
-
-<span class="sd">    * velocity</span>
-<span class="sd">    * note</span>
-<span class="sd">    * time_delta (delta from previous event) - it is not necessary to quantize this</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">velocity_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span> <span class="n">time_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">125</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dtype</span> <span class="o">=</span> <span class="n">dtype</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">velocity_steps</span> <span class="o">=</span> <span class="n">velocity_steps</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">velocity_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">velocity_steps</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">time_steps</span> <span class="o">=</span> <span class="n">time_steps</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">time_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_steps</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">num_midi</span> <span class="o">=</span> <span class="mi">128</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">midi_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_midi</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">transform_size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_midi</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">velocity_steps</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_steps</span>
-
-    <span class="k">def</span> <span class="nf">_events</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">selector</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">bool</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="n">events</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_midi</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;velocity&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">selector</span><span class="p">)]</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
-            <span class="n">events</span> <span class="o">=</span> <span class="n">events</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">midi_mask</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">note</span><span class="p">)]</span>
-        <span class="k">return</span> <span class="n">events</span>
-
-    <span class="k">def</span> <span class="nf">_events_on</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_events</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">selector</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">_events_off</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_events</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">selector</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">_velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="c1"># todo: should this ignore 0 velocity at all?</span>
-        <span class="n">velocity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">velocity_steps</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
-
-        <span class="n">mean_velocity</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;velocity&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">velocity</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">pd</span><span class="o">.</span><span class="n">isna</span><span class="p">(</span><span class="n">mean_velocity</span><span class="p">):</span>
-            <span class="n">quantized_velocity</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
-                <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">mean_velocity</span> <span class="o">/</span> <span class="mi">127</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">velocity_steps</span><span class="p">)</span>
-            <span class="p">)</span>
-            <span class="n">velocity</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">velocity_mask</span><span class="p">[</span><span class="n">quantized_velocity</span><span class="p">]</span>
-
-        <span class="k">return</span> <span class="n">velocity</span>
-
-    <span class="k">def</span> <span class="nf">_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_steps</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="c1"># clip between 0 and 1</span>
-            <span class="n">time_diff</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">time_delta</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
-            <span class="n">time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_mask</span><span class="p">[</span>
-                <span class="nb">int</span><span class="p">(</span>
-                    <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span>
-                        <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">time_diff</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_steps</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_steps</span> <span class="o">-</span> <span class="mi">1</span>
-                    <span class="p">)</span>
-                <span class="p">)</span>
-            <span class="p">]</span>
-        <span class="k">return</span> <span class="n">time</span>
-
-    <span class="k">def</span> <span class="nf">un_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sample</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-        <span class="c1"># filter out empty messages and pedal messages</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;note&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
-            <span class="p">[</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_events_on</span><span class="p">(</span><span class="n">df</span><span class="p">),</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_events_off</span><span class="p">(</span><span class="n">df</span><span class="p">),</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_velocity</span><span class="p">(</span><span class="n">df</span><span class="p">),</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_time</span><span class="p">(</span><span class="n">df</span><span class="p">),</span>
-            <span class="p">],</span>
-            <span class="n">dtype</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dtype</span><span class="p">,</span>
-        <span class="p">)</span>
-
-
-<span class="n">transformer</span> <span class="o">=</span> <span class="n">MidiVectorTransform</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_html"><div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>note</th>
-      <th>velocity</th>
-      <th>time</th>
-      <th>time_delta</th>
-      <th>quantized_time</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>-1</td>
-      <td>0</td>
-      <td>0.000000</td>
-      <td>0.980469</td>
-      <td>0.000</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>51</td>
-      <td>49</td>
-      <td>0.980469</td>
-      <td>0.016927</td>
-      <td>0.976</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>63</td>
-      <td>57</td>
-      <td>0.997396</td>
-      <td>0.089844</td>
-      <td>0.992</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>51</td>
-      <td>0</td>
-      <td>1.087240</td>
-      <td>0.006510</td>
-      <td>1.080</td>
-    </tr>
-    <tr>
-      <th>4</th>
-      <td>50</td>
-      <td>64</td>
-      <td>1.093750</td>
-      <td>0.071615</td>
-      <td>1.088</td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-      <td>...</td>
-    </tr>
-    <tr>
-      <th>7301</th>
-      <td>-1</td>
-      <td>69</td>
-      <td>389.126302</td>
-      <td>0.019531</td>
-      <td>389.120</td>
-    </tr>
-    <tr>
-      <th>7302</th>
-      <td>-1</td>
-      <td>64</td>
-      <td>389.145833</td>
-      <td>0.018229</td>
-      <td>389.144</td>
-    </tr>
-    <tr>
-      <th>7303</th>
-      <td>-1</td>
-      <td>55</td>
-      <td>389.164062</td>
-      <td>0.020833</td>
-      <td>389.160</td>
-    </tr>
-    <tr>
-      <th>7304</th>
-      <td>-1</td>
-      <td>37</td>
-      <td>389.184896</td>
-      <td>0.019531</td>
-      <td>389.184</td>
-    </tr>
-    <tr>
-      <th>7305</th>
-      <td>-1</td>
-      <td>0</td>
-      <td>389.204427</td>
-      <td>1.000000</td>
-      <td>389.200</td>
-    </tr>
-  </tbody>
-</table>
-<p>7306 rows × 5 columns</p>
-</div></div></div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">prepare_df</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">num_time_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">125</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
-    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;time_delta&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
-    <span class="n">df</span><span class="p">[</span><span class="s2">&quot;quantized_time&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;time&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">num_time_steps</span><span class="p">)</span> <span class="o">/</span> <span class="n">num_time_steps</span>
-
-    <span class="c1"># remove pedal</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;note&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
-
-    <span class="k">return</span> <span class="n">df</span>
-
-
-<span class="k">def</span> <span class="nf">df_quantized_iterator</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">group_df</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;quantized_time&quot;</span><span class="p">):</span>
-        <span class="k">yield</span> <span class="n">group_df</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
-
-<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
-
-<span class="n">vectors</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-
-<span class="k">for</span> <span class="n">midi_path</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
-    <span class="n">vector</span> <span class="o">=</span> <span class="p">[]</span>
-
-    <span class="n">piano_roll</span> <span class="o">=</span> <span class="n">PianoRoll</span><span class="p">(</span><span class="n">dataset_record</span><span class="p">[</span><span class="s2">&quot;file_path&quot;</span><span class="p">])</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">piano_roll</span><span class="o">.</span><span class="n">events</span><span class="p">()</span>
-
-    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">df_quantized_iterator</span><span class="p">(</span><span class="n">prepare_df</span><span class="p">(</span><span class="n">df</span><span class="p">)):</span>
-        <span class="n">vector</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">transformer</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
-
-    <span class="n">vectors</span><span class="p">[</span><span class="n">midi_path</span><span class="p">[</span><span class="s2">&quot;file_path&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">vector</span><span class="p">)</span>
-    <span class="k">break</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  0%|          | 0/1276 [00:07&lt;?, ?it/s]
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vector</span> <span class="o">=</span> <span class="n">vectors</span><span class="p">[</span><span class="s2">&quot;ORIG-MIDI_01_7_7_13_Group__MID--AUDIO_12_R1_2013_wav--1.midi&quot;</span><span class="p">]</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vector</span><span class="o">.</span><span class="n">shape</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(3667, 413)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">piano_roll</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PianoRoll(/Users/scheiba/github/ki-ueben-klavier-trainieren/book/chapters/data/maestro-v3.0.0/maestro-v3.0.0/2013/ORIG-MIDI_01_7_7_13_Group__MID--AUDIO_11_R1_2013_wav--1.midi)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vector</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">shape</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1, 413)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">LSTM</span><span class="p">(</span><span class="n">L</span><span class="o">.</span><span class="n">LightningModule</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">hidden_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">512</span><span class="p">,</span>
-        <span class="n">midi_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">128</span><span class="p">,</span>
-        <span class="n">velocity_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
-        <span class="n">time_steps</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">125</span><span class="p">,</span>
-    <span class="p">):</span>
+<span class="k">class</span> <span class="nc">SimpleRNN</span><span class="p">(</span><span class="n">L</span><span class="o">.</span><span class="n">LightningModule</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">velocity_steps</span> <span class="o">=</span> <span class="n">velocity_steps</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">time_steps</span> <span class="o">=</span> <span class="n">time_steps</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">midi_size</span> <span class="o">=</span> <span class="n">midi_size</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">midi_size</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">velocity_steps</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">time_steps</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span> <span class="o">=</span> <span class="n">hidden_size</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">lstm</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LSTM</span><span class="p">(</span>
-            <span class="n">input_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span><span class="p">,</span>
-            <span class="n">hidden_size</span><span class="o">=</span><span class="n">hidden_size</span><span class="p">,</span>
-            <span class="n">num_layers</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-            <span class="n">dropout</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rnn</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LSTM</span><span class="p">(</span>
+            <span class="n">input_size</span><span class="o">=</span><span class="mi">88</span><span class="p">,</span>
+            <span class="n">hidden_size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span>
+            <span class="n">num_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
             <span class="n">batch_first</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span>
-            <span class="n">in_features</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span><span class="p">,</span>
-            <span class="n">out_features</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fc</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span>
+            <span class="n">in_features</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span>
+            <span class="n">out_features</span><span class="o">=</span><span class="mi">88</span><span class="p">,</span>
         <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">):</span>
-        <span class="c1"># !!! batch needs to be!!!</span>
-        <span class="c1"># * midi_in</span>
-        <span class="c1"># * midi_out</span>
-        <span class="c1"># * velocity</span>
-        <span class="c1"># * time</span>
-
-        <span class="n">lstm_out</span><span class="p">,</span> <span class="p">(</span><span class="n">hn</span><span class="p">,</span> <span class="n">cn</span><span class="p">)</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lstm</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
-        <span class="c1"># only select the last output of the lstm</span>
-        <span class="c1"># we need to unsqueeze because selecting a single element</span>
-        <span class="c1"># will delete the dimension as well</span>
-        <span class="n">lstm_out</span> <span class="o">=</span> <span class="n">lstm_out</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">:,</span> <span class="p">:]</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">lstm_out</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">note_on</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">t</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">midi_size</span><span class="p">]</span>
-
-    <span class="k">def</span> <span class="nf">note_off</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">t</span><span class="p">[:,</span> <span class="p">:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">midi_size</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">midi_size</span> <span class="o">*</span> <span class="mi">2</span><span class="p">]</span>
-
-    <span class="k">def</span> <span class="nf">velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">t</span><span class="p">[:,</span> <span class="p">:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">midi_size</span> <span class="o">*</span> <span class="mi">2</span> <span class="p">:</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">midi_size</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">velocity_steps</span><span class="p">]</span>
-
-    <span class="k">def</span> <span class="nf">time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">:</span>
-        <span class="c1"># @todo this is wrong!</span>
-        <span class="k">return</span> <span class="n">t</span><span class="p">[:,</span> <span class="p">:,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">time_steps</span> <span class="p">:]</span>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+        <span class="c1"># x must have shape (batch_size, time_steps, features)</span>
+        <span class="n">z</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rnn</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+        <span class="c1"># only take the &quot;latest&quot; output from our time dimension</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">z</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fc</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">z</span>
 
     <span class="k">def</span> <span class="nf">training_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">):</span>
         <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">batch</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-
-        <span class="c1"># losses = torch.concatenate([</span>
-        <span class="c1">#     nn.functional.mse_loss(self.note_on(y), self.note_on(out)),</span>
-        <span class="c1">#     # nn.CrossEntropyLoss()(self.velocity(x), self.velocity(out))</span>
-        <span class="c1"># ])</span>
-
-        <span class="n">note_on_loss</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">note_on</span><span class="p">(</span><span class="n">out</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">note_on</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
-        <span class="c1"># have different losses for each section</span>
-        <span class="n">time_loss</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">cross_entropy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">(</span><span class="n">out</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;train_note_on_loss&quot;</span><span class="p">,</span> <span class="n">note_on_loss</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;train_time_loss&quot;</span><span class="p">,</span> <span class="n">time_loss</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">note_on_loss</span> <span class="o">+</span> <span class="n">time_loss</span>
+        <span class="n">y_hat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">criterion</span><span class="p">(</span><span class="n">y_hat</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;train_loss&quot;</span><span class="p">,</span> <span class="n">loss</span><span class="p">,</span> <span class="n">prog_bar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">loss</span>
 
     <span class="k">def</span> <span class="nf">configure_optimizers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
 
 
-<span class="n">lstm</span> <span class="o">=</span> <span class="n">LSTM</span><span class="p">()</span>
+<span class="n">simple_rnn</span> <span class="o">=</span> <span class="n">SimpleRNN</span><span class="p">()</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">lstm</span><span class="p">)</span>
+<span class="c1"># add gradient clipping to avoid exploding gradients</span>
+<span class="n">CLIP_VALUE</span> <span class="o">=</span> <span class="mf">10.0</span>
+<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">simple_rnn</span><span class="o">.</span><span class="n">parameters</span><span class="p">():</span>
+    <span class="n">p</span><span class="o">.</span><span class="n">register_hook</span><span class="p">(</span><span class="k">lambda</span> <span class="n">grad</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="n">grad</span><span class="p">,</span> <span class="o">-</span><span class="n">CLIP_VALUE</span><span class="p">,</span> <span class="n">CLIP_VALUE</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">simple_rnn</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>LSTM(
-  (lstm): LSTM(413, 512, num_layers=3, batch_first=True, dropout=0.3)
-  (linear): Linear(in_features=512, out_features=413, bias=True)
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SimpleRNN(
+  (rnn): LSTM(88, 256, num_layers=2, batch_first=True)
+  (dropout): Dropout(p=0.1, inplace=False)
+  (fc): Linear(in_features=256, out_features=88, bias=True)
+  (criterion): CrossEntropyLoss()
 )
 </pre></div>
 </div>
@@ -959,413 +483,327 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lstm</span><span class="o">.</span><span class="n">note_on</span><span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pytorch_lightning.utilities.model_summary</span> <span class="kn">import</span> <span class="n">ModelSummary</span>
+
+<span class="n">ModelSummary</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">simple_rnn</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>torch.Size([1, 1, 128])
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterator</span>
-
-<span class="kn">import</span> <span class="nn">torch.utils.data</span>
-
-
-<span class="k">class</span> <span class="nc">TimeSeriesDataset</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">IterableDataset</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vectors</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">num_pre</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">num_post</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">vectors</span> <span class="o">=</span> <span class="n">vectors</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">num_pre</span> <span class="o">=</span> <span class="n">num_pre</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">num_post</span> <span class="o">=</span> <span class="n">num_post</span>
-
-    <span class="k">def</span> <span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">offset</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span>
-            <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vectors</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_post</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_pre</span>
-        <span class="p">):</span>
-            <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">vectors</span><span class="p">[</span><span class="n">offset</span> <span class="p">:</span> <span class="n">offset</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_pre</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">vectors</span><span class="p">[</span>
-                <span class="n">offset</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_pre</span> <span class="p">:</span> <span class="n">offset</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_pre</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_post</span>
-            <span class="p">]</span>
-
-
-<span class="n">dataset</span> <span class="o">=</span> <span class="n">TimeSeriesDataset</span><span class="p">(</span>
-    <span class="n">vectors</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">vector</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)),</span> <span class="n">num_pre</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">num_post</span><span class="o">=</span><span class="mi">1</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dataloader</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span><span class="n">dataset</span><span class="o">=</span><span class="n">dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">28</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">trainer</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">Trainer</span><span class="p">(</span><span class="n">limit_train_batches</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_epochs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">log_every_n_steps</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">trainer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">lstm</span><span class="p">,</span> <span class="n">train_dataloaders</span><span class="o">=</span><span class="n">dataloader</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>GPU available: False, used: False
-TPU available: False, using: 0 TPU cores
-IPU available: False, using: 0 IPUs
-HPU available: False, using: 0 HPUs
-
-  | Name   | Type   | Params
-----------------------------------
-0 | lstm   | LSTM   | 6.1 M 
-1 | linear | Linear | 211 K 
-----------------------------------
-6.3 M     Trainable params
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  | Name      | Type             | Params | Mode 
+-------------------------------------------------------
+0 | rnn       | LSTM             | 880 K  | train
+1 | dropout   | Dropout          | 0      | train
+2 | fc        | Linear           | 22.6 K | train
+3 | criterion | CrossEntropyLoss | 0      | train
+-------------------------------------------------------
+903 K     Trainable params
 0         Non-trainable params
-6.3 M     Total params
-25.251    Total estimated model params size (MB)
-/Users/scheiba/github/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/lightning/pytorch/trainer/connectors/data_connector.py:441: The &#39;train_dataloader&#39; does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` to `num_workers=15` in the `DataLoader` to improve performance.
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Training:   0%|          | 0/100 [00:00&lt;?, ?it/s]
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 1: 100%|██████████| 100/100 [00:47&lt;00:00,  2.10it/s, v_num=42]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>`Trainer.fit` stopped: `max_epochs=2` reached.
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 1: 100%|██████████| 100/100 [00:47&lt;00:00,  2.09it/s, v_num=42]
+903 K     Total params
+3.613     Total estimated model params size (MB)
+4         Modules in train mode
+0         Modules in eval mode
 </pre></div>
 </div>
 </div>
 </div>
+<p>Once again, we need to tweak our data loading mechanism to account for the new ways of our network.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">trainer</span><span class="o">.</span><span class="n">logged_metrics</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;train_note_on_loss&#39;: tensor(0.0041), &#39;train_time_loss&#39;: tensor(-0.)}
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">out</span> <span class="o">=</span> <span class="n">lstm</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">vector</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">100</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tensor([ 3.8971e-03, -1.2172e-03, -2.4754e-03, -3.7213e-03, -2.7787e-03,
-        -2.5138e-04,  1.7865e-03, -2.6892e-04,  1.8892e-03, -1.5990e-03,
-         3.2224e-04,  9.8781e-04, -1.4894e-03, -2.0432e-03,  2.9413e-03,
-        -1.7089e-03,  9.7648e-03, -1.2814e-03, -1.8693e-03, -3.8153e-03,
-        -5.2325e-03,  2.3664e-03,  8.2530e-04, -1.2044e-03, -2.1420e-03,
-        -6.7895e-04, -1.5671e-03,  2.7583e-03,  3.3898e-03,  5.4249e-03,
-        -2.0362e-03,  3.2021e-03, -9.8711e-04,  2.5240e-03, -2.1509e-04,
-        -1.2053e-04,  1.2406e-03,  3.5846e-04, -2.5151e-04, -5.0175e-03,
-        -2.1750e-03, -5.8116e-03,  8.4303e-03,  1.2473e-02,  3.3065e-03,
-         4.9784e-04,  3.2720e-03, -1.1198e-03,  5.0466e-03,  9.6616e-03,
-         6.7661e-03,  3.2104e-02,  1.1356e-02,  1.5208e-02,  2.1413e-02,
-        -1.3461e-03,  1.1828e-02, -4.4166e-03,  3.0715e-02,  1.0709e-02,
-         2.2356e-02,  1.2477e-02,  1.4657e-02,  4.9933e-02,  9.8639e-03,
-         5.0932e-03,  3.4576e-02,  2.8624e-02,  3.1148e-02,  1.4244e-02,
-         1.3624e-02,  9.0485e-03, -7.5996e-03,  2.4900e-02,  1.4314e-03,
-         2.4914e-02,  6.8576e-03,  1.8449e-02,  2.5721e-02, -2.2751e-03,
-         5.0112e-03, -1.4032e-03, -6.6324e-04, -5.5712e-05, -2.2678e-04,
-        -2.1236e-03,  6.7008e-03,  1.7317e-03,  7.5102e-06, -4.2326e-03,
-        -1.4865e-03, -1.9564e-03, -1.8173e-03, -7.5530e-03, -2.5971e-03,
-        -6.6896e-04, -2.8853e-04, -1.3860e-03, -2.9145e-03,  2.5233e-03,
-        -3.0141e-03, -1.8416e-03, -2.0920e-04,  1.3955e-03,  1.4082e-03,
-        -5.2320e-03, -2.2829e-04, -2.7252e-03, -1.8598e-03, -2.0533e-03,
-        -1.7556e-03, -1.3605e-03,  4.8952e-03, -6.1192e-03, -7.1883e-04,
-        -1.2520e-03, -1.8946e-03, -3.9329e-03, -3.3910e-03,  2.0080e-03,
-         1.1569e-04, -7.0281e-04, -5.2682e-03, -2.6927e-03, -1.9303e-03,
-        -2.0103e-03,  1.6549e-03,  2.7641e-03,  2.3737e-02,  1.2776e-02,
-        -2.2792e-02, -3.7656e-02,  1.2028e-02,  2.9068e-02, -2.7538e-02,
-        -3.8140e-02,  2.2985e-02, -2.0768e-02, -3.9148e-02,  3.3403e-02,
-         3.2566e-02,  3.4457e-02,  2.2134e-02,  7.2785e-03,  4.5199e-02,
-         1.7560e-02,  7.3990e-03,  3.3805e-02, -3.9054e-03, -1.8722e-02,
-        -1.9900e-02,  4.3101e-02, -4.0593e-02, -1.9847e-02,  2.0040e-02,
-        -3.5919e-02, -2.3761e-02,  5.2724e-03,  4.3978e-02,  2.7625e-02,
-        -3.8861e-02,  3.1229e-02,  3.2987e-02,  2.5322e-02, -2.1601e-02,
-        -3.3452e-02, -3.9446e-02, -4.9163e-02,  2.5905e-02,  7.3373e-03,
-         4.4806e-03,  2.7141e-02,  1.0308e-02, -1.1387e-02, -3.5696e-02,
-        -4.5360e-02,  8.0430e-03, -3.9659e-02, -3.9769e-02, -4.3226e-02,
-         1.8576e-02, -7.3207e-03,  1.6507e-02, -2.1918e-03,  3.0971e-02,
-        -4.7017e-03, -3.3365e-02,  2.5517e-03, -6.6097e-03,  4.1712e-02,
-        -3.1158e-02, -2.7735e-02, -4.5749e-02, -2.0409e-02,  6.6859e-03,
-        -3.3338e-02, -1.7701e-02, -2.5616e-03,  5.9042e-03, -1.5096e-02,
-         2.7269e-02, -1.3449e-02,  1.9918e-02,  1.4246e-02, -2.9368e-02,
-         3.9403e-03, -3.1972e-02,  3.8182e-02, -8.6633e-03,  2.3459e-02,
-        -2.0701e-02,  3.2765e-02, -6.4843e-03,  3.5714e-02, -6.7283e-03,
-        -3.3848e-02,  4.5694e-02,  3.9664e-02,  3.8251e-02,  4.2845e-02,
-         5.9987e-03, -1.6130e-02,  4.6555e-02,  4.5439e-02,  2.0768e-02,
-         3.1304e-02,  2.8316e-02,  2.3103e-02,  2.5092e-02, -4.9728e-02,
-        -2.1685e-02,  3.3223e-02,  2.2863e-03,  4.0384e-02,  3.2432e-02,
-         6.8279e-03,  3.4870e-02, -1.8543e-02,  2.4752e-02, -2.0220e-02,
-        -1.8563e-02, -3.8347e-03,  2.4133e-02,  7.9473e-03,  4.3926e-02,
-         4.4744e-02,  1.6670e-03, -1.0041e-02,  4.6717e-02,  4.3535e-03,
-        -3.7917e-03, -4.2693e-02, -3.8575e-02,  3.9670e-02, -3.0533e-02,
-         1.4539e-02, -2.7041e-02, -1.3461e-02,  3.4271e-02,  2.6884e-02,
-         3.3698e-02, -2.1815e-02, -3.6171e-02,  3.7228e-02, -2.3271e-02,
-         1.6165e-02, -1.9304e-02, -1.0806e-02,  2.4865e-02,  2.8080e-02,
-        -3.3596e-02,  1.5015e-02,  1.9676e-02,  9.4632e-03,  2.6891e-02,
-        -2.8566e-02,  1.3460e-02,  4.5108e-02,  4.1301e-02, -4.6732e-02,
-         2.1529e-02, -5.0594e-03, -2.3084e-02,  4.9358e-03,  4.7264e-02,
-        -3.4201e-02,  4.4690e-02,  1.9649e-02,  2.4159e-02, -4.1604e-02,
-        -2.9940e-02, -1.6085e-02, -2.1004e-02, -1.6435e-02, -1.0687e-02,
-        -3.8009e-02,  3.4674e-02, -3.9884e-02, -1.3196e-02, -4.0335e-02,
-         4.6765e-02,  9.6048e-03,  2.8515e-02,  4.8117e-02, -2.4999e-02,
-        -1.2368e-02,  1.7255e-02,  2.0706e-02,  2.2120e-02,  7.2939e-03,
-        -1.8978e-02, -1.8084e-02, -1.7331e-02,  1.0563e-02, -1.2415e-02,
-         9.9599e-03, -3.6635e-02,  1.6644e-02, -4.1848e-02,  1.6299e-03,
-        -3.6215e-02,  3.0513e-02,  1.3567e-02,  3.8604e-02,  4.3125e-02,
-        -4.0514e-02,  2.7093e-02,  2.8078e-02, -1.2638e-02,  1.9425e-02,
-         4.5069e-02, -3.8987e-02,  3.9404e-02, -2.5092e-02,  1.0052e-03,
-        -4.1483e-02,  4.0935e-03,  3.2575e-02,  1.0139e-02,  3.7838e-02,
-        -3.6300e-02, -4.6253e-02, -2.3956e-02, -2.2817e-02, -1.9818e-02,
-        -3.7306e-02, -1.4942e-02, -2.6097e-02,  3.0904e-02, -1.2205e-02,
-         1.7287e-02, -3.5403e-02, -2.7734e-02,  1.8749e-02, -4.7736e-02,
-        -4.1799e-02, -3.2422e-02, -1.5975e-03,  3.0155e-02, -3.3387e-02,
-        -1.1106e-03,  2.5647e-02, -1.3699e-02, -1.1126e-02,  2.5204e-02,
-        -3.0537e-02, -2.1189e-02,  1.7125e-02,  3.0578e-02, -2.4332e-02,
-        -1.8495e-02,  7.4440e-03,  4.2622e-02, -2.2923e-02, -3.8553e-02,
-        -4.8918e-04, -3.5645e-02,  2.3841e-02, -3.9050e-03,  1.8616e-02,
-        -3.8206e-02, -4.0831e-02, -2.4276e-02, -2.5626e-03, -6.6222e-03,
-         4.1509e-02, -4.2947e-02, -1.6525e-02,  4.6827e-02, -1.3096e-02,
-         1.5053e-03,  2.4252e-02, -1.3178e-02,  2.2984e-02, -2.5244e-02,
-        -2.0906e-03, -2.5289e-02,  2.8134e-02,  1.8045e-02,  4.0391e-02,
-        -3.0290e-02, -2.2061e-02, -3.6481e-02, -3.9591e-02, -4.5669e-02,
-         1.9075e-02, -1.7979e-02, -4.6694e-02, -3.8227e-02, -4.4380e-02,
-        -9.1604e-03,  4.2172e-02,  1.0153e-04], grad_fn=&lt;SliceBackward0&gt;)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">lstm</span><span class="o">.</span><span class="n">velocity</span><span class="p">(</span><span class="n">out</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tensor(28)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lstm</span><span class="o">.</span><span class="n">note_on</span><span class="p">(</span><span class="n">out</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.04</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tensor([False, False, False, False, False, False, False, False, False, False,
-        False, False, False, False, False, False, False, False, False, False,
-        False, False, False, False, False, False, False, False, False, False,
-        False, False, False, False, False, False, False, False, False, False,
-        False, False, False, False, False, False, False, False, False, False,
-        False, False, False, False, False, False, False, False, False, False,
-        False, False, False,  True, False, False, False, False, False, False,
-        False, False, False, False, False, False, False, False, False, False,
-        False, False, False, False, False, False, False, False, False, False,
-        False, False, False, False, False, False, False, False, False, False,
-        False, False, False, False, False, False, False, False, False, False,
-        False, False, False, False, False, False, False, False, False, False,
-        False, False, False, False, False, False, False, False])
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lstm</span><span class="o">.</span><span class="n">velocity_steps</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>32
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lstm</span><span class="o">.</span><span class="n">velocity</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tensor(0.0518, grad_fn=&lt;MaxBackward1&gt;)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">lstm</span><span class="o">.</span><span class="n">time</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>269
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lstm</span><span class="o">.</span><span class="n">time_steps</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>125
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">out</span><span class="o">.</span><span class="n">shape</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>torch.Size([1, 1, 413])
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">out</span> <span class="o">&gt;</span> <span class="mf">0.2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tensor(1)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vectors</span><span class="o">.</span><span class="n">shape</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(6677, 413)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dataset</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">TensorDataset</span><span class="p">(</span>
-    <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">vectors</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">vectors</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dataset</span><span class="p">[</span><span class="mi">10</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>torch.Size([413])
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">output</span> <span class="o">=</span> <span class="n">lstm</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span>
-    <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">(</span><span class="n">vectors</span><span class="p">[</span><span class="mi">10</span><span class="p">:</span><span class="mi">20</span><span class="p">])</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vectors</span><span class="p">[</span><span class="mi">10</span><span class="p">:</span><span class="mi">20</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(10, 413)
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">output</span><span class="o">.</span><span class="n">shape</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>torch.Size([1, 333])
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">LSTM</span><span class="p">(</span><span class="n">L</span><span class="o">.</span><span class="n">LightningModule</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">mp</span> 
-        <span class="n">n_features</span><span class="o">=</span><span class="mi">88</span><span class="p">,</span>
-        <span class="n">hidden_size</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
-        <span class="n">seq_len</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
-        <span class="n">batch_size</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
-        <span class="n">num_layers</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
-        <span class="n">dropout</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
-        <span class="n">output_size</span><span class="o">=</span><span class="mi">88</span><span class="p">,</span>
-    <span class="p">):</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">ki_ueben.datasets</span> <span class="kn">import</span> <span class="n">Maestro3Dataset</span>
+<span class="kn">from</span> <span class="nn">ki_ueben.midi</span> <span class="kn">import</span> <span class="n">PianoRoll</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">n_features</span> <span class="o">=</span> <span class="n">n_features</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span> <span class="o">=</span> <span class="n">hidden_size</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">seq_len</span> <span class="o">=</span> <span class="n">seq_len</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">batch_size</span> <span class="o">=</span> <span class="n">batch_size</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">num_layers</span> <span class="o">=</span> <span class="n">num_layers</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">dropout</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">output_size</span> <span class="o">=</span> <span class="n">output_size</span>
-    
-        <span class="bp">self</span><span class="o">.</span><span class="n">lstm</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">LSTM</span><span class="p">(</span>
-            <span class="n">input_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">n_features</span><span class="p">,</span>
-            <span class="n">hidden_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span><span class="p">,</span>
-            <span class="n">num_layers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">num_layers</span><span class="p">,</span>
-            <span class="n">dropout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">,</span>
-            <span class="n">batch_first</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_size</span><span class="p">)</span>
-    
+<span class="n">note_dfs</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">maestro_files</span> <span class="o">=</span> <span class="n">Maestro3Dataset</span><span class="p">()</span>
+
+<span class="c1"># limit files - set to -1 for no limits</span>
+<span class="n">NUM_FILES</span> <span class="o">=</span> <span class="mi">60</span>
+
+<span class="k">for</span> <span class="n">midi_path</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">maestro_files</span><span class="p">[:</span><span class="n">NUM_FILES</span><span class="p">][</span><span class="s2">&quot;file_path&quot;</span><span class="p">]):</span>
+    <span class="n">piano_roll</span> <span class="o">=</span> <span class="n">PianoRoll</span><span class="p">(</span><span class="n">midi_path</span><span class="p">)</span>
+    <span class="n">df_events</span> <span class="o">=</span> <span class="n">piano_roll</span><span class="o">.</span><span class="n">events</span><span class="p">()</span>
+    <span class="c1"># filter out pedal (note=-1) and note_off events (velocity=0)</span>
+    <span class="n">df_events</span> <span class="o">=</span> <span class="n">df_events</span><span class="p">[(</span><span class="n">df_events</span><span class="p">[</span><span class="s2">&quot;note&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df_events</span><span class="p">[</span><span class="s2">&quot;velocity&quot;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)]</span>
+    <span class="n">df_events</span><span class="p">[</span><span class="s2">&quot;note&quot;</span><span class="p">]</span>
+    <span class="n">note_dfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df_events</span><span class="p">)</span>
+
+<span class="n">simple_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">note_dfs</span><span class="p">)</span>
+<span class="n">simple_df</span>
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 60/60 [00:31&lt;00:00,  1.88it/s]
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>note</th>
+      <th>velocity</th>
+      <th>time</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>37</td>
+      <td>25</td>
+      <td>0.437500</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>49</td>
+      <td>30</td>
+      <td>0.959635</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>40</td>
+      <td>47</td>
+      <td>1.342448</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>37</td>
+      <td>31</td>
+      <td>1.725260</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>49</td>
+      <td>23</td>
+      <td>2.100260</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>7460</th>
+      <td>50</td>
+      <td>26</td>
+      <td>210.647135</td>
+    </tr>
+    <tr>
+      <th>7462</th>
+      <td>38</td>
+      <td>31</td>
+      <td>210.651042</td>
+    </tr>
+    <tr>
+      <th>7530</th>
+      <td>69</td>
+      <td>29</td>
+      <td>212.897135</td>
+    </tr>
+    <tr>
+      <th>7531</th>
+      <td>74</td>
+      <td>40</td>
+      <td>212.901042</td>
+    </tr>
+    <tr>
+      <th>7533</th>
+      <td>65</td>
+      <td>19</td>
+      <td>212.927083</td>
+    </tr>
+  </tbody>
+</table>
+<p>544242 rows × 3 columns</p>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">torch.utils.data.dataset</span> <span class="kn">import</span> <span class="n">TensorDataset</span>
+
+<span class="c1"># number of notes as context for network</span>
+<span class="n">CONTEXT_NUM_NOTES</span> <span class="o">=</span> <span class="mi">100</span>
+
+<span class="c1"># -21 to scale data down to 0</span>
+<span class="n">one_hot_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">88</span><span class="p">)[</span><span class="n">simple_df</span><span class="p">[</span><span class="s2">&quot;note&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span> <span class="o">-</span> <span class="mi">21</span><span class="p">]</span>
+
+<span class="c1"># offset the data by 1 between X and y</span>
+<span class="n">probability_data_X</span> <span class="o">=</span> <span class="n">one_hot_data</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">probability_data_y</span> <span class="o">=</span> <span class="n">one_hot_data</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+<span class="n">context_X</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">context_y</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># not efficient, but works</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">one_hot_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">CONTEXT_NUM_NOTES</span><span class="p">):</span>
+    <span class="n">context_X</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">one_hot_data</span><span class="p">[</span><span class="n">i</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">CONTEXT_NUM_NOTES</span><span class="p">])</span>
+    <span class="n">context_y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">one_hot_data</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">CONTEXT_NUM_NOTES</span><span class="p">])</span>
+
+<span class="n">context_X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">context_X</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+<span class="n">context_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">context_y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+
+<span class="n">context_dataset</span> <span class="o">=</span> <span class="n">TensorDataset</span><span class="p">(</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">context_X</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">context_y</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;context_X: </span><span class="si">{</span><span class="n">context_X</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, context_y: </span><span class="si">{</span><span class="n">context_y</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>context_X: (544142, 100, 88), context_y: (544142, 88)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s2">&quot;logs/simple_rnn/version_0/model_2024.ckpt&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>True
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">pytorch_lightning.loggers</span> <span class="kn">import</span> <span class="n">CSVLogger</span>
+
+<span class="n">MODEL_PATH</span> <span class="o">=</span> <span class="s2">&quot;logs/simple_rnn/version_0/model_2024.ckpt&quot;</span>
+
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">MODEL_PATH</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Start training - this will take a while&quot;</span><span class="p">)</span>
+    <span class="n">rnn_loader</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">DataLoader</span><span class="p">(</span>
+        <span class="n">dataset</span><span class="o">=</span><span class="n">context_dataset</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">num_workers</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">persistent_workers</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="n">rnn_trainer</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">Trainer</span><span class="p">(</span>
+        <span class="n">max_epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+        <span class="n">logger</span><span class="o">=</span><span class="p">[</span>
+            <span class="c1"># we store the metrics into a CSV file so we can take a look at its progress later</span>
+            <span class="n">CSVLogger</span><span class="p">(</span><span class="n">save_dir</span><span class="o">=</span><span class="s2">&quot;logs&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;simple_rnn&quot;</span><span class="p">,</span> <span class="n">version</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="n">rnn_trainer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">simple_rnn</span><span class="p">,</span> <span class="n">train_dataloaders</span><span class="o">=</span><span class="n">rnn_loader</span><span class="p">)</span>
+    <span class="n">rnn_trainer</span><span class="o">.</span><span class="n">save_checkpoint</span><span class="p">(</span><span class="n">MODEL_PATH</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Found model - will load model&quot;</span><span class="p">)</span>
+
+<span class="n">eval_model</span> <span class="o">=</span> <span class="n">simple_rnn</span><span class="o">.</span><span class="n">load_from_checkpoint</span><span class="p">(</span><span class="n">MODEL_PATH</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+HPU available: False, using: 0 HPUs
+You are using a CUDA device (&#39;NVIDIA GeForce RTX 3080 Laptop GPU&#39;) that has Tensor Cores. To properly utilize them, you should set `torch.set_float32_matmul_precision(&#39;medium&#39; | &#39;high&#39;)` which will trade-off precision for performance. For more details, read https://pytorch.org/docs/stable/generated/torch.set_float32_matmul_precision.html#torch.set_float32_matmul_precision
+/home/dennis/git/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/lightning_fabric/loggers/csv_logs.py:268: Experiment logs directory logs/simple_rnn/version_0 exists and is not empty. Previous log files in this directory will be deleted when the new ones are saved!
+/home/dennis/git/ki-ueben-klavier-trainieren/venv/lib/python3.10/site-packages/lightning/pytorch/callbacks/model_checkpoint.py:654: Checkpoint directory logs/simple_rnn/version_0/checkpoints exists and is not empty.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+
+  | Name      | Type             | Params | Mode 
+-------------------------------------------------------
+0 | rnn       | LSTM             | 880 K  | train
+1 | dropout   | Dropout          | 0      | train
+2 | fc        | Linear           | 22.6 K | train
+3 | criterion | CrossEntropyLoss | 0      | train
+-------------------------------------------------------
+903 K     Trainable params
+0         Non-trainable params
+903 K     Total params
+3.613     Total estimated model params size (MB)
+4         Modules in train mode
+0         Modules in eval mode
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 99: 100%|██████████| 8503/8503 [01:25&lt;00:00, 99.49it/s, v_num=0, train_loss=0.182] 
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>`Trainer.fit` stopped: `max_epochs=100` reached.
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Epoch 99: 100%|██████████| 8503/8503 [01:25&lt;00:00, 99.46it/s, v_num=0, train_loss=0.182]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="o">%</span><span class="k">config</span> InlineBackend.figure_format = &#39;svg&#39;
+
+<span class="n">df_simple_metrics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;logs/simple_rnn/version_0/metrics.csv&quot;</span><span class="p">)</span>
+<span class="n">df_simple_metrics</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span>
+    <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Simple RNN loss&quot;</span><span class="p">,</span>
+    <span class="c1"># x=&quot;step&quot;,</span>
+    <span class="n">y</span><span class="o">=</span><span class="s2">&quot;train_loss&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">df_simple_metrics</span><span class="p">[</span><span class="s2">&quot;train_loss&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">40</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">line</span><span class="p">(</span>
+    <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Meaned train_loss&quot;</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/66b628e1cf93abc10368c4d0a07f78f256a8d995978b3ac6c7b22a450c7416ab.svg" src="../_images/66b628e1cf93abc10368c4d0a07f78f256a8d995978b3ac6c7b22a450c7416ab.svg" />
+</div>
+</div>
+<p>The training of this network already took nearly 3 hours on a GPU, but it shows some progress in regards to its training loss.</p>
+<div class="admonition-note admonition">
+<p class="admonition-title">Note</p>
+<p>Instead of using an <a class="reference external" href="https://en.wikipedia.org/wiki/Long_short-term_memory">LSTM</a> cell, I also tried out experiments with a plain <a class="reference external" href="https://pytorch.org/docs/stable/generated/torch.nn.RNN.html">RNN</a> cell, but this did not converge over time.
+So it seems that RNN can’t maintain enough memory for our task.
+I also increased the context we provide to the RNN from 40 to 100 - but this also increases our memory demand by a lot!</p>
+<figure class="align-default" id="id2">
+<img alt="../_images/rnn-loss.svg" src="../_images/rnn-loss.svg" />
+<figcaption>
+<p><span class="caption-number">Fig. 8.2 </span><span class="caption-text">The RNN setup did not converge as seen in this loss plot.</span><a class="headerlink" href="#id2" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<p>It seems we are moving in a right direction here as we start to make some actually learning progress, but our model still lacks crucial elements such as timing, velocity and sustain, therefore we need to implement a different kind of data representation which accounts for all these kinds.
+Yet we already run out of memory capacity, because we load all data into memory at once.
+Therefore we have to go yet another step, in which we stream data into the neural network instead of having our whole dataset in memory at once.
+We will also take all our other parameters into account.</p>
+<p>If you are interested in RNNs, consider reading some <a class="reference external" href="https://pytorch.org/tutorials/intermediate/char_rnn_classification_tutorial.html">tutorials from the PyTorch docs</a>.</p>
+<div class="admonition-task admonition">
+<p class="admonition-title">Task</p>
+<ul class="simple">
+<li><p>Evaluate the model by trying out some input samples - how does it compare to our previous models?</p></li>
+<li><p>What is the dropout layer doing?</p></li>
+<li><p>Why does this take so long to train? What could be ways of reducing its training time with or without sacrificing quality?</p></li>
+</ul>
 </div>
 </section>
 

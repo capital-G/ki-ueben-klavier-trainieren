@@ -191,11 +191,11 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendices</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../player_limitations.html">Player Piano limitations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../player_piano_evening.html">Player Piano Evening</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../ki_ueben_api.html">ki_ueben API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../bibliography.html">Bibliography</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../glossary.html">Glossary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../appendices/player_limitations.html">Player Piano limitations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../appendices/player_piano_evening.html">Player Piano Evening</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../appendices/ki_ueben_api.html">ki_ueben API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../appendices/bibliography.html">Bibliography</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../appendices/glossary.html">Glossary</a></li>
 </ul>
 
     </div>
@@ -333,14 +333,14 @@ document.write(`
 
 
 <div class="viewcode-block" id="MIDIFileRecord">
-<a class="viewcode-back" href="../../ki_ueben_api.html#ki_ueben.datasets.MIDIFileRecord">[docs]</a>
+<a class="viewcode-back" href="../../appendices/ki_ueben_api.html#ki_ueben.datasets.MIDIFileRecord">[docs]</a>
 <span class="k">class</span> <span class="nc">MIDIFileRecord</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
     <span class="n">file_path</span><span class="p">:</span> <span class="n">Path</span></div>
 
 
 
 <div class="viewcode-block" id="MIDIFilesDataset">
-<a class="viewcode-back" href="../../ki_ueben_api.html#ki_ueben.datasets.MIDIFilesDataset">[docs]</a>
+<a class="viewcode-back" href="../../appendices/ki_ueben_api.html#ki_ueben.datasets.MIDIFilesDataset">[docs]</a>
 <span class="k">class</span> <span class="nc">MIDIFilesDataset</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">Dataset</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Wrapper for MIDI file dataset.&quot;&quot;&quot;</span>
 
@@ -362,7 +362,7 @@ document.write(`
 
 
 <div class="viewcode-block" id="Maestro3Dataset">
-<a class="viewcode-back" href="../../ki_ueben_api.html#ki_ueben.datasets.Maestro3Dataset">[docs]</a>
+<a class="viewcode-back" href="../../appendices/ki_ueben_api.html#ki_ueben.datasets.Maestro3Dataset">[docs]</a>
 <span class="k">class</span> <span class="nc">Maestro3Dataset</span><span class="p">(</span><span class="n">MIDIFilesDataset</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Download helper class for the Masestro dataset v3.0.0.</span>
 <span class="sd">    For more information see https://magenta.tensorflow.org/datasets/maestro.</span>
@@ -400,14 +400,14 @@ document.write(`
 
 
 <div class="viewcode-block" id="MIDIEventRecord">
-<a class="viewcode-back" href="../../ki_ueben_api.html#ki_ueben.datasets.MIDIEventRecord">[docs]</a>
+<a class="viewcode-back" href="../../appendices/ki_ueben_api.html#ki_ueben.datasets.MIDIEventRecord">[docs]</a>
 <span class="k">class</span> <span class="nc">MIDIEventRecord</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
     <span class="k">pass</span></div>
 
 
 
 <div class="viewcode-block" id="MIDIEventDataset">
-<a class="viewcode-back" href="../../ki_ueben_api.html#ki_ueben.datasets.MIDIEventDataset">[docs]</a>
+<a class="viewcode-back" href="../../appendices/ki_ueben_api.html#ki_ueben.datasets.MIDIEventDataset">[docs]</a>
 <span class="k">class</span> <span class="nc">MIDIEventDataset</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">IterableDataset</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
@@ -481,7 +481,7 @@ document.write(`
 
 
 <div class="viewcode-block" id="PianoRollDataset">
-<a class="viewcode-back" href="../../ki_ueben_api.html#ki_ueben.datasets.PianoRollDataset">[docs]</a>
+<a class="viewcode-back" href="../../appendices/ki_ueben_api.html#ki_ueben.datasets.PianoRollDataset">[docs]</a>
 <span class="k">class</span> <span class="nc">PianoRollDataset</span><span class="p">(</span><span class="n">IterableDataset</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Iterates in a distributed manner over a given set of MIDI files</span>
 <span class="sd">    and outputs a PianoRoll as seen in :func:`ki_ueben.midi.PianoRoll.piano_roll`&quot;&quot;&quot;</span>

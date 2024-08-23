@@ -1,6 +1,6 @@
 # Player Piano Evening
 
-```{figure} chapters/assets/event_poster.png
+```{figure} event_poster.png
 Poster for the *Player Piano Evening* event.
 ```
 
